@@ -1,5 +1,5 @@
 {
-    "name": "webware/usermanager",
+    "name": "webware/webware-usermanager",
     "description": "Mezzio user registration, authentication, email verification, and admin user management for the webware-* package family.",
     "license": "BSD-3-Clause",
     "keywords": [
