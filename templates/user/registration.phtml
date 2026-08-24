@@ -1,0 +1,180 @@
+<?php
+
+declare(strict_types=1);
+
+$this->headTitle('Create Account');
+?>
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-body-secondary p-3">
+    <div class="ims-login-wrap">
+        <div class="card shadow-lg w-100">
+            <div class="row g-0">
+
+                <!-- Brand panel (desktop left column) -->
+                <div class="col-lg-5 ims-login-brand-panel d-none d-lg-flex flex-column align-items-center justify-content-center p-5 text-center">
+                    <i class="bi bi-boxes mb-3 ims-login-brand-icon"></i>
+                    <div class="fw-bold fs-3 lh-sm mb-2">Farmers IMS</div>
+                    <div class="mb-4 ims-login-brand-tagline">Inventory Management System</div>
+                    <ul class="list-unstyled text-start ims-login-brand-features">
+                        <li class="mb-2"><i class="bi bi-check2-circle me-2"></i>Scan &amp; track every incoming manifest</li>
+                        <li class="mb-2"><i class="bi bi-check2-circle me-2"></i>Damage reports with photo evidence</li>
+                        <li class="mb-2"><i class="bi bi-check2-circle me-2"></i>Ticket &amp; transfer workflows</li>
+                        <li class="mb-0"><i class="bi bi-check2-circle me-2"></i>Cross-store inventory visibility</li>
+                    </ul>
+                </div>
+
+                <!-- Form panel -->
+                <div class="col-12 col-lg-7">
+                    <div class="p-4 p-lg-5">
+
+                        <!-- Mobile brand (hidden on desktop) -->
+                        <div class="d-flex align-items-center justify-content-center gap-2 mb-4 d-lg-none">
+                            <i class="bi bi-boxes fs-2 text-primary"></i>
+                            <span class="fs-4 fw-bold">Farmers IMS</span>
+                        </div>
+
+                        <h1 class="h4 fw-bold mb-1">Create Account</h1>
+                        <p class="text-secondary small mb-4">Fill in your details to request access.</p>
+
+                        <?php if (! empty($this->errors)): ?>
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0 ps-3">
+                                <?php foreach ($this->errors as $error): ?>
+                                <li><?= $this->escapeHtml($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <?php endif; ?>
+
+                        <form action="<?= $this->userUrl('register.create') ?>" method="post" novalidate>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label form-label-sm fw-semibold" for="reg-first-name">First Name</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="reg-first-name"
+                                        name="firstName"
+                                        placeholder="Jane"
+                                        autocomplete="given-name"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label form-label-sm fw-semibold" for="reg-last-name">Last Name</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="reg-last-name"
+                                        name="lastName"
+                                        placeholder="Doe"
+                                        autocomplete="family-name"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label form-label-sm fw-semibold" for="reg-email">Email</label>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="reg-email"
+                                    name="email"
+                                    placeholder="you@farmers-store.com"
+                                    autocomplete="email"
+                                    required
+                                />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label form-label-sm fw-semibold" for="reg-password">Password</label>
+                                <div class="input-group">
+                                    <input
+                                        type="password"
+                                        class="form-control"
+                                        id="reg-password"
+                                        name="passwordHash"
+                                        placeholder="••••••••"
+                                        autocomplete="new-password"
+                                        required
+                                    />
+                                    <button
+                                        class="btn btn-outline-secondary"
+                                        type="button"
+                                        id="toggle-password"
+                                        aria-label="Toggle password visibility"
+                                    >
+                                        <i class="bi bi-eye" id="toggle-icon"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label form-label-sm fw-semibold" for="reg-confirm">Confirm Password</label>
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="reg-confirm"
+                                    name="confirmPasswordHash"
+                                    placeholder="••••••••"
+                                    autocomplete="new-password"
+                                    required
+                                />
+                                <div class="invalid-feedback" id="confirm-error">Passwords do not match.</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Create Account</button>
+
+                            <div class="text-center small">
+                                Already have an account?
+                                <a href="<?= $this->userUrl('session.read') ?>" class="text-primary">Sign in</a>
+                            </div>
+
+                        </form>
+
+                        <div class="text-center mt-4 text-secondary ims-login-footer">
+                            Farmers Home Furniture &copy; <?= date('Y') ?> &middot; v0.1.0-alpha
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+
+$this->inlineScript()->appendScript(<<<'JS'
+    (function () {
+    const pwInput   = document.getElementById('reg-password');
+    const confirm   = document.getElementById('reg-confirm');
+    const toggleBtn = document.getElementById('toggle-password');
+    const icon      = document.getElementById('toggle-icon');
+
+    toggleBtn.addEventListener('click', () => {
+        const isVisible = pwInput.type === 'text';
+        pwInput.type   = isVisible ? 'password' : 'text';
+        icon.className = isVisible ? 'bi bi-eye' : 'bi bi-eye-slash';
+    });
+
+    confirm.addEventListener('input', () => {
+        if (confirm.value && confirm.value !== pwInput.value) {
+            confirm.classList.add('is-invalid');
+        } else {
+            confirm.classList.remove('is-invalid');
+        }
+    });
+
+    document.querySelector('form').addEventListener('submit', (e) => {
+        if (confirm.value !== pwInput.value) {
+            e.preventDefault();
+            confirm.classList.add('is-invalid');
+            confirm.focus();
+        }
+    });
+    })();
+    JS);
+?>
+<?= $this->imsMessenger() ?>

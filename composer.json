@@ -1,0 +1,63 @@
+{
+    "name": "webware/usermanager",
+    "description": "Mezzio user registration, authentication, email verification, and admin user management for the webware-* package family.",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "webware",
+        "user",
+        "authentication",
+        "mezzio"
+    ],
+    "authors": [
+        {
+            "name": "Joey Smith",
+            "email": "jsmith@webinertia.net",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
+        "axleus/axleus-log": "^0.1.1",
+        "axleus/axleus-mailer": "dev-master",
+        "axleus/axleus-message": "dev-master",
+        "laminas/laminas-diactoros": "^3.8",
+        "laminas/laminas-permissions-acl": "^2.16",
+        "mezzio/mezzio": "^3.26",
+        "mezzio/mezzio-authentication": "^1.13",
+        "mezzio/mezzio-authentication-session": "*",
+        "mezzio/mezzio-router": "^3.15",
+        "mezzio/mezzio-session": "^1.12",
+        "mezzio/mezzio-template": "^2.8",
+        "monolog/monolog": "^3.0",
+        "php-db/phpdb-mysql": "0.4.x-dev",
+        "psr/container": "^2.0",
+        "psr/event-dispatcher": "^1.0",
+        "psr/http-message": "^2.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "ramsey/uuid": "^4.9",
+        "webware/acl": "^0.1",
+        "webware/command-bus": "0.5.x-dev",
+        "webware/commandbus-event": "0.1.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.0",
+        "webware/coding-standard": "^0.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webware\\UserManager\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Webware\\UserManagerTest\\": "test/unit/",
+            "Webware\\UserManagerIntegrationTest\\": "test/integration/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
+}
