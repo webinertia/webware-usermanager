@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Webware\UserManager\Admin\Dashboard;
 
 use Webware\Admin\Event\RegisterWidgetEvent;
-use Webware\ResultSet\WithRowDataResultSet;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\UserRepositoryInterface;
+
+use function count;
 
 final class RegisterWidgetListener
 {
@@ -33,9 +34,9 @@ final class RegisterWidgetListener
         }
 
         $event->registerWidget(new Widget(
-            resourceId: $this->resourceId,
-            totalUsers: $totalUsers,
-            activeUsers: $activeUsers,
+            resourceId   : $this->resourceId,
+            totalUsers   : $totalUsers,
+            activeUsers  : $activeUsers,
             inactiveUsers: $inactiveUsers,
         ));
     }

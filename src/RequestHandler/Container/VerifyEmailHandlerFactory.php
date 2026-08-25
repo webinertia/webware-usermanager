@@ -35,7 +35,7 @@ final class VerifyEmailHandlerFactory
 
         return new VerifyEmailHandler(
             template: $container->get(TemplateRendererInterface::class),
-            users: $container->get(UserRepositoryInterface::class),
+            users   : $container->get(UserRepositoryInterface::class),
             tokenTtl: $tokenTtl,
             loginUrl: $userUrl('session.read'),
         );

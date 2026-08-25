@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\RequestHandler;
 
-use Axleus\Mailer\MailerInterface;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -24,6 +23,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
+use Webware\Mailer\MailerInterface;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\UserInterface;
 use Webware\UserManager\View\Helper\UserUrl;
@@ -97,22 +97,22 @@ final class ResendVerificationHandler implements RequestHandlerInterface
                     ->isHtml(true)
                     ->body(
                         '<p>Hello '
-                        . htmlspecialchars($user->firstName, ENT_QUOTES, 'UTF-8')
-                        . ',</p>'
-                        . '<p>You requested a new verification link. Please verify your email address by clicking below.</p>'
-                        . '<p><a href="'
-                        . htmlspecialchars($verificationUrl, ENT_QUOTES, 'UTF-8')
-                        . '">Verify my email</a></p>'
-                        . '<p>This link expires in 24 hours.</p>',
+                            . htmlspecialchars($user->firstName, ENT_QUOTES, 'UTF-8')
+                            . ',</p>'
+                            . '<p>You requested a new verification link. Please verify your email address by clicking below.</p>'
+                            . '<p><a href="'
+                            . htmlspecialchars($verificationUrl, ENT_QUOTES, 'UTF-8')
+                            . '">Verify my email</a></p>'
+                            . '<p>This link expires in 24 hours.</p>',
                     )
                     ->altBody(
                         'Hello '
-                        . $user->firstName
-                        . ",\n\n"
-                        . "You requested a new verification link. Please visit:\n"
-                        . $verificationUrl
-                        . "\n\n"
-                        . "This link expires in 24 hours.\n",
+                            . $user->firstName
+                            . ",\n\n"
+                            . "You requested a new verification link. Please visit:\n"
+                            . $verificationUrl
+                            . "\n\n"
+                            . "This link expires in 24 hours.\n",
                     );
 
                 $this->mailer->send();

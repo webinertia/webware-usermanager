@@ -21,6 +21,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
+use function filter_var;
+
 final class UpdateUserModalHandler implements RequestHandlerInterface
 {
     public function __construct(

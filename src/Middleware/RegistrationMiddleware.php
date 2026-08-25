@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Middleware;
 
-use Axleus\Message\SystemMessengerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
 use Override;
@@ -23,9 +22,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
-use Webware\CommandBus\Command\CommandResult;
-use Webware\CommandBus\Command\CommandStatus;
-use Webware\CommandBus\CommandBusInterface;
+use Webware\Message\SystemMessengerInterface;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\InputFilter\UserDataFilter;
 use Webware\UserManager\InputFilter\ValidationGroupTrait;
@@ -41,7 +41,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
     const array DEFAULT_ROLE    = ['Member'];
 
     public function __construct(
-        private readonly CommandBusInterface $commandBus,
+        private readonly MessageBusInterface $commandBus,
         private readonly TemplateRendererInterface $template,
         private readonly UserDataFilter $filter,
     ) {}
@@ -75,7 +75,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
             new CreateUserCommand(...$values),
         );
 
-        if ($result->getStatus() === CommandStatus::Failure) {
+        if ($result->getStatus() === MessageStatus::Failure) {
             return new HtmlResponse(
                 $this->template->render('user::registration', ['errors' => [$result->getResult()]]),
                 500,

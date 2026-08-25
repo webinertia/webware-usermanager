@@ -15,11 +15,11 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use Closure;
-use PhpDb\ResultSet\ResultSetInterface;
+use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
-use Webware\CommandBus\CommandInterface;
-use Webware\ResultSet\WithRowDataResultSet;
+use SensitiveParameter;
+use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\UserInterface;
 
 interface UserRepositoryInterface
@@ -32,6 +32,7 @@ interface UserRepositoryInterface
      */
     public function authenticate(
         string $credential,
+        #[SensitiveParameter]
         ?string $password = null,
     ): \Webware\UserManager\Auth\AuthenticationResult;
 
@@ -50,7 +51,7 @@ interface UserRepositoryInterface
         ?string $orderBy = null,
         ?int $limit = null,
         ?int $offset = null,
-    ): (ResultSetInterface&WithRowDataResultSet)|null;
+    ): ?RowPrototypeResultSetInterface;
 
     /**
      * Find a user by their email address, or null if not found.
@@ -65,7 +66,7 @@ interface UserRepositoryInterface
     /**
      * Find a user by their verification token, or null if not found.
      */
-    public function findByVerificationToken(string $token): ?UserInterface;
+    public function findByVerificationToken(#[SensitiveParameter] string $token): ?UserInterface;
 
     /**
      * Return the role identifier string for the given role name.

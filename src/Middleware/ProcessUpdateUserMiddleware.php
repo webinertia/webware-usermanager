@@ -14,15 +14,15 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Middleware;
 
-use Axleus\Message\SystemMessengerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Webware\CommandBus\Command\CommandResult;
-use Webware\CommandBus\Command\CommandStatus;
-use Webware\CommandBus\CommandBusInterface;
-use Webware\Core\HttpMethodProcessorTrait;
+use Webware\Core\Http\Middleware\HttpMethodProcessorTrait;
+use Webware\Message\SystemMessengerInterface;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\InputFilter\UserDataFilter;
 use Webware\UserManager\InputFilter\ValidationGroupTrait;
@@ -35,7 +35,7 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
     use ValidationGroupTrait;
 
     public function __construct(
-        private CommandBusInterface $commandBus,
+        private MessageBusInterface $commandBus,
         private UserDataFilter $filter,
     ) {}
 
@@ -58,7 +58,7 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
 
         $result = $this->commandBus->handle($command);
 
-        if ($result->getStatus() === CommandStatus::Success) {
+        if ($result->getStatus() === MessageStatus::Success) {
             $messenger?->success('User updated.', hops: 0, now: true);
         } else {
             $messenger?->danger('User could not be updated. Please try again.', hops: 0, now: true);

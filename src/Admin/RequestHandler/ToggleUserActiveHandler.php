@@ -19,8 +19,8 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Webware\CommandBus\Command\CommandResult;
-use Webware\CommandBus\Command\CommandStatus;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\UserInterface;
 
 final class ToggleUserActiveHandler implements RequestHandlerInterface
@@ -34,20 +34,20 @@ final class ToggleUserActiveHandler implements RequestHandlerInterface
         /** @var CommandResult|null $result */
         $result = $request->getAttribute(CommandResult::class);
 
-        if (!$result instanceof CommandResult || $result->getStatus() !== CommandStatus::Success) {
+        if (! $result instanceof CommandResult || $result->getStatus() !== MessageStatus::Success) {
             return new HtmlResponse('', 422);
         }
 
         $user = $result->getResult();
 
-        if (!$user instanceof UserInterface) {
+        if (! $user instanceof UserInterface) {
             return new HtmlResponse('', 404);
         }
 
         return new HtmlResponse($this->template->render('user::partials/user-row', [
-            'user' => $user,
+            'user'   => $user,
             'layout' => false,
-            'body' => false,
+            'body'   => false,
         ]));
     }
 }

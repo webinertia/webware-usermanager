@@ -14,14 +14,14 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\RequestHandler;
 
-use Htmx\Response\Header;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Webware\CommandBus\Command\CommandResult;
-use Webware\CommandBus\Command\CommandStatus;
+use Webware\Htmx\Response\Header;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
 use function json_encode;
@@ -40,7 +40,7 @@ final class UserListHandler implements RequestHandlerInterface
         ]));
 
         $commandResult = $request->getAttribute(CommandResult::class);
-        if ($commandResult instanceof CommandResult && $commandResult->getStatus() === CommandStatus::Success) {
+        if ($commandResult instanceof CommandResult && $commandResult->getStatus() === MessageStatus::Success) {
             $response = $response->withHeader(Header::Trigger->value, json_encode(['closeModal' => null]));
         }
 

@@ -14,10 +14,10 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\RequestHandler\Container;
 
-use Axleus\Mailer\MailerInterface;
 use Laminas\View\HelperPluginManager;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
+use Webware\Mailer\MailerInterface;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\RequestHandler\ResendVerificationHandler;
 use Webware\UserManager\View\Helper\UserUrl;
@@ -36,15 +36,15 @@ final class ResendVerificationHandlerFactory
         $userUrl       = $helperManager->get(UserUrl::class);
 
         return new ResendVerificationHandler(
-            template: $container->get(TemplateRendererInterface::class),
-            users: $container->get(UserRepositoryInterface::class),
-            mailer: $container->get(MailerInterface::class),
-            fromEmail: (string) ($userConf['from_email'] ?? 'noreply@farmers-ims.local'),
-            fromName: (string) ($userConf['from_name'] ?? 'Farmers IMS'),
-            baseUrl: (string) ($userConf['base_url'] ?? 'http://localhost:8080'),
+            template           : $container->get(TemplateRendererInterface::class),
+            users              : $container->get(UserRepositoryInterface::class),
+            mailer             : $container->get(MailerInterface::class),
+            fromEmail          : (string) ($userConf['from_email'] ?? 'noreply@farmers-ims.local'),
+            fromName           : (string) ($userConf['from_name'] ?? 'Farmers IMS'),
+            baseUrl            : (string) ($userConf['base_url'] ?? 'http://localhost:8080'),
             verificationSubject: (string) ($mailerConf['verification_email_subject'] ?? 'Verify your account'),
-            loginUrl: $userUrl('session.read'),
-            userUrl: $userUrl,
+            loginUrl           : $userUrl('session.read'),
+            userUrl            : $userUrl,
         );
     }
 }

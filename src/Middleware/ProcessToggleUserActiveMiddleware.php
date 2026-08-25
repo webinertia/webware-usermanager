@@ -18,9 +18,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Webware\CommandBus\Command\CommandResult;
-use Webware\CommandBus\CommandBusInterface;
-use Webware\Core\HttpMethodProcessorTrait;
+use Webware\Core\Http\Middleware\HttpMethodProcessorTrait;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Command\ToggleUserActiveCommand;
 
 use function filter_var;
@@ -32,7 +32,7 @@ final readonly class ProcessToggleUserActiveMiddleware implements MiddlewareInte
     use HttpMethodProcessorTrait;
 
     public function __construct(
-        private CommandBusInterface $commandBus,
+        private MessageBusInterface $commandBus,
     ) {}
 
     public function processPost(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

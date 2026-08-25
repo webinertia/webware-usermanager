@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Command;
 
-use Webware\CommandBus\Command\NamedCommandInterface;
-use Webware\CommandBus\Command\NamedCommandTrait;
+use Webware\MessageBus\Command\NamedCommandInterface;
+use Webware\MessageBus\Command\NamedCommandTrait;
 
 readonly class UpdateUserCommand implements NamedCommandInterface
 {

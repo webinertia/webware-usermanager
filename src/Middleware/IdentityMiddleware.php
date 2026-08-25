@@ -58,7 +58,6 @@ final class IdentityMiddleware implements MiddlewareInterface
         $userInfo = $session?->get(UserInterface::class);
 
         if (null !== $userInfo) {
-            
             $check = $this->repository->checkStatus($userInfo['id']);
             if ($check) {
                 $user = ($this->userFactory)($userInfo);

@@ -25,9 +25,9 @@ final readonly class IdentityMiddlewareFactory
     public function __invoke(ContainerInterface $container): IdentityMiddleware
     {
         return new IdentityMiddleware(
-            repository: $container->get(UserRepositoryInterface::class),
+            repository : $container->get(UserRepositoryInterface::class),
             userFactory: $container->get(UserInterface::class),
-            config: Configuration::getCredentialConfig($container, self::class)
+            config     : Configuration::getCredentialConfig($container, self::class),
         );
     }
 }

@@ -14,16 +14,16 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler;
 
-use Override;
 use Throwable;
-use Webware\CommandBus\Command\CommandResult;
-use Webware\CommandBus\Command\CommandResultInterface;
-use Webware\CommandBus\Command\CommandStatus;
-use Webware\CommandBus\CommandHandlerInterface;
-use Webware\CommandBus\CommandInterface;
+use Webware\MessageBus\Command\CommandInterface;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\Command\CommandResultInterface;
+use Webware\MessageBus\CommandHandlerInterface;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
+use function assert;
 use function json_encode;
 
 final class UpdateUserHandler implements CommandHandlerInterface
@@ -32,7 +32,6 @@ final class UpdateUserHandler implements CommandHandlerInterface
         private readonly UserRepositoryInterface $users,
     ) {}
 
-    #[Override]
     public function handle(CommandInterface $command): CommandResultInterface
     {
         assert($command instanceof UpdateUserCommand);
@@ -40,21 +39,21 @@ final class UpdateUserHandler implements CommandHandlerInterface
         $user = $this->users->findById($command->id);
 
         if ($user === null) {
-            return new CommandResult($command, CommandStatus::Failure, 'User not found.');
+            return new CommandResult($command, MessageStatus::Failure, 'User not found.');
         }
 
         try {
             $this->users->update($command->id, [
                 'firstName' => $command->firstName,
-                'lastName' => $command->lastName,
-                'email' => $command->email,
-                'roleId' => json_encode($command->roleId),
-                'active' => $command->active ? 1 : 0,
+                'lastName'  => $command->lastName,
+                'email'     => $command->email,
+                'roleId'    => json_encode($command->roleId),
+                'active'    => $command->active ? 1 : 0,
             ]);
         } catch (Throwable $e) {
-            return new CommandResult($command, CommandStatus::Failure, $e->getMessage());
+            return new CommandResult($command, MessageStatus::Failure, $e->getMessage());
         }
 
-        return new CommandResult($command, CommandStatus::Success, $this->users->findById($command->id));
+        return new CommandResult($command, MessageStatus::Success, $this->users->findById($command->id));
     }
 }

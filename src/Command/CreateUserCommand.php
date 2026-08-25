@@ -18,14 +18,17 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use SensitiveParameter;
-use Webware\CommandBus\Command\NamedCommandInterface;
-use Webware\CommandBus\Command\NamedCommandTrait;
+use Webware\MessageBus\Command\NamedCommandInterface;
+use Webware\MessageBus\Command\NamedCommandTrait;
 use Webware\UserManager\UserInterface;
 
+use function is_array;
+use function is_string;
 use function json_encode;
 use function json_validate;
 use function password_get_info;
 use function password_hash;
+use function strtolower;
 
 class CreateUserCommand implements NamedCommandInterface
 {
@@ -74,6 +77,7 @@ class CreateUserCommand implements NamedCommandInterface
                 }
             }
         },
+        #[SensitiveParameter]
         public private(set) string $verificationToken {
             get => $this->verificationToken;
             set(string $value) {

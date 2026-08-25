@@ -14,12 +14,12 @@ declare(strict_types=1);
 
 namespace Webware\UserManager;
 
-use Htmx\Middleware\DisableBodyMiddleware;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\MiddlewareFactoryInterface;
 use Mezzio\Router\RouteCollectorInterface;
 use Mezzio\Router\RouteProviderInterface;
 use Override;
+use Webware\Htmx\Middleware\DisableBodyMiddleware;
 use Webware\UserManager\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Admin\RequestHandler\ToggleUserActiveHandler;
 use Webware\UserManager\Admin\RequestHandler\UpdateUserHandler;
