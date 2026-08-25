@@ -18,13 +18,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Webware\MessageBus\Command\NamedCommandTrait;
 use Webware\UserManager\Command\ToggleUserActiveCommand;
 
 #[CoversClass(ToggleUserActiveCommand::class)]
 #[CoversMethod(ToggleUserActiveCommand::class, '__construct')]
-#[CoversClass(NamedCommandTrait::class)]
-#[CoversMethod(NamedCommandTrait::class, 'getName')]
 final class ToggleUserActiveCommandTest extends TestCase
 {
     #[Test]
