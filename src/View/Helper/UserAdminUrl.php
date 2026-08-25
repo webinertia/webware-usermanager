@@ -17,6 +17,9 @@ final readonly class UserAdminUrl implements StatefulHelperInterface
         private string $routeNamePrefix,
     ) {}
 
+    #[Override]
+    public function resetState(): void {}
+
     public function __invoke(
         string $routeName,
         array $routeParams = [],
@@ -31,10 +34,7 @@ final readonly class UserAdminUrl implements StatefulHelperInterface
             $routeParams,
             $queryParams,
             $fragmentIdentifier,
-            $options
+            $options,
         );
     }
-
-    #[Override]
-    public function resetState(): void {}
 }

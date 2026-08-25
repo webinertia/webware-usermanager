@@ -9,6 +9,9 @@ use Webware\Core\Configuration as Config;
 use Webware\Core\Exception;
 use Webware\UserManager\UserInterface;
 
+use function get_debug_type;
+use function is_array;
+
 final readonly class Configuration extends Config
 {
     public const string CONFIG_KEY = UserInterface::class;

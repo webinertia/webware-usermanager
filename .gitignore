@@ -1,0 +1,9 @@
+/.phpunit.cache
+/.phpunit.result.cache
+/clover.xml
+/coverage/
+/vendor/
+/.vscode/
+
+/.specify/
+/specs/

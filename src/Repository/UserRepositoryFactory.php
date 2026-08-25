@@ -15,10 +15,10 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use PhpDb\Adapter\AdapterInterface;
+use PhpDb\ResultSet\RowPrototypeInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\UserManager\Container\Configuration;
-use Webware\ResultSet\WithRowDataPrototypeInterface;
 
 final class UserRepositoryFactory
 {
@@ -33,9 +33,9 @@ final class UserRepositoryFactory
     {
         $config = Configuration::getCredentialConfig($container, self::class);
         return new UserRepository(
-            adapter: $container->get(AdapterInterface::class),
-            dispatcher: $container->get(EventDispatcherInterface::class),
-            userPrototype: $container->get(WithRowDataPrototypeInterface::class),
+            adapter         : $container->get(AdapterInterface::class),
+            dispatcher      : $container->get(EventDispatcherInterface::class),
+            userPrototype   : $container->get(RowPrototypeInterface::class),
             credentialColumn: $config['username'],
         );
     }

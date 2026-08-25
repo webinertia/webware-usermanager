@@ -14,21 +14,22 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Repository;
 
-use Axleus\Log\Event\LogEvent;
-use Axleus\Log\LogChannel;
 use Closure;
 use DateTimeImmutable;
 use Monolog\Level;
 use PhpDb\Adapter\AdapterInterface;
 use PhpDb\Exception\ExceptionInterface;
-use PhpDb\ResultSet\ResultSetInterface;
+use PhpDb\ResultSet\RowPrototypeInterface;
+use PhpDb\ResultSet\RowPrototypeResultSet;
+use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use PhpDb\TableGateway\TableGateway;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Webware\CommandBus\CommandInterface;
-use Webware\ResultSet\WithRowDataPrototypeInterface;
-use Webware\ResultSet\WithRowDataResultSet;
+use SensitiveParameter;
+use Webware\Log\Event\LogEvent;
+use Webware\Log\LogChannel;
+use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\UserInterface;
@@ -42,19 +43,22 @@ final class UserRepository implements UserRepositoryInterface
     public function __construct(
         private readonly AdapterInterface $adapter,
         private readonly EventDispatcherInterface $dispatcher,
-        private readonly WithRowDataPrototypeInterface $userPrototype,
+        private readonly RowPrototypeInterface $userPrototype,
         private readonly string $credentialColumn,
     ) {
         $this->gateway = new TableGateway(
-            table: Schema::User->table(),
-            adapter: $this->adapter,
-            resultSetPrototype: new WithRowDataResultSet($this->userPrototype),
+            table             : Schema::User->table(),
+            adapter           : $this->adapter,
+            resultSetPrototype: new RowPrototypeResultSet($this->userPrototype),
         );
     }
 
     #[\Override]
-    public function authenticate(string $credential, ?string $password = null): AuthenticationResult
-    {
+    public function authenticate(
+        string $credential,
+        #[SensitiveParameter]
+        ?string $password = null,
+    ): AuthenticationResult {
         $user = $this->findByConfiguredCredential($this->credentialColumn, $credential);
 
         if ($user === null) {
@@ -109,7 +113,7 @@ final class UserRepository implements UserRepositoryInterface
         ?string $orderBy = null,
         ?int $limit = null,
         ?int $offset = null,
-    ): (ResultSetInterface&WithRowDataResultSet)|null {
+    ): ?RowPrototypeResultSetInterface {
         $sql    = $this->gateway->getSql();
         $select = $sql->select();
         if (null !== $selectColumns) {
@@ -159,7 +163,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     #[\Override]
-    public function findByVerificationToken(string $token): ?UserInterface
+    public function findByVerificationToken(#[SensitiveParameter] string $token): ?UserInterface
     {
         $sql    = $this->gateway->getSql();
         $select = $sql->select()->where(['user.verificationToken' => $token])->limit(1);
@@ -214,7 +218,7 @@ final class UserRepository implements UserRepositoryInterface
         return $this->gateway->selectWith($select)->current();
     }
 
-    private function getRowPrototype(): WithRowDataPrototypeInterface
+    private function getRowPrototype(): RowPrototypeInterface
     {
         return $this->gateway->getResultSetPrototype()->getRowPrototype();
     }

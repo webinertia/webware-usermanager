@@ -25,7 +25,7 @@ final class UserListHandlerFactory
     {
         return new UserListHandler(
             template: $container->get(TemplateRendererInterface::class),
-            users: $container->get(UserRepositoryInterface::class),
+            users   : $container->get(UserRepositoryInterface::class),
         );
     }
 }

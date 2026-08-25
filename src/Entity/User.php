@@ -19,9 +19,10 @@ use DateTimeZone;
 use InvalidArgumentException;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
+use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
-use Webware\CommandBus\Command\NamedCommandInterface;
-use Webware\CommandBus\Command\NamedCommandTrait;
+use Webware\MessageBus\Command\NamedCommandInterface;
+use Webware\MessageBus\Command\NamedCommandTrait;
 use Webware\UserManager\UserInterface;
 
 use function array_merge;
@@ -32,6 +33,7 @@ use function json_decode;
 use function json_validate;
 use function password_get_info;
 use function password_hash;
+use function strtolower;
 
 use const PASSWORD_DEFAULT;
 
@@ -84,10 +86,7 @@ class User implements UserInterface, NamedCommandInterface
             get => $this->createdAt ?? new DateTimeImmutable();
             set(DateTimeImmutable|array|string|null $value) {
                 if (is_array($value) && isset($value['date'])) {
-                    $this->createdAt = new DateTimeImmutable(
-                        $value['date'],
-                        new DateTimeZone($value['timezone']),
-                    );
+                    $this->createdAt = new DateTimeImmutable($value['date'], new DateTimeZone($value['timezone']));
                 } elseif (is_string($value)) {
                     $this->createdAt = new DateTimeImmutable($value);
                 } else {
@@ -192,6 +191,13 @@ class User implements UserInterface, NamedCommandInterface
         return $this->roleId;
     }
 
+    /** @param array<string, mixed> $data */
+    #[Override]
+    public function populate(array $data): UserInterface&RowPrototypeInterface
+    {
+        return new static(...$data);
+    }
+
     public function toArray(): array
     {
         return (array) $this;
@@ -200,102 +206,102 @@ class User implements UserInterface, NamedCommandInterface
     public function withActive(bool $active): static
     {
         return new static(
-            id: $this->id,
-            roleId: $this->roleId,
-            firstName: $this->firstName,
-            lastName: $this->lastName,
-            email: $this->email,
-            passwordHash: $this->passwordHash,
-            active: $active,
-            createdAt: $this->createdAt,
+            id               : $this->id,
+            roleId           : $this->roleId,
+            firstName        : $this->firstName,
+            lastName         : $this->lastName,
+            email            : $this->email,
+            passwordHash     : $this->passwordHash,
+            active           : $active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: $this->details,
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : $this->details,
         );
     }
 
     public function withDetail(string $name, mixed $value): static
     {
         return new static(
-            id: $this->id,
-            roleId: $this->roleId,
-            firstName: $this->firstName,
-            lastName: $this->lastName,
-            email: $this->email,
-            passwordHash: $this->passwordHash,
-            active: $this->active,
-            createdAt: $this->createdAt,
+            id               : $this->id,
+            roleId           : $this->roleId,
+            firstName        : $this->firstName,
+            lastName         : $this->lastName,
+            email            : $this->email,
+            passwordHash     : $this->passwordHash,
+            active           : $this->active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: array_merge($this->details, [$name => $value]),
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : array_merge($this->details, [$name => $value]),
         );
     }
 
     public function withEmail(string $email): static
     {
         return new static(
-            id: $this->id,
-            roleId: $this->roleId,
-            firstName: $this->firstName,
-            lastName: $this->lastName,
-            email: $email,
-            passwordHash: $this->passwordHash,
-            active: $this->active,
-            createdAt: $this->createdAt,
+            id               : $this->id,
+            roleId           : $this->roleId,
+            firstName        : $this->firstName,
+            lastName         : $this->lastName,
+            email            : $email,
+            passwordHash     : $this->passwordHash,
+            active           : $this->active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: $this->details,
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : $this->details,
         );
     }
 
     public function withFirstName(string $firstName): static
     {
         return new static(
-            id: $this->id,
-            roleId: $this->roleId,
-            firstName: $firstName,
-            lastName: $this->lastName,
-            email: $this->email,
-            passwordHash: $this->passwordHash,
-            active: $this->active,
-            createdAt: $this->createdAt,
+            id               : $this->id,
+            roleId           : $this->roleId,
+            firstName        : $firstName,
+            lastName         : $this->lastName,
+            email            : $this->email,
+            passwordHash     : $this->passwordHash,
+            active           : $this->active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: $this->details,
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : $this->details,
         );
     }
 
     public function withId(int|string|null $id): static
     {
         return new static(
-            id: $id,
-            roleId: $this->roleId,
-            firstName: $this->firstName,
-            lastName: $this->lastName,
-            email: $this->email,
-            passwordHash: $this->passwordHash,
-            active: $this->active,
-            createdAt: $this->createdAt,
+            id               : $id,
+            roleId           : $this->roleId,
+            firstName        : $this->firstName,
+            lastName         : $this->lastName,
+            email            : $this->email,
+            passwordHash     : $this->passwordHash,
+            active           : $this->active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: $this->details,
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : $this->details,
         );
     }
 
     public function withLastName(string $lastName): static
     {
         return new static(
-            id: $this->id,
-            roleId: $this->roleId,
-            firstName: $this->firstName,
-            lastName: $lastName,
-            email: $this->email,
-            passwordHash: $this->passwordHash,
-            active: $this->active,
-            createdAt: $this->createdAt,
+            id               : $this->id,
+            roleId           : $this->roleId,
+            firstName        : $this->firstName,
+            lastName         : $lastName,
+            email            : $this->email,
+            passwordHash     : $this->passwordHash,
+            active           : $this->active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: $this->details,
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : $this->details,
         );
     }
 
@@ -306,17 +312,17 @@ class User implements UserInterface, NamedCommandInterface
         }
 
         return new static(
-            id: $this->id,
-            roleId: $this->roleId,
-            firstName: $this->firstName,
-            lastName: $this->lastName,
-            email: $this->email,
-            passwordHash: $passwordHash,
-            active: $this->active,
-            createdAt: $this->createdAt,
+            id               : $this->id,
+            roleId           : $this->roleId,
+            firstName        : $this->firstName,
+            lastName         : $this->lastName,
+            email            : $this->email,
+            passwordHash     : $passwordHash,
+            active           : $this->active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: $this->details,
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : $this->details,
         );
     }
 
@@ -328,23 +334,24 @@ class User implements UserInterface, NamedCommandInterface
         }
 
         return new static(
-            id: $this->id,
-            roleId: array_merge($this->roleId, array_values($roleId)),
-            firstName: $this->firstName,
-            lastName: $this->lastName,
-            email: $this->email,
-            passwordHash: $this->passwordHash,
-            active: $this->active,
-            createdAt: $this->createdAt,
+            id               : $this->id,
+            roleId           : array_merge($this->roleId, array_values($roleId)),
+            firstName        : $this->firstName,
+            lastName         : $this->lastName,
+            email            : $this->email,
+            passwordHash     : $this->passwordHash,
+            active           : $this->active,
+            createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
-            tokenCreatedAt: $this->tokenCreatedAt,
-            details: $this->details,
+            tokenCreatedAt   : $this->tokenCreatedAt,
+            details          : $this->details,
         );
     }
 
-    public function withRowData(array $withRowData): static
+    /** @param array<string, mixed> $withRowData */
+    public function withRowData(array $withRowData): UserInterface&RowPrototypeInterface
     {
-        return new static(...$withRowData);
+        return $this->populate(data: $withRowData);
     }
 
     public function __invoke(): UserInterface

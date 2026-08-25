@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Webware\UserManager;
 
-use DatetimeImmutable;
 use Laminas\Permissions\Acl\ProprietaryInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
-use Webware\ResultSet\WithRowDataPrototypeInterface;
+use PhpDb\ResultSet\RowPrototypeInterface;
 
-interface UserInterface extends RoleInterface, ResourceInterface, ProprietaryInterface, WithRowDataPrototypeInterface
+interface UserInterface extends RoleInterface, ResourceInterface, ProprietaryInterface, RowPrototypeInterface
 {
     final public const string GUEST_ROLE = 'Guest';
     public const string DATETIME_FORMAT = 'Y-m-d H:i:s';

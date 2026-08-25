@@ -25,7 +25,7 @@ final class UpdateUserModalHandlerFactory
     {
         return new UpdateUserModalHandler(
             template: $container->get(TemplateRendererInterface::class),
-            users: $container->get(UserRepositoryInterface::class),
+            users   : $container->get(UserRepositoryInterface::class),
         );
     }
 }

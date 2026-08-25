@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Listener\Container;
 
-use Axleus\Mailer\MailerInterface;
 use Laminas\View\HelperPluginManager;
 use Psr\Container\ContainerInterface;
+use Webware\Mailer\MailerInterface;
 use Webware\UserManager\Listener\SendVerificationEmailListener;
 use Webware\UserManager\View\Helper\UserUrl;
 
@@ -33,12 +33,12 @@ final class SendVerificationEmailListenerFactory
         $helperManager = $container->get(HelperPluginManager::class);
 
         return new SendVerificationEmailListener(
-            mailer: $container->get(MailerInterface::class),
-            fromEmail: (string) ($userConf['from_email'] ?? 'noreply@farmers-ims.local'),
-            fromName: (string) ($userConf['from_name'] ?? 'Farmers IMS'),
-            baseUrl: (string) ($userConf['base_url'] ?? 'http://localhost:8080'),
+            mailer             : $container->get(MailerInterface::class),
+            fromEmail          : (string) ($userConf['from_email'] ?? 'noreply@farmers-ims.local'),
+            fromName           : (string) ($userConf['from_name'] ?? 'Farmers IMS'),
+            baseUrl            : (string) ($userConf['base_url'] ?? 'http://localhost:8080'),
             verificationSubject: (string) ($mailerConf['verification_email_subject'] ?? 'Verify your account'),
-            userUrl: $helperManager->get(UserUrl::class),
+            userUrl            : $helperManager->get(UserUrl::class),
         );
     }
 }

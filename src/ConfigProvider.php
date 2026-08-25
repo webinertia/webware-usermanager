@@ -15,11 +15,12 @@ declare(strict_types=1);
 namespace Webware\UserManager;
 
 use Laminas\InputFilter\InputFilterFactory;
+use PhpDb\ResultSet\RowPrototypeInterface;
 use Webware\Acl\AclInterface;
 use Webware\Admin\Container\Configuration as AdminConfiguration;
 use Webware\Admin\Event\RegisterWidgetEvent;
-use Webware\CommandBus\CommandBusInterface;
-use Webware\ResultSet\WithRowDataPrototypeInterface;
+use Webware\MessageBus\ConfigProvider as BusProvider;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Repository\UserRepositoryInterface;
@@ -27,6 +28,8 @@ use Webware\UserManager\View\Helper\UserAdminUrl;
 use Webware\UserManager\View\Helper\UserAdminUrlFactory;
 use Webware\UserManager\View\Helper\UserUrl;
 use Webware\UserManager\View\Helper\UserUrlFactory;
+
+use function rtrim;
 
 final class ConfigProvider
 {
@@ -154,8 +157,8 @@ final class ConfigProvider
     {
         return [
             'aliases'   => [
-                UserRepositoryInterface::class       => Repository\UserRepository::class,
-                WithRowDataPrototypeInterface::class => Entity\User::class,
+                UserRepositoryInterface::class => Repository\UserRepository::class,
+                RowPrototypeInterface::class   => Entity\User::class,
             ],
             'factories' => [
                 // Registers the user factory under our own interface key.
@@ -246,8 +249,8 @@ final class ConfigProvider
             'templates'                => $this->getTemplates(),
             'view_helpers'             => $this->getViewHelpers(),
             'authentication'           => $this->getAuthenticationConfig(),
-            CommandBusInterface::class => [
-                'command_map' => $this->getCommandMap(),
+            MessageBusInterface::class => [
+                BusProvider::COMMAND_MAP_KEY => $this->getCommandMap(),
             ],
             'listeners'                => $this->getListeners(),
             UserInterface::class       => $this->getDefaultConfig(),

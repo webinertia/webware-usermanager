@@ -14,9 +14,6 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\RequestHandler;
 
-use Axleus\Message\SystemMessengerInterface;
-use Htmx\Attribute;
-use Htmx\Response\Header;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -24,6 +21,9 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Htmx\Attribute;
+use Webware\Htmx\Response\Header;
+use Webware\Message\SystemMessengerInterface;
 use Webware\UserManager\UserInterface;
 
 /**

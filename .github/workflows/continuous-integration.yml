@@ -1,0 +1,49 @@
+name: "Continuous Integration"
+
+# Branch protection blocks direct pushes to release branches, and pull_request
+# already re-triggers on every commit pushed to a PR branch (synchronize), so
+# there's no push:branches trigger here — only PRs (targeting numbered
+# release branches) and pushed version tags.
+on:
+  pull_request:
+    branches:
+      - "[0-9]+.[0-9]+.x"
+  push:
+    branches:
+      - "[0-9]+.[0-9]+.x"
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  qa:
+    uses: webinertia/webware-tools/.github/workflows/continuous-integration.yml@0.1.x
+    # CODECOV_TOKEN (org-wide) and INFECTION_DASHBOARD_API_KEY (per-repo) both
+    # come through here, whichever scope actually defines each one.
+    secrets: inherit
+    with:
+      php-versions: '["8.4", "8.5"]'
+      run-integration: true
+      enable-codecov: true
+      enable-infection: true
+      # Canonical leg for coverage + mutation testing (highest supported PHP).
+      coverage-php-version: "8.5"
+      # Start at webware-log's values and raise as the test suite matures.
+      min-msi: "0"
+      min-covered-msi: "0"
+      # -----------------------------------------------------------------------
+      # Database — tests need a MySQL database (webware-usermanager via
+      # php-db/phpdb-mysql). This mirrors the `mysql` service in compose.yml
+      # and the package's `db-image` spec parameter, so the CI database
+      # matches local dev.
+      #
+      # The reusable workflow starts a container from `db-image` and waits for
+      # `db-health-cmd` to succeed before running tests. `db-env-json` seeds
+      # the database; `test-env-json` overrides phpunit.xml.dist connection
+      # values for CI (the test job runs on the runner VM, so the DB is only
+      # reachable via 127.0.0.1 + the mapped port, not the container name).
+      # -----------------------------------------------------------------------
+      db-image: "mysql:9.7"
+      db-port: "3306"
+      db-env-json: '{"MYSQL_ROOT_HOST":"%","MYSQL_DATABASE":"webware","MYSQL_USER":"webware","MYSQL_PASSWORD":"webware","MYSQL_ALLOW_EMPTY_PASSWORD":"true"}'
+      db-health-cmd: "mysqladmin ping -h127.0.0.1 --silent"
+      test-env-json: '{"TESTS_ADAPTER_MYSQL_HOSTNAME":"127.0.0.1"}'

@@ -24,7 +24,7 @@ final class CreateUserHandlerFactory
     public function __invoke(ContainerInterface $container): CreateUserHandler
     {
         return new CreateUserHandler(
-            users: $container->get(UserRepositoryInterface::class),
+            users          : $container->get(UserRepositoryInterface::class),
             eventDispatcher: $container->get(EventDispatcherInterface::class),
         );
     }

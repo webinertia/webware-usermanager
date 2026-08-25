@@ -14,10 +14,11 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Listener;
 
-use Axleus\Mailer\MailerInterface;
+use Webware\Mailer\MailerInterface;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\View\Helper\UserUrl;
 
+use function htmlspecialchars;
 use function rtrim;
 
 final class SendVerificationEmailListener
@@ -50,22 +51,22 @@ final class SendVerificationEmailListener
             ->isHtml(true)
             ->body(
                 '<p>Hello '
-                . htmlspecialchars($command->firstName, ENT_QUOTES, 'UTF-8')
-                . ',</p>'
-                . '<p>Thank you for registering. Please verify your email address by clicking the link below.</p>'
-                . '<p><a href="'
-                . htmlspecialchars($verificationUrl, ENT_QUOTES, 'UTF-8')
-                . '">Verify my email</a></p>'
-                . '<p>This link expires in 24 hours.</p>',
+                    . htmlspecialchars($command->firstName, ENT_QUOTES, 'UTF-8')
+                    . ',</p>'
+                    . '<p>Thank you for registering. Please verify your email address by clicking the link below.</p>'
+                    . '<p><a href="'
+                    . htmlspecialchars($verificationUrl, ENT_QUOTES, 'UTF-8')
+                    . '">Verify my email</a></p>'
+                    . '<p>This link expires in 24 hours.</p>',
             )
             ->altBody(
                 'Hello '
-                . $command->firstName
-                . ",\n\n"
-                . "Please verify your email address by visiting the following link:\n"
-                . $verificationUrl
-                . "\n\n"
-                . "This link expires in 24 hours.\n",
+                    . $command->firstName
+                    . ",\n\n"
+                    . "Please verify your email address by visiting the following link:\n"
+                    . $verificationUrl
+                    . "\n\n"
+                    . "This link expires in 24 hours.\n",
             );
 
         $this->mailer->send();

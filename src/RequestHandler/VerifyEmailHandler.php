@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\RequestHandler;
 
-use Axleus\Message\SystemMessengerInterface;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -23,6 +22,7 @@ use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Message\SystemMessengerInterface;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
 use function is_string;
@@ -46,7 +46,7 @@ final class VerifyEmailHandler implements RequestHandlerInterface
             return new HtmlResponse(
                 $this->template->render('user::verify-email', [
                     'error' => 'Invalid verification link.',
-                ])
+                ]),
             );
         }
 
@@ -56,19 +56,19 @@ final class VerifyEmailHandler implements RequestHandlerInterface
             return new HtmlResponse(
                 $this->template->render('user::verify-email', [
                     'error' => 'Invalid or already used verification link.',
-                ])
+                ]),
             );
         }
 
         if ($user->tokenCreatedAt !== null) {
-            $age = (new DateTimeImmutable())->getTimestamp() - $user->tokenCreatedAt->getTimestamp();
+            $age = new DateTimeImmutable()->getTimestamp() - $user->tokenCreatedAt->getTimestamp();
 
             if ($age > $this->tokenTtl) {
                 return new HtmlResponse(
                     $this->template->render('user::verify-email', [
                         'error'   => 'Your verification link has expired.',
                         'expired' => true,
-                    ])
+                    ]),
                 );
             }
         }

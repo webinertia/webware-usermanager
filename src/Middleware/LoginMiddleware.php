@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Middleware;
 
-use Axleus\Message\SystemMessengerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Session\RetrieveSession;
@@ -24,6 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Webware\Message\SystemMessengerInterface;
 use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\UserInterface;
@@ -44,7 +44,7 @@ final class LoginMiddleware implements MiddlewareInterface
         }
 
         $params   = $request->getParsedBody();
-        $email    = $params['email']    ?? null;
+        $email    = $params['email'] ?? null;
         $password = $params['password'] ?? null;
 
         if ($email === null || $password === null) {

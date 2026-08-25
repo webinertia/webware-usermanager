@@ -17,7 +17,7 @@ final readonly class UserAdminUrlFactory
         $moduleAdminPrefix = Configuration::getAdminRouteNamePrefix($container, self::class);
 
         return new UserAdminUrl(
-            urlHelper: $container->get(UrlHelper::class),
+            urlHelper      : $container->get(UrlHelper::class),
             routeNamePrefix: $adminBasePrefix . $moduleAdminPrefix,
         );
     }

@@ -15,19 +15,19 @@ declare(strict_types=1);
 namespace Webware\UserManager\CommandHandler;
 
 use DateTimeImmutable;
-use Override;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Ramsey\Uuid\Uuid;
 use Throwable;
-use Webware\CommandBus\Command\CommandResult;
-use Webware\CommandBus\Command\CommandResultInterface;
-use Webware\CommandBus\Command\CommandStatus;
-use Webware\CommandBus\CommandHandlerInterface;
-use Webware\CommandBus\CommandInterface;
+use Webware\MessageBus\Command\CommandInterface;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\Command\CommandResultInterface;
+use Webware\MessageBus\CommandHandlerInterface;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
+use function assert;
 use function json_encode;
 use function password_hash;
 
@@ -38,15 +38,15 @@ final class CreateUserHandler implements CommandHandlerInterface
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
-    #[Override]
     public function handle(CommandInterface $command): CommandResultInterface
     {
         assert($command instanceof CreateUserCommand);
 
         if ($result = $this->users->save($command)) {
             $this->eventDispatcher->dispatch(new SendVerificationEmailEvent($command));
-            return new CommandResult($command, CommandStatus::Success, $result);
+            return new CommandResult($command, MessageStatus::Success, $result);
         }
-        return new CommandResult($command, CommandStatus::Failure, 'Failed to save user.');
+
+        return new CommandResult($command, MessageStatus::Failure, 'Failed to save user.');
     }
 }

@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Container;
 
+use PhpDb\ResultSet\RowPrototypeInterface;
 use Psr\Container\ContainerInterface;
 use Webmozart\Assert\Assert;
-use Webware\ResultSet\WithRowDataPrototypeInterface;
 use Webware\UserManager\UserInterface;
 
 /**
@@ -29,7 +29,7 @@ final class UserFactory
 {
     public function __invoke(ContainerInterface $container): callable
     {
-        $prototype = $container->get(WithRowDataPrototypeInterface::class);
+        $prototype = $container->get(RowPrototypeInterface::class);
         $config    = Configuration::getCredentialConfig($container, self::class);
         return static function (array $withData) use ($prototype, $config): UserInterface {
             Assert::isMap($withData);
