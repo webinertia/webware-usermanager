@@ -23,10 +23,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Webware\Core\UserInterface;
 use Webware\Message\SystemMessengerInterface;
 use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Repository\UserRepositoryInterface;
-use Webware\UserManager\UserInterface;
 
 final class LoginMiddleware implements MiddlewareInterface
 {

@@ -23,9 +23,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
+use Webware\Core\UserInterface;
 use Webware\Mailer\MailerInterface;
 use Webware\UserManager\Repository\UserRepositoryInterface;
-use Webware\UserManager\UserInterface;
 use Webware\UserManager\View\Helper\UserUrl;
 
 use function htmlspecialchars;

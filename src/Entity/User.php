@@ -21,9 +21,9 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
-use Webware\UserManager\UserInterface;
 
 use function array_merge;
 use function array_values;

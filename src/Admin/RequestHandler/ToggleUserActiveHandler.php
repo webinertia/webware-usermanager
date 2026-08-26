@@ -19,9 +19,9 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageStatus;
-use Webware\UserManager\UserInterface;
 
 final class ToggleUserActiveHandler implements RequestHandlerInterface
 {

@@ -15,10 +15,10 @@ declare(strict_types=1);
 namespace Webware\UserManager\Middleware\Container;
 
 use Psr\Container\ContainerInterface;
+use Webware\Core\UserInterface;
 use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Middleware\IdentityMiddleware;
 use Webware\UserManager\Repository\UserRepositoryInterface;
-use Webware\UserManager\UserInterface;
 
 final readonly class IdentityMiddlewareFactory
 {

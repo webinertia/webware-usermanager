@@ -16,9 +16,10 @@ namespace Webware\UserManager;
 
 use Laminas\InputFilter\InputFilterFactory;
 use PhpDb\ResultSet\RowPrototypeInterface;
-use Webware\Acl\AclInterface;
 use Webware\Admin\Container\Configuration as AdminConfiguration;
 use Webware\Admin\Event\RegisterWidgetEvent;
+use Webware\Core\AclInterface;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\ConfigProvider as BusProvider;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;

@@ -27,12 +27,12 @@ use PhpDb\Sql\Predicate\PredicateInterface;
 use PhpDb\TableGateway\TableGateway;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SensitiveParameter;
+use Webware\Core\UserInterface;
 use Webware\Log\Event\LogEvent;
 use Webware\Log\LogChannel;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
-use Webware\UserManager\UserInterface;
 
 use function password_verify;
 

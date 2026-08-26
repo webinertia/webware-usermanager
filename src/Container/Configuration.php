@@ -7,7 +7,7 @@ namespace Webware\UserManager\Container;
 use Psr\Container\ContainerInterface;
 use Webware\Core\Configuration as Config;
 use Webware\Core\Exception;
-use Webware\UserManager\UserInterface;
+use Webware\Core\UserInterface;
 
 use function get_debug_type;
 use function is_array;

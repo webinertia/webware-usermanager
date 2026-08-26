@@ -20,8 +20,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Core\UserInterface;
 use Webware\UserManager\Repository\UserRepositoryInterface;
-use Webware\UserManager\UserInterface;
 
 use function is_array;
 

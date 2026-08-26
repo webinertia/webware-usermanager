@@ -40,7 +40,6 @@
         "ramsey/uuid": "^4.7",
         "webmozart/assert": "^2.4.1",
         "webware/message-bus": "^2.0.0-beta.1",
-        "webware/webware-acl": "0.1.x-dev",
         "webware/webware-admin": "0.1.x-dev",
         "webware/webware-core": "0.1.x-dev",
         "webware/webware-event": "^0.1",
@@ -71,10 +70,6 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/webinertia/webware-acl"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/webinertia/webware-admin"
         },
         {
@@ -84,10 +79,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/webinertia/webware-htmx"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/webinertia/webware-resultset"
         }
     ],
     "minimum-stability": "dev",

@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Auth;
 
+use Webware\Core\UserInterface;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\UserInterface;
 
 final readonly class AuthenticationResult
 {

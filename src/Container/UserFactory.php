@@ -17,7 +17,7 @@ namespace Webware\UserManager\Container;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use Psr\Container\ContainerInterface;
 use Webmozart\Assert\Assert;
-use Webware\UserManager\UserInterface;
+use Webware\Core\UserInterface;
 
 /**
  * DI factory for the UserInterface::class callable service.

@@ -21,10 +21,10 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Core\UserInterface;
 use Webware\Htmx\Attribute;
 use Webware\Htmx\Response\Header;
 use Webware\Message\SystemMessengerInterface;
-use Webware\UserManager\UserInterface;
 
 /**
  * Renders the login page.
