@@ -17,10 +17,10 @@ namespace Webware\UserManager\Middleware\Container;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\InputFilter\UserDataFilter;
 use Webware\UserManager\Middleware\RegistrationMiddleware;
-use Webware\UserManager\UserInterface;
 
 final class RegistrationMiddlewareFactory
 {

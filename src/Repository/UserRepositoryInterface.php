@@ -19,8 +19,8 @@ use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use SensitiveParameter;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\CommandInterface;
-use Webware\UserManager\UserInterface;
 
 interface UserRepositoryInterface
 {

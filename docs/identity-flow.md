@@ -102,7 +102,7 @@ subsequent calls by `IdentityMiddleware` always hit the `User` branch.
 
 ## Session Key and Data Shape
 
-Key: `Webware\UserManager\UserInterface::class`
+Key: `Webware\Core\UserInterface::class`
 
 ```php
 [

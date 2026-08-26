@@ -231,7 +231,7 @@ count = 1
 [[issues]]
 file = "src/CommandHandler/ToggleUserActiveHandler.php"
 code = "non-existent-property"
-message = 'Property `$active` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
@@ -723,7 +723,7 @@ count = 1
 [[issues]]
 file = "src/Middleware/Container/IdentityMiddlewareFactory.php"
 code = "less-specific-nested-argument-type"
-message = 'Argument type mismatch for argument #2 of `Webware\UserManager\Middleware\IdentityMiddleware::__construct`: expected `(callable(array<array-key, mixed>): Webware\UserManager\UserInterface)`, but provided type `Webware\UserManager\UserInterface` is less specific.'
+message = 'Argument type mismatch for argument #2 of `Webware\UserManager\Middleware\IdentityMiddleware::__construct`: expected `(callable(array<array-key, mixed>): Webware\Core\UserInterface)`, but provided type `Webware\Core\UserInterface` is less specific.'
 count = 1
 
 [[issues]]
@@ -1041,7 +1041,7 @@ count = 2
 [[issues]]
 file = "src/Repository/UserRepository.php"
 code = "less-specific-argument"
-message = 'Argument type mismatch for argument #2 of `Webware\UserManager\Auth\AuthenticationResult::__construct`: expected `(Webware\UserManager\UserInterface&Webware\UserManager\Entity\User)|null`, but provided type `Webware\UserManager\UserInterface` is less specific.'
+message = 'Argument type mismatch for argument #2 of `Webware\UserManager\Auth\AuthenticationResult::__construct`: expected `(Webware\Core\UserInterface&Webware\UserManager\Entity\User)|null`, but provided type `Webware\Core\UserInterface` is less specific.'
 count = 1
 
 [[issues]]
@@ -1143,13 +1143,13 @@ count = 1
 [[issues]]
 file = "src/Repository/UserRepository.php"
 code = "non-existent-property"
-message = 'Property `$active` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
 code = "non-existent-property"
-message = 'Property `$firstName` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$firstName` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
@@ -1161,13 +1161,13 @@ count = 1
 [[issues]]
 file = "src/Repository/UserRepository.php"
 code = "non-existent-property"
-message = 'Property `$lastName` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$lastName` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
 code = "non-existent-property"
-message = 'Property `$passwordHash` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$passwordHash` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
@@ -1503,19 +1503,19 @@ count = 1
 [[issues]]
 file = "src/RequestHandler/ResendVerificationHandler.php"
 code = "non-existent-property"
-message = 'Property `$active` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
 file = "src/RequestHandler/ResendVerificationHandler.php"
 code = "non-existent-property"
-message = 'Property `$firstName` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$firstName` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
 file = "src/RequestHandler/ResendVerificationHandler.php"
 code = "non-existent-property"
-message = 'Property `$lastName` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$lastName` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
@@ -1587,7 +1587,7 @@ count = 1
 [[issues]]
 file = "src/RequestHandler/VerifyEmailHandler.php"
 code = "non-existent-property"
-message = 'Property `$tokenCreatedAt` does not exist on interface `Webware\UserManager\UserInterface`.'
+message = 'Property `$tokenCreatedAt` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
@@ -1624,12 +1624,6 @@ count = 1
 file = "src/RouteProvider.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Mezzio\Router\Exception\DuplicateRouteException` in `Webware\UserManager\RouteProvider::registerRoutes`.'
-count = 1
-
-[[issues]]
-file = "src/UserInterface.php"
-code = "missing-api-or-internal"
-message = 'Interface `Webware\UserManager\UserInterface` is missing an `@api` or `@internal` annotation.'
 count = 1
 
 [[issues]]

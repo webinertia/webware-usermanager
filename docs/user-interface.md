@@ -1,12 +1,12 @@
 # UserInterface Contract
 
-`Webware\UserManager\UserInterface` is the **canonical user identity type** for
+`Webware\Core\UserInterface` is the **canonical user identity type** for
 the webware package ecosystem. It extends `Mezzio\Authentication\UserInterface`
 with the three Laminas ACL interfaces required for ownership-based access
 control:
 
 ```php
-namespace Webware\UserManager;
+namespace Webware\Core;
 
 use Laminas\Permissions\Acl\ProprietaryInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
@@ -31,7 +31,7 @@ interface UserInterface extends
 `getRoles()`, `getDetail()`). It carries no information that Laminas ACL can
 use for role-based or ownership-based checks.
 
-`Webware\UserManager\UserInterface` adds:
+`Webware\Core\UserInterface` adds:
 
 | Interface | Provided by | Required for |
 |---|---|---|
@@ -63,19 +63,19 @@ yields a concrete class that also satisfies the richer contract:
 // config/autoload/dependencies.global.php  (host application)
 
 use Mezzio\Authentication\UserInterface as MezzioUserInterface;
-use Webware\UserManager\UserInterface as UserManagerUserInterface;
+use Webware\Core\UserInterface as CoreUserInterface;
 
 return [
     'dependencies' => [
         'aliases' => [
             // Anything resolving Mezzio's UserInterface gets our richer
             // implementation, which satisfies all ACL interfaces.
-            MezzioUserInterface::class => UserManagerUserInterface::class,
+            MezzioUserInterface::class => CoreUserInterface::class,
         ],
         'factories' => [
             // The concrete factory that creates User instances must be
             // registered under our interface key.
-            UserManagerUserInterface::class => \Webware\UserManager\Container\UserFactory::class,
+            CoreUserInterface::class => \Webware\UserManager\Container\UserFactory::class,
         ],
     ],
 ];
@@ -93,7 +93,7 @@ return [
 
 Any class used as the concrete implementation must:
 
-1. Implement `Webware\UserManager\UserInterface` (satisfies all four interfaces above).
+1. Implement `Webware\Core\UserInterface` (satisfies all four interfaces above).
 2. `getRoleId(): string` — return the user's primary role string (e.g. `'member'`).
 3. `getResourceId(): string` — return a stable identifier for ACL resource
    checks against the user's own profile (typically `'user'`).
@@ -108,11 +108,11 @@ Any class used as the concrete implementation must:
 ## Checklist
 
 ```
-□ Concrete User class implements Webware\UserManager\UserInterface
+□ Concrete User class implements Webware\Core\UserInterface
 □ GuestUser::isGuest() returns true
 □ User::isGuest() returns false
-□ MezzioUserInterface::class aliased to UserManagerUserInterface::class in host-app DI
-□ UserManagerUserInterface::class bound to the concrete factory in host-app DI
+□ MezzioUserInterface::class aliased to CoreUserInterface::class in host-app DI
+□ CoreUserInterface::class bound to the concrete factory in host-app DI
 □ getOwnerId() returns the user's PK (not store_id — that comes via getDetail('store_id'))
 □ getDetail('store_id') returns an int for StoreOwnedResourceAssertion
 ```

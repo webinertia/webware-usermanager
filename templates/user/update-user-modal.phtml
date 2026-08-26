@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Edit-user modal fragment.
  *
  * Rendered by EditUserModalHandler and swapped into #sharedModalDialog.
  *
- * @var \Webware\UserManager\UserInterface $user
+ * @var \Webware\Core\UserInterface $user
  */
 $patchUrl = $this->escapeHtmlAttr($this->userAdminUrl('update', ['id' => $user->id]));
 ?>
@@ -82,7 +83,9 @@ $patchUrl = $this->escapeHtmlAttr($this->userAdminUrl('update', ['id' => $user->
         </div>
         <div class="mb-0">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="edit_active" name="active" <?= $user->active ? 'checked' : '' ?>>
+                <input class="form-check-input" type="checkbox" id="edit_active" name="active" <?= $user->active
+                    ? 'checked'
+                    : '' ?>>
                 <label class="form-check-label small fw-semibold" for="edit_active">Active account</label>
             </div>
             <div class="form-text">Inactive users cannot sign in.</div>

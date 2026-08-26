@@ -18,9 +18,9 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use SensitiveParameter;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
-use Webware\UserManager\UserInterface;
 
 use function is_array;
 use function is_string;
