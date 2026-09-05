@@ -26,7 +26,7 @@ final class ProcessUpdateUserMiddlewareFactory
     {
         $manager = $container->get(InputFilterPluginManager::class);
         return new ProcessUpdateUserMiddleware(
-            commandBus: $container->get(MessageBusInterface::class),
+            messageBus: $container->get(MessageBusInterface::class),
             filter    : $manager->get(UserDataFilter::class),
         );
     }

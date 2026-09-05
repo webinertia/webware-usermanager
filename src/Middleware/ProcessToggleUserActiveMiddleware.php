@@ -32,14 +32,14 @@ final readonly class ProcessToggleUserActiveMiddleware implements MiddlewareInte
     use HttpMethodProcessorTrait;
 
     public function __construct(
-        private MessageBusInterface $commandBus,
+        private MessageBusInterface $messageBus,
     ) {}
 
     public function processPost(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT, ['options' => ['default' => 0]]);
 
-        $result = $this->commandBus->handle(new ToggleUserActiveCommand($id));
+        $result = $this->messageBus->handle(new ToggleUserActiveCommand($id));
 
         return $handler->handle($request->withAttribute(CommandResult::class, $result));
     }
