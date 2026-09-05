@@ -41,7 +41,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
     const array DEFAULT_ROLE    = ['Member'];
 
     public function __construct(
-        private readonly MessageBusInterface $commandBus,
+        private readonly MessageBusInterface $messageBus,
         private readonly TemplateRendererInterface $template,
         private readonly UserDataFilter $filter,
     ) {}
@@ -71,7 +71,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
         $values = $this->filter->getValues();
         unset($values['confirmPasswordHash']);
 
-        $result = $this->commandBus->handle(
+        $result = $this->messageBus->handle(
             new CreateUserCommand(...$values),
         );
 

@@ -35,7 +35,7 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
     use ValidationGroupTrait;
 
     public function __construct(
-        private MessageBusInterface $commandBus,
+        private MessageBusInterface $messageBus,
         private UserDataFilter $filter,
     ) {}
 
@@ -56,7 +56,7 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
         }
         $command = new UpdateUserCommand(...$this->filter->getValues());
 
-        $result = $this->commandBus->handle($command);
+        $result = $this->messageBus->handle($command);
 
         if ($result->getStatus() === MessageStatus::Success) {
             $messenger?->success('User updated.', hops: 0, now: true);

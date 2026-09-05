@@ -22,6 +22,6 @@ final class ProcessToggleUserActiveMiddlewareFactory
 {
     public function __invoke(ContainerInterface $container): ProcessToggleUserActiveMiddleware
     {
-        return new ProcessToggleUserActiveMiddleware(commandBus: $container->get(MessageBusInterface::class));
+        return new ProcessToggleUserActiveMiddleware(messageBus: $container->get(MessageBusInterface::class));
     }
 }
