@@ -1,9 +1,24 @@
 # UserInterface Contract
 
-`Webware\Core\UserInterface` is the **canonical user identity type** for
-the webware package ecosystem. It extends `Mezzio\Authentication\UserInterface`
-with the three Laminas ACL interfaces required for ownership-based access
-control:
+`Webware\Core\UserInterface` is the **canonical user identity type** for the
+webware package ecosystem. It lives in
+[`webware/webware-core`](https://github.com/webinertia/webware-core) — the
+shared contracts package — alongside `Webware\Core\AclInterface`.
+
+> **Why these contracts live in `webware-core`**  
+> `UserInterface` (originally `Webware\UserManager\UserInterface`) and
+> `AclInterface` (originally `Webware\Acl\AclInterface`) were first built inside
+> the inventory-management-system application, then split out into their own
+> vendor packages. `webware-usermanager` produces the user and `webware-acl`
+> consumes it for role and ownership checks, so keeping the contract in either
+> package created a circular dependency between two tightly intertwined
+> components. Moving both contracts to `webware-core` — which sits below both
+> packages in the dependency graph — gives every package a single home for the
+> shared types without usermanager and acl depending on each other.
+
+It extends the three Laminas ACL interfaces required for role-based and
+ownership-based access control, plus `PhpDb\ResultSet\RowPrototypeInterface`
+for row hydration:
 
 ```php
 namespace Webware\Core;
@@ -11,15 +26,34 @@ namespace Webware\Core;
 use Laminas\Permissions\Acl\ProprietaryInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
-use Mezzio\Authentication\UserInterface as MezzioUserInterface;
+use PhpDb\ResultSet\RowPrototypeInterface;
 
+/**
+ * @api
+ */
 interface UserInterface extends
-    MezzioUserInterface,
     RoleInterface,
     ResourceInterface,
-    ProprietaryInterface
+    ProprietaryInterface,
+    RowPrototypeInterface
 {
-    public function isGuest(): bool;
+    final public const string GUEST_ROLE = 'Guest';
+    public const string DATETIME_FORMAT = 'Y-m-d H:i:s';
+
+    public int|string|null $id { get; }
+
+    public function getDetail(string $name, mixed $default = null): mixed;
+
+    /** @return array<string, mixed>|null */
+    public function getDetails(): ?array;
+
+    public function getIdentity(): ?string;
+
+    /** @return RoleInterface[]|string[]|null */
+    public function getRoles(): ?array;
+
+    /** @return static */
+    public function withId(int|string|null $id): static;
 }
 ```
 
@@ -28,64 +62,75 @@ interface UserInterface extends
 ## Why this interface exists
 
 `Mezzio\Authentication\UserInterface` only covers identity (`getIdentity()`,
-`getRoles()`, `getDetail()`). It carries no information that Laminas ACL can
-use for role-based or ownership-based checks.
-
-`Webware\Core\UserInterface` adds:
+`getRoles()`, `getDetail()`), and its return types (`string`, `iterable`) are
+tighter than this ecosystem needs (`?string`, `?array`, `mixed`). Rather than
+extend it, `Webware\Core\UserInterface` **mirrors** the Mezzio identity
+accessors (`getIdentity()`, `getRoles()`, `getDetail()`, `getDetails()`) so it
+drops into Mezzio authentication code naturally, while also carrying what
+Laminas ACL needs:
 
 | Interface | Provided by | Required for |
 |---|---|---|
 | `RoleInterface` | `laminas/laminas-permissions-acl` | `$acl->isAllowed($user, ...)` |
 | `ResourceInterface` | `laminas/laminas-permissions-acl` | User-profile ownership assertion |
 | `ProprietaryInterface` | `laminas/laminas-permissions-acl` | `getOwnerId()` — used by `OwnershipAssertion` |
+| `RowPrototypeInterface` | `php-db/phpdb` | Row hydration (`populate()` / `toArray()`) |
 
-`isGuest()` is an additional method not derived from any parent interface. It
-allows any consumer to distinguish a guest (anonymous) user from an
-authenticated user without inspecting role strings or checking `null`.
+`GUEST_ROLE` (`'Guest'`) is the canonical role id for anonymous users. There
+is no dedicated `isGuest()` method — consumers compare the user's `getRoleId()`
+against `UserInterface::GUEST_ROLE`.
 
-Every concrete `User` entity produced by the authentication layer **must**
-implement this interface so that ACL checks and ownership assertions work
-without additional type casting.
+Every concrete user entity produced by the authentication layer **must**
+implement this interface so that ACL checks, ownership assertions, and row
+hydration work without additional type casting.
 
 ---
 
-## Required host-application DI alias
+## The ACL contract sits beside it
 
-`webware-acl` resolves `Mezzio\Authentication\UserInterface::class` from the
-container — that is the interface the Mezzio authentication session adapter
-uses to restore the user between requests.
-
-The host application **must** alias Mezzio's interface to this one in its
-container configuration so that every resolution of the Mezzio interface
-yields a concrete class that also satisfies the richer contract:
+`Webware\Core\AclInterface` moved to `webware-core` at the same time, for the
+same reason. It extends `Laminas\Permissions\Acl\AclInterface` and adds the
+ecosystem-specific surface:
 
 ```php
-// config/autoload/dependencies.global.php  (host application)
+namespace Webware\Core;
 
-use Mezzio\Authentication\UserInterface as MezzioUserInterface;
-use Webware\Core\UserInterface as CoreUserInterface;
+use Laminas\Permissions\Acl\AclInterface as LaminasAclInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
-return [
-    'dependencies' => [
-        'aliases' => [
-            // Anything resolving Mezzio's UserInterface gets our richer
-            // implementation, which satisfies all ACL interfaces.
-            MezzioUserInterface::class => CoreUserInterface::class,
-        ],
-        'factories' => [
-            // The concrete factory that creates User instances must be
-            // registered under our interface key.
-            CoreUserInterface::class => \Webware\UserManager\Container\UserFactory::class,
-        ],
-    ],
-];
+/**
+ * @api
+ */
+interface AclInterface extends LaminasAclInterface
+{
+    final public const string DEVELOPER_ROLE_ID = 'Developer';
+
+    public function getResourceParentId(string $resourceId): ?string;
+
+    /** @return array<string, string[]> */
+    public function getRoles(): array;
+
+    public function isAllowedRoute(
+        ?UserInterface $user,
+        ResourceInterface $resource,
+    ): bool;
+}
 ```
 
-> **Why in the host app, not in a package?**  
-> `webware-acl` must not depend on `webware-usermanager` (circular) and
-> `webware-usermanager` must not own the DI key for `Mezzio\Authentication\UserInterface`
-> (it does not own the Mezzio authentication package). The alias is a host-app
-> wiring concern — it is the only place where all three packages are in scope.
+`isAllowedRoute()` is fail-closed and takes the `UserInterface` aggregate
+object directly (not decomposed role strings), so assertions such as
+`OwnershipAssertion` receive a role that satisfies `ProprietaryInterface`.
+
+---
+
+## Relationship to Mezzio's `UserInterface`
+
+`Webware\Core\UserInterface` deliberately **mirrors** — rather than extends —
+`Mezzio\Authentication\UserInterface`. The looser return types mean the two
+interfaces cannot be aliased to a single implementation, and `webware-usermanager`
+owns the identity flow directly (`IdentityMiddleware` reads and writes the
+session under `UserInterface::class`). No host-application DI alias between the
+Mezzio and Webware interfaces is required.
 
 ---
 
@@ -93,26 +138,29 @@ return [
 
 Any class used as the concrete implementation must:
 
-1. Implement `Webware\Core\UserInterface` (satisfies all four interfaces above).
-2. `getRoleId(): string` — return the user's primary role string (e.g. `'member'`).
+1. Implement `Webware\Core\UserInterface` (satisfies all four parent interfaces above).
+2. `getRoleId(): string` — return the user's primary role string (e.g.
+   `'member'`); guests return `UserInterface::GUEST_ROLE`.
 3. `getResourceId(): string` — return a stable identifier for ACL resource
    checks against the user's own profile (typically `'user'`).
-4. `getOwnerId(): int|string` — return the user's primary key so that
-   `OwnershipAssertion` can compare it against a profile resource's owner.
-5. `getDetail(string $name): mixed` — must expose at minimum `store_id` for
-   store-scoped ownership assertions.
-6. `isGuest(): bool` — `GuestUser` returns `true`; `User` returns `false`.
+4. `getOwnerId(): mixed` — return the user's primary key (`int|string|null`) so
+   that `OwnershipAssertion` can compare it against a profile resource's owner.
+5. `getDetail(string $name, mixed $default = null): mixed` — must expose at
+   minimum `store_id` for store-scoped ownership assertions.
+6. `populate(array $data)` / `toArray(): array` — hydrate from, and serialize
+   to, a row array (satisfies `RowPrototypeInterface`).
+7. `withId(int|string|null $id): static` — return a copy with a new identity,
+   used when persisting a user created without an id.
 
 ---
 
 ## Checklist
 
 ```
-□ Concrete User class implements Webware\Core\UserInterface
-□ GuestUser::isGuest() returns true
-□ User::isGuest() returns false
-□ MezzioUserInterface::class aliased to CoreUserInterface::class in host-app DI
-□ CoreUserInterface::class bound to the concrete factory in host-app DI
+□ Concrete user class implements Webware\Core\UserInterface
+□ GuestUser::getRoleId() returns UserInterface::GUEST_ROLE
+□ User::getRoleId() returns the user's primary role string
 □ getOwnerId() returns the user's PK (not store_id — that comes via getDetail('store_id'))
-□ getDetail('store_id') returns an int for StoreOwnedResourceAssertion
+□ getDetail('store_id') returns an int for store-scoped ownership assertions
+□ ACL implementations type-hint Webware\Core\AclInterface (not the old per-package interface)
 ```
