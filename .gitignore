@@ -2,8 +2,15 @@
 /.phpunit.result.cache
 /clover.xml
 /coverage/
+/coveralls-upload.json
+/coverage.txt
+/phpbench.json
+/phpunit.xml
+/infection.log
+/summary.log
 /vendor/
-/.vscode/
-
+/.vscode
+/mago-results.txt
 /.specify/
 /specs/
+*:Zone.Identifier
