@@ -127,7 +127,7 @@ Browser:
 
 ```
 ProcessUserMiddleware returns valid:
-  → $this->commandBus->handle(new SaveUserCommand(...))
+  → $this->messageBus->handle(new SaveUserCommand(...))
   → $messenger->success(...)                  ← toast queued
   → attaches CommandResult::class to $request
   → $handler->handle($request)
@@ -135,7 +135,7 @@ ProcessUserMiddleware returns valid:
 UserListHandler:
   → fetches all users
   → renders user::list-users (full list page)
-  → detects CommandResult::Success
+  → detects MessageStatus::Success
   → adds header: HX-Trigger: {"closeModal": null}
   → returns HtmlResponse
 
@@ -152,7 +152,7 @@ Browser:
 |---|---|
 | Form always targets `main`, not `#sharedModalDialog` | The response is the full list page; the modal is closed or left open by trigger |
 | Modal is never swapped by the PATCH response | It lives in the layout outside `<main>` |
-| `closeModal` trigger only fires on `CommandResult::Success` | On failure the modal stays open so the user can fix and retry |
+| `closeModal` trigger only fires on `MessageStatus::Success` | On failure the modal stays open so the user can fix and retry |
 | `BodyParamsMiddleware` is only on the PATCH route, not the GET modal route | Modal GET routes use `DisableBodyMiddleware` instead |
 | Toast uses `$messenger->success(...)` / `$messenger->warning(...)` in middleware | Never in the handler — handlers only render |
 | Shared modal shell is Bootstrap 5 `.modal.fade` | Use `getOrCreateInstance` to show, `data-bs-dismiss="modal"` for Cancel |
@@ -365,7 +365,7 @@ it by FQCN.
 **Implements:** `MiddlewareInterface`  
 **Uses:** `HttpMethodProcessorTrait`
 
-**Dependencies:** `CommandBusInterface`
+**Dependencies:** `MessageBusInterface`
 
 **`processPatch()`:**
 
@@ -378,8 +378,8 @@ it by FQCN.
 6. If invalid → messenger warning → pass to handler (re-renders list)
 7. If valid → `$filteredData = $filter->getValues()`
 8. Build `SaveUserCommand` from filtered data (password/storeId are dummies for update path)
-9. Dispatch via `$this->commandBus->handle($command)`
-10. Set messenger success or warning based on `CommandStatus`
+9. Dispatch via `$this->messageBus->handle($command)`
+10. Set messenger success or warning based on `MessageStatus`
 11. Attach `CommandResult::class` as request attribute → pass to handler
 
 **`processPost()`:** Falls through to handler (no admin create POST processing in this plan).
@@ -388,7 +388,7 @@ it by FQCN.
 
 **File:** `src/webware-usermanager/src/Admin/Middleware/Container/ProcessUserMiddlewareFactory.php`
 
-Resolves `CommandBusInterface` from container.
+Resolves `MessageBusInterface` from container.
 
 ---
 
@@ -420,7 +420,7 @@ Resolves `TemplateRendererInterface`, `UserRepositoryInterface` from container.
 
 After rendering the list template, check for `CommandResult::class` request attribute:
 
-- If `CommandResult` is present and `CommandStatus::Success`:
+- If `CommandResult` is present and `MessageStatus::Success`:
   add response header `HX-Trigger: {"closeModal": null}`
 
 Pattern reference: `RoleListHandler` in `src/webware-acl/src/Admin/RequestHandler/RoleListHandler.php`.
