@@ -120,7 +120,12 @@ Update DI keys in `ConfigProvider`, `RouteProvider`, factories, and test imports
 
 ## Cross-cutting
 
-- Bump `webware/webware-message` `^1.0.0-beta.1` → `^1.0.0-beta.2`.
+- **Repository Schema + TableGateway IoC** (in progress) — adopt `Webware\Core\SchemaFactory`
+  for `Repository\Schema` (drop the `table()` method) and move `TableGateway` construction
+  out of the repository constructor into the factory (mirror webware-acl's
+  `RoleRepositoryFactory` / `RuleRepositoryFactory`). Consumers: `UserRepository`,
+  `UserRepositoryFactory`.
+- Bump `webware/webware-message` → `^1.0.0-beta.2` (done via `composer update`).
 - Add direct `php-db/phpdb: ^0.6.x-dev` (RowPrototype contract).
 - InputFilter `validate()` migration (core `SystemMessageTrait` already updated).
 - Centralized SystemMessage notification alignment (acl issue #22 pattern).
