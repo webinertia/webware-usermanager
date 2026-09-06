@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Webware\Core\Http\Middleware\HttpMethodProcessorTrait;
+use Webware\Message\Exception\InvalidHopsValueException;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
@@ -29,6 +30,9 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
         private UserDataFilter $filter,
     ) {}
 
+    /**
+     * @throws InvalidHopsValueException
+     */
     public function processPatch(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var SystemMessengerInterface|null $messenger */
