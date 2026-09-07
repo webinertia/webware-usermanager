@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use Closure;
+use PhpDb\ResultSet\ResultSetInterface;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
@@ -41,7 +42,7 @@ interface UserRepositoryInterface
         ?string $orderBy = null,
         ?int $limit = null,
         ?int $offset = null,
-    ): ?RowPrototypeResultSetInterface;
+    ): ResultSetInterface&RowPrototypeResultSetInterface;
 
     /**
      * Find a user by their email address, or null if not found.

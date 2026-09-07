@@ -36,7 +36,6 @@ final class IdentityMiddleware implements MiddlewareInterface
     public function __construct(
         private UserRepositoryInterface $repository,
         callable $userFactory,
-        private array $config,
     ) {
         $this->userFactory = $userFactory;
     }

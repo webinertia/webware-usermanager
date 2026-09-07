@@ -185,7 +185,8 @@ final class ConfigProvider
     {
         return [
             'factories' => [
-                InputFilter\UserDataFilter::class => InputFilterFactory::class,
+                InputFilter\UpdateUserDataFilter::class   => InputFilterFactory::class,
+                InputFilter\RegistrationDataFilter::class => InputFilterFactory::class,
             ],
         ];
     }

@@ -169,12 +169,6 @@ message = "String concatenation can be replaced with interpolation."
 count = 1
 
 [[issues]]
-file = "src/Container/UserFactory.php"
-code = "no-unused-closure-capture"
-message = "Closure capture `$config` is unused."
-count = 1
-
-[[issues]]
 file = "src/Entity/User.php"
 code = "cyclomatic-complexity"
 message = "Class has high complexity."

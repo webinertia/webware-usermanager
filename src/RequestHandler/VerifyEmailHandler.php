@@ -12,6 +12,7 @@ use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Message\Exception\InvalidHopsValueException;
 use Webware\Message\SystemMessengerInterface;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -26,6 +27,9 @@ final class VerifyEmailHandler implements RequestHandlerInterface
         private readonly string $loginUrl,
     ) {}
 
+    /**
+     * @throws InvalidHopsValueException
+     */
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

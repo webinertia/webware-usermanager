@@ -7,14 +7,14 @@ namespace Webware\UserManager\Repository;
 use Closure;
 use DateTimeImmutable;
 use Monolog\Level;
-use PhpDb\Adapter\AdapterInterface;
 use PhpDb\Exception\ExceptionInterface;
+use PhpDb\ResultSet\ResultSetInterface;
 use PhpDb\ResultSet\RowPrototypeInterface;
-use PhpDb\ResultSet\RowPrototypeResultSet;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use PhpDb\TableGateway\TableGateway;
+use Psl\Type;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
@@ -28,20 +28,11 @@ use function password_verify;
 
 final class UserRepository implements UserRepositoryInterface
 {
-    private readonly TableGateway $gateway;
-
     public function __construct(
-        private readonly AdapterInterface $adapter,
+        private readonly TableGateway $gateway,
         private readonly EventDispatcherInterface $dispatcher,
-        private readonly RowPrototypeInterface $userPrototype,
         private readonly string $credentialColumn,
-    ) {
-        $this->gateway = new TableGateway(
-            table             : Schema::User->table(),
-            adapter           : $this->adapter,
-            resultSetPrototype: new RowPrototypeResultSet($this->userPrototype),
-        );
-    }
+    ) {}
 
     #[\Override]
     public function authenticate(
@@ -103,7 +94,7 @@ final class UserRepository implements UserRepositoryInterface
         ?string $orderBy = null,
         ?int $limit = null,
         ?int $offset = null,
-    ): ?RowPrototypeResultSetInterface {
+    ): ResultSetInterface&RowPrototypeResultSetInterface {
         $sql    = $this->gateway->getSql();
         $select = $sql->select();
         if (null !== $selectColumns) {
@@ -131,7 +122,12 @@ final class UserRepository implements UserRepositoryInterface
         if (null !== $offset) {
             $select->offset($offset);
         }
-        return $this->gateway->selectWith($select);
+
+        $resultSet = $this->gateway->selectWith($select);
+
+        Type\instance_of(RowPrototypeResultSetInterface::class)->assert($resultSet);
+
+        return $resultSet;
     }
 
     #[\Override]
@@ -210,6 +206,8 @@ final class UserRepository implements UserRepositoryInterface
 
     private function getRowPrototype(): RowPrototypeInterface
     {
-        return $this->gateway->getResultSetPrototype()->getRowPrototype();
+        /** @var ResultSetInterface&RowPrototypeResultSetInterface $resultSet */
+        $resultSet = $this->gateway->getResultSetPrototype();
+        return $resultSet->getRowPrototype();
     }
 }

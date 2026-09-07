@@ -6,15 +6,22 @@ namespace Webware\UserManager\InputFilter;
 
 use Laminas\Filter;
 use Laminas\InputFilter;
+use Laminas\InputFilter\Exception\ExceptionInterface;
 use Laminas\Validator;
+use Override;
 use Webware\Core\InputFilter\SystemMessageTrait;
 
-use function is_string;
-
-class UserDataFilter extends InputFilter\InputFilter
+/**
+ * @extends InputFilter\InputFilter<array{id: int, firstName: string, lastName: string, email: string, roleId: array<string>, active: bool}>
+ */
+final class UpdateUserDataFilter extends InputFilter\InputFilter
 {
     use SystemMessageTrait;
 
+    /**
+     * @throws ExceptionInterface
+     */
+    #[Override]
     public function init(): void
     {
         $this->add([
@@ -54,51 +61,10 @@ class UserDataFilter extends InputFilter\InputFilter
         ]);
 
         $this->add([
-            'name'     => 'passwordHash',
-            'required' => true,
-        ]);
-
-        $this->add([
-            'name'       => 'confirmPasswordHash',
-            'required'   => true,
-            'validators' => [
-                [
-                    'name'    => Validator\Identical::class,
-                    'options' => [
-                        'token'    => 'passwordHash',
-                        'messages' => [
-                            Validator\Identical::NOT_SAME      => 'Passwords do not match.',
-                            Validator\Identical::MISSING_TOKEN => 'Please enter your password.',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-
-        $this->add([
-            'name'        => 'verificationToken',
-            'allow_empty' => true,
-            'validators'  => [
-                ['name' => Validator\Uuid::class],
-            ],
-        ]);
-
-        $this->add([
             'name'     => 'roleId',
             'required' => true,
             'filters'  => [
                 ['name' => Filter\StringTrim::class],
-                // [
-                //     'name'    => Filter\Callback::class,
-                //     'options' => [
-                //         'callback' => static function ($value) {
-                //             if (is_string($value)) {
-                //                 return [$value];
-                //             }
-                //             return $value;
-                //         },
-                //     ],
-                // ],
             ],
         ]);
 
