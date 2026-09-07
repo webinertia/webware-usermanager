@@ -367,12 +367,6 @@ message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInter
 count = 1
 
 [[issues]]
-file = "src/Container/UserFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Webmozart\Assert\InvalidArgumentException` in `{closure:src/Container/UserFactory.php:34:16}`.'
-count = 1
-
-[[issues]]
 file = "src/Entity/User.php"
 code = "class-must-be-final"
 message = 'Class `Webware\UserManager\Entity\User` should be declared `final`.'
@@ -997,18 +991,6 @@ message = 'Potentially unhandled exception `Laminas\InputFilter\Exception\Invali
 count = 1
 
 [[issues]]
-file = "src/Repository/Schema.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Repository\Schema::table`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/Schema.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\Schema::table`.'
-count = 1
-
-[[issues]]
 file = "src/Repository/UserRepository.php"
 code = "imprecise-type"
 message = "Type `array` in parameter `$joins` is imprecise, equivalent to `array<array-key, mixed>`."
@@ -1244,38 +1226,14 @@ count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\TableGateway\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::__construct`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
 code = "unused-method"
 message = "Method `getRowPrototype()` is never used."
 count = 1
 
 [[issues]]
 file = "src/Repository/UserRepositoryFactory.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #4 of `Webware\UserManager\Repository\UserRepository::__construct`: expected `string`, but found `mixed`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryFactory.php"
 code = "possibly-undefined-string-array-index"
 message = "Possibly undefined array key `string('username')` accessed on `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Repository\UserRepositoryFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Repository\UserRepositoryFactory::__invoke`.'
 count = 1
 
 [[issues]]

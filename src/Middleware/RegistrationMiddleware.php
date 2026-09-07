@@ -57,7 +57,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
 
         if (! $this->filter->isValid()) {
             return new HtmlResponse(
-                $this->template->render('user::registration', ['errors' => $this->filter->getMessages()]),
+                $this->template->render('user::registration', ['errors' => $this->filter->getMessages()->toArray()]),
                 422,
             );
         }

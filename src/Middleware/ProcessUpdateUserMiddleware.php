@@ -45,7 +45,7 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
         $this->filter->setValidationGroup(self::UPDATE_VALIDATION_GROUP);
         $this->filter->setData($data);
         if (! $this->filter->isValid()) {
-            $messenger?->warning($this->filter->getSystemMessage());
+            $messenger?->warning($this->filter->getSystemMessage($this->filter->getMessages()));
             return $handler->handle($request);
         }
         $command = new UpdateUserCommand(...$this->filter->getValues());
