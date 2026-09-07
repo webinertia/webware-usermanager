@@ -19,12 +19,12 @@ final class RegisterWidgetListener
 
     public function __invoke(RegisterWidgetEvent $event): void
     {
-        /** @var User[] $allUsers */
-        $allUsers      = $this->users->findAll() ?? [];
+        $allUsers      = $this->users->findAll();
         $totalUsers    = count($allUsers);
         $activeUsers   = 0;
         $inactiveUsers = 0;
 
+        /** @var User $user */
         foreach ($allUsers as $user) {
             if ($user->active) {
                 $activeUsers++;
