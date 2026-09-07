@@ -6,6 +6,7 @@ baseline = "lint-baseline.toml"
 
 [analyzer]
 baseline = "analysis-baseline.toml"
+unchecked-exceptions = ['Psl\Type\Exception\ExceptionInterface']
 
 [source]
 paths = ["src", "test"]

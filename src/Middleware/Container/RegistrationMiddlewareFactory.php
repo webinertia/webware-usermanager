@@ -9,7 +9,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
-use Webware\UserManager\InputFilter\UserDataFilter;
+use Webware\UserManager\InputFilter\RegistrationDataFilter;
 use Webware\UserManager\Middleware\RegistrationMiddleware;
 
 final class RegistrationMiddlewareFactory
@@ -19,7 +19,7 @@ final class RegistrationMiddlewareFactory
         return new RegistrationMiddleware(
             $container->get(MessageBusInterface::class),
             $container->get(TemplateRendererInterface::class),
-            $container->get(InputFilterPluginManager::class)->get(UserDataFilter::class),
+            $container->get(InputFilterPluginManager::class)->get(RegistrationDataFilter::class),
         );
     }
 }

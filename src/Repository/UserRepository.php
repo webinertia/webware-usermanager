@@ -92,7 +92,7 @@ final class UserRepository implements UserRepositoryInterface
         ?string $orderBy = null,
         ?int $limit = null,
         ?int $offset = null,
-    ): ?RowPrototypeResultSetInterface {
+    ): RowPrototypeResultSetInterface {
         $sql    = $this->gateway->getSql();
         $select = $sql->select();
         if (null !== $selectColumns) {
