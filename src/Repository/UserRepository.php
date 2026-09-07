@@ -7,10 +7,8 @@ namespace Webware\UserManager\Repository;
 use Closure;
 use DateTimeImmutable;
 use Monolog\Level;
-use PhpDb\Adapter\AdapterInterface;
 use PhpDb\Exception\ExceptionInterface;
 use PhpDb\ResultSet\RowPrototypeInterface;
-use PhpDb\ResultSet\RowPrototypeResultSet;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
@@ -28,20 +26,11 @@ use function password_verify;
 
 final class UserRepository implements UserRepositoryInterface
 {
-    private readonly TableGateway $gateway;
-
     public function __construct(
-        private readonly AdapterInterface $adapter,
+        private readonly TableGateway $gateway,
         private readonly EventDispatcherInterface $dispatcher,
-        private readonly RowPrototypeInterface $userPrototype,
         private readonly string $credentialColumn,
-    ) {
-        $this->gateway = new TableGateway(
-            table             : Schema::User->table(),
-            adapter           : $this->adapter,
-            resultSetPrototype: new RowPrototypeResultSet($this->userPrototype),
-        );
-    }
+    ) {}
 
     #[\Override]
     public function authenticate(
@@ -103,7 +92,7 @@ final class UserRepository implements UserRepositoryInterface
         ?string $orderBy = null,
         ?int $limit = null,
         ?int $offset = null,
-    ): ?RowPrototypeResultSetInterface {
+    ): RowPrototypeResultSetInterface {
         $sql    = $this->gateway->getSql();
         $select = $sql->select();
         if (null !== $selectColumns) {

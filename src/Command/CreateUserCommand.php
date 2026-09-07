@@ -24,7 +24,7 @@ class CreateUserCommand implements NamedCommandInterface
 {
     use NamedCommandTrait;
 
-    /** @param string[] $roleId */
+    /** @param array|string $roleId */
     public function __construct(
         public private(set) string $firstName {
             get => $this->firstName;
@@ -59,7 +59,11 @@ class CreateUserCommand implements NamedCommandInterface
             get => $this->roleId;
             set(array|string $value) {
                 if (is_array($value)) {
-                    $this->roleId = json_encode($value);
+                    $encoded = json_encode($value);
+                    if (false === $encoded) {
+                        throw new InvalidArgumentException('roleId could not be encoded to JSON.');
+                    }
+                    $this->roleId = $encoded;
                 } elseif (is_string($value) && json_validate($value)) {
                     $this->roleId = $value;
                 } else {

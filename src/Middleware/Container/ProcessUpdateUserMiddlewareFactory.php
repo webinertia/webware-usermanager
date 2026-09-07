@@ -7,7 +7,7 @@ namespace Webware\UserManager\Middleware\Container;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Psr\Container\ContainerInterface;
 use Webware\MessageBus\MessageBusInterface;
-use Webware\UserManager\InputFilter\UserDataFilter;
+use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 use Webware\UserManager\Middleware\ProcessUpdateUserMiddleware;
 
 final class ProcessUpdateUserMiddlewareFactory
@@ -17,7 +17,7 @@ final class ProcessUpdateUserMiddlewareFactory
         $manager = $container->get(InputFilterPluginManager::class);
         return new ProcessUpdateUserMiddleware(
             messageBus: $container->get(MessageBusInterface::class),
-            filter    : $manager->get(UserDataFilter::class),
+            filter    : $manager->get(UpdateUserDataFilter::class),
         );
     }
 }
