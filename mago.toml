@@ -90,6 +90,21 @@ allow-from = [
     "WebwareTest\\UserManager\\**",
 ]
 
+# Repository\** — the persistence boundary is usable only from query/command
+# handlers, the root ConfigProvider wiring, itself, and tests. Admin\Dashboard
+# is deliberately absent (it moved to the MessageBus in Phase 3).
+[[guard.perimeter.restrictions]]
+dependency = "Webware\\UserManager\\Repository\\**"
+allow-from = [
+    "Webware\\*",
+    "Webware\\UserManager\\Repository\\**",
+    "Webware\\UserManager\\QueryHandler\\**",
+    "Webware\\UserManager\\CommandHandler\\**",
+    "Webware\\UserManager\\Console\\**",
+    "WebwareTest\\UserManager\\**",
+    "WebwareTestIntegration\\UserManager\\**",
+]
+
 [source]
 paths = ["src", "test"]
 includes = ["vendor"]
