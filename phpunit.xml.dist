@@ -22,4 +22,15 @@
             <directory suffix=".php">src</directory>
         </include>
     </source>
+    <extensions>
+        <bootstrap class="WebwareTestIntegration\UserManager\Extension\ListenerExtension"/>
+    </extensions>
+    <php>
+        <env name="TESTS_ADAPTER_MYSQL" value="true"/>
+        <env name="TESTS_ADAPTER_MYSQL_HOSTNAME" value="mysql"/>
+        <env name="TESTS_ADAPTER_MYSQL_PORT" value="3306"/>
+        <env name="TESTS_ADAPTER_MYSQL_DATABASE" value="webware"/>
+        <env name="TESTS_ADAPTER_MYSQL_USERNAME" value="webware"/>
+        <env name="TESTS_ADAPTER_MYSQL_PASSWORD" value="webware"/>
+    </php>
 </phpunit>

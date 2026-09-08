@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WebwareTestIntegration\UserManager\CommandHandler;
+namespace WebwareTest\UserManager\CommandHandler;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
@@ -27,6 +27,24 @@ final class CreateUserHandlerTest extends TestCase
 {
     /** @var EventDispatcherInterface&MockObject */
     private EventDispatcherInterface&MockObject $dispatcher;
+
+    #[Test]
+    public function failedSaveReturnsFailureWithoutDispatching(): void
+    {
+        $command = $this->createCommand();
+
+        $users = $this->createStub(UserRepositoryInterface::class);
+        $users->method('save')->willReturn(0);
+
+        $this->dispatcher->expects($this->never())->method('dispatch');
+
+        $handler = new CreateUserHandler($users, $this->dispatcher);
+
+        $result = $handler->handle($command);
+
+        static::assertSame(MessageStatus::Failure, $result->getStatus());
+        static::assertSame('Failed to save user.', $result->getResult());
+    }
 
     #[Test]
     public function successfulSaveDispatchesVerificationEmailEvent(): void
