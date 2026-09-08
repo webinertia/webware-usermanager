@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\RequestHandler;
 
-use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Template\TemplateRendererInterface;
@@ -12,70 +11,29 @@ use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Webware\Message\Exception\InvalidHopsValueException;
-use Webware\Message\SystemMessengerInterface;
-use Webware\UserManager\Repository\UserRepositoryInterface;
 
-use function is_string;
-
+/**
+ * Render-only handler for the email verification flow. All token resolution
+ * and activation happens in ProcessVerifyEmailMiddleware.
+ */
 final class VerifyEmailHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $template,
-        private readonly UserRepositoryInterface $users,
-        private readonly int $tokenTtl,
         private readonly string $loginUrl,
     ) {}
 
-    /**
-     * @throws InvalidHopsValueException
-     */
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $tokenAttr = $request->getAttribute('token');
-        $token     = is_string($tokenAttr) ? $tokenAttr : '';
+        /** @var array{error?: string, expired?: bool}|null $viewModel */
+        $viewModel = $request->getAttribute(self::class);
 
-        if ($token === '') {
+        if (null !== $viewModel) {
             return new HtmlResponse(
-                $this->template->render('user::verify-email', [
-                    'error' => 'Invalid verification link.',
-                ]),
+                $this->template->render('user::verify-email', $viewModel),
             );
         }
-
-        $user = $this->users->findByVerificationToken($token);
-
-        if ($user === null) {
-            return new HtmlResponse(
-                $this->template->render('user::verify-email', [
-                    'error' => 'Invalid or already used verification link.',
-                ]),
-            );
-        }
-
-        if ($user->tokenCreatedAt !== null) {
-            $age = new DateTimeImmutable()->getTimestamp() - $user->tokenCreatedAt->getTimestamp();
-
-            if ($age > $this->tokenTtl) {
-                return new HtmlResponse(
-                    $this->template->render('user::verify-email', [
-                        'error'   => 'Your verification link has expired.',
-                        'expired' => true,
-                    ]),
-                );
-            }
-        }
-
-        $this->users->update($user->id, [
-            'active'            => 1,
-            'verificationToken' => null,
-            'tokenCreatedAt'    => null,
-        ]);
-
-        /** @var SystemMessengerInterface|null $messenger */
-        $messenger = $request->getAttribute(SystemMessengerInterface::class);
-        $messenger?->success('Email verified! You may now sign in.', hops: 1, now: false);
 
         return new RedirectResponse($this->loginUrl);
     }

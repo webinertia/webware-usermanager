@@ -145,9 +145,11 @@ final class ConfigProvider
     public function getCommandMap(): array
     {
         return [
-            Command\CreateUserCommand::class       => CommandHandler\CreateUserHandler::class,
-            Command\ToggleUserActiveCommand::class => CommandHandler\ToggleUserActiveHandler::class,
-            Command\UpdateUserCommand::class       => CommandHandler\UpdateUserHandler::class,
+            Command\ActivateUserCommand::class                => CommandHandler\ActivateUserHandler::class,
+            Command\CreateUserCommand::class                  => CommandHandler\CreateUserHandler::class,
+            Command\RegenerateVerificationTokenCommand::class => CommandHandler\RegenerateVerificationTokenHandler::class,
+            Command\ToggleUserActiveCommand::class            => CommandHandler\ToggleUserActiveHandler::class,
+            Command\UpdateUserCommand::class                  => CommandHandler\UpdateUserHandler::class,
         ];
     }
 
@@ -181,6 +183,8 @@ final class ConfigProvider
                 CommandHandler\CreateUserHandler::class                        => CommandHandler\Container\CreateUserHandlerFactory::class,
                 CommandHandler\ToggleUserActiveHandler::class                  => CommandHandler\Container\ToggleUserActiveHandlerFactory::class,
                 CommandHandler\UpdateUserHandler::class                        => CommandHandler\Container\UpdateUserHandlerFactory::class,
+                CommandHandler\ActivateUserHandler::class                      => CommandHandler\Container\ActivateUserHandlerFactory::class,
+                CommandHandler\RegenerateVerificationTokenHandler::class       => CommandHandler\Container\RegenerateVerificationTokenHandlerFactory::class,
                 QueryHandler\AuthenticateUserHandler::class                    => QueryHandler\Container\AuthenticateUserHandlerFactory::class,
                 QueryHandler\CheckUserActiveHandler::class                     => QueryHandler\Container\CheckUserActiveHandlerFactory::class,
                 QueryHandler\FetchUserByEmailHandler::class                    => QueryHandler\Container\FetchUserByEmailHandlerFactory::class,
@@ -189,6 +193,8 @@ final class ConfigProvider
                 QueryHandler\FetchUsersHandler::class                          => QueryHandler\Container\FetchUsersHandlerFactory::class,
                 Http\Middleware\IdentityMiddleware::class                      => Http\Middleware\Container\IdentityMiddlewareFactory::class,
                 Http\Middleware\LoginMiddleware::class                         => Http\Middleware\Container\LoginMiddlewareFactory::class,
+                Http\Middleware\ProcessVerifyEmailMiddleware::class            => Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory::class,
+                Http\Middleware\ProcessResendVerificationMiddleware::class     => Http\Middleware\Container\ProcessResendVerificationMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessToggleUserActiveMiddleware::class => Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessUpdateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory::class,
                 Http\Middleware\RegistrationMiddleware::class                  => Http\Middleware\Container\RegistrationMiddlewareFactory::class,

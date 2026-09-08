@@ -15,7 +15,9 @@ use Webware\Core\UserInterface;
 use Webware\MessageBus\ConfigProvider as BusProvider;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
+use Webware\UserManager\Command\ActivateUserCommand;
 use Webware\UserManager\Command\CreateUserCommand;
+use Webware\UserManager\Command\RegenerateVerificationTokenCommand;
 use Webware\UserManager\Command\ToggleUserActiveCommand;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\ConfigProvider;
@@ -137,8 +139,10 @@ final class ConfigProviderTest extends TestCase
     {
         $map = $this->provider->getCommandMap();
 
-        self::assertCount(3, $map);
+        self::assertCount(5, $map);
+        self::assertArrayHasKey(ActivateUserCommand::class, $map);
         self::assertArrayHasKey(CreateUserCommand::class, $map);
+        self::assertArrayHasKey(RegenerateVerificationTokenCommand::class, $map);
         self::assertArrayHasKey(ToggleUserActiveCommand::class, $map);
         self::assertArrayHasKey(UpdateUserCommand::class, $map);
     }

@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Webware\UserManager\Http\RequestHandler\Container\VerifyEmailHandlerFactory;
 use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
-use Webware\UserManager\Repository\UserRepositoryInterface;
 use WebwareTest\UserManager\Support\ViewHelperManagerTrait;
 
 #[CoversClass(VerifyEmailHandlerFactory::class)]
@@ -28,12 +27,10 @@ final class VerifyEmailHandlerFactoryTest extends TestCase
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')
             ->willReturnMap([
-                ['config', ['user' => ['verification_token_ttl' => 3600]]],
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
-                [UserRepositoryInterface::class, $this->createStub(UserRepositoryInterface::class)],
                 [HelperPluginManager::class, $this->userUrlHelperManager()],
             ]);
 
-        self::assertInstanceOf(VerifyEmailHandler::class, (new VerifyEmailHandlerFactory())($container));
+        static::assertInstanceOf(VerifyEmailHandler::class, (new VerifyEmailHandlerFactory())($container));
     }
 }
