@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Webware\UserManager;
 
 use Laminas\InputFilter\InputFilterFactory;
-use PhpDb\ResultSet\RowPrototypeInterface;
 use Webware\Admin\Container\Configuration as AdminConfiguration;
 use Webware\Admin\Event\RegisterWidgetEvent;
+use Webware\Console\ConsoleInterface;
 use Webware\Core\AclInterface;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\ConfigProvider as BusProvider;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
+use Webware\UserManager\Console\Container\InitDbCommandFactory;
+use Webware\UserManager\Console\InitDbCommand;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\View\Helper\UserAdminUrl;
 use Webware\UserManager\View\Helper\UserAdminUrlFactory;
@@ -147,11 +149,10 @@ final class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'aliases'   => [
+            'aliases'    => [
                 UserRepositoryInterface::class => Repository\UserRepository::class,
-                RowPrototypeInterface::class   => Entity\User::class,
             ],
-            'factories' => [
+            'factories'  => [
                 // Registers the user factory under our own interface key.
                 UserInterface::class                                => Container\UserFactory::class,
                 Entity\User::class                                  => Entity\User::class,
@@ -168,6 +169,7 @@ final class ConfigProvider
                 Middleware\ProcessUpdateUserMiddleware::class       => Middleware\Container\ProcessUpdateUserMiddlewareFactory::class,
                 Middleware\RegistrationMiddleware::class            => Middleware\Container\RegistrationMiddlewareFactory::class,
                 Repository\UserRepository::class                    => Repository\UserRepositoryFactory::class,
+                InitDbCommand::class                                => InitDbCommandFactory::class,
                 RouteProvider::class                                => Container\RouteProviderFactory::class,
                 RequestHandler\LoginHandler::class                  => RequestHandler\Container\LoginHandlerFactory::class,
                 RequestHandler\LogoutHandler::class                 => RequestHandler\Container\LogoutHandlerFactory::class,
@@ -177,6 +179,9 @@ final class ConfigProvider
                 RequestHandler\VerifyEmailHandler::class            => RequestHandler\Container\VerifyEmailHandlerFactory::class,
                 Listener\SendVerificationEmailListener::class       => Listener\Container\SendVerificationEmailListenerFactory::class,
                 RegisterWidgetListener::class                       => RegisterWidgetListenerFactory::class,
+            ],
+            'invokables' => [
+                Entity\User::class => Entity\User::class,
             ],
         ];
     }
@@ -247,6 +252,11 @@ final class ConfigProvider
             'listeners'                => $this->getListeners(),
             UserInterface::class       => $this->getDefaultConfig(),
             AclInterface::class        => $this->getAclConfig(),
+            ConsoleInterface::class    => [
+                'commands' => [
+                    'user:init-db' => InitDbCommand::class,
+                ],
+            ],
         ];
     }
 }

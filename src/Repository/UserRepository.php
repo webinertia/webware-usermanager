@@ -9,7 +9,6 @@ use DateTimeImmutable;
 use Monolog\Level;
 use PhpDb\Exception\ExceptionInterface;
 use PhpDb\ResultSet\ResultSetInterface;
-use PhpDb\ResultSet\RowPrototypeInterface;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
@@ -170,7 +169,9 @@ final class UserRepository implements UserRepositoryInterface
         $sql    = $this->gateway->getSql();
         $insert = $sql->insert()->values($data);
 
-        return $this->gateway->insertWith($insert);
+        $this->gateway->insertWith($insert);
+
+        return (int) $this->gateway->getLastInsertValue();
     }
 
     /**
@@ -180,7 +181,9 @@ final class UserRepository implements UserRepositoryInterface
     public function save(CommandInterface $command): int
     {
         if (! isset($command->id)) {
-            return $this->gateway->insert((array) $command);
+            $this->gateway->insert((array) $command);
+
+            return (int) $this->gateway->getLastInsertValue();
         }
         return $this->gateway->update((array) $command, ['id' => $command->id]);
     }
@@ -202,12 +205,5 @@ final class UserRepository implements UserRepositoryInterface
         $select = $sql->select()->where([$column => $credential])->limit(1);
 
         return $this->gateway->selectWith($select)->current();
-    }
-
-    private function getRowPrototype(): RowPrototypeInterface
-    {
-        /** @var ResultSetInterface&RowPrototypeResultSetInterface $resultSet */
-        $resultSet = $this->gateway->getResultSetPrototype();
-        return $resultSet->getRowPrototype();
     }
 }

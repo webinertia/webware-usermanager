@@ -54,6 +54,7 @@
         "phpunit/phpunit": "^13.3",
         "roave/backward-compatibility-check": "^8.21.0",
         "roave/security-advisories": "dev-master",
+        "webware/webware-console": "0.1.x-dev",
         "webware/webware-tools": "^0.1.x-dev"
     },
     "autoload": {
@@ -71,6 +72,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/webinertia/webware-admin"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/webinertia/webware-console"
         },
         {
             "type": "vcs",

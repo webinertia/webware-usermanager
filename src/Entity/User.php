@@ -317,7 +317,7 @@ class User implements UserInterface, NamedCommandInterface
     }
 
     /** @param RoleInterface[]|string[]|string $roleId */
-    public function withRoleId(array $roleId): static
+    public function withRoleId(array|string $roleId): static
     {
         if (is_string($roleId)) {
             $roleId = [$roleId];
@@ -344,8 +344,13 @@ class User implements UserInterface, NamedCommandInterface
         return $this->populate(data: $withRowData);
     }
 
-    public function __invoke(): UserInterface
+    /** @param array<string, mixed>|null $withRowData */
+    public function __invoke(?array $withRowData = null): UserInterface
     {
+        if (null !== $withRowData) {
+            return $this->populate(data: $withRowData);
+        }
+
         return new static();
     }
 }
