@@ -148,11 +148,13 @@ Each with a `CommandHandler` + `Container\*Factory`, wired under `command_map`.
 [[guard.perimeter.restrictions]]
 dependency = "Webware\\UserManager\\Repository\\**"
 allow-from = [
-    "Webware\\*",                                # root ConfigProvider wiring
-    "Webware\\UserManager\\Repository\\**",      # self
-    "Webware\\UserManager\\QueryHandler\\**",    # reads
-    "Webware\\UserManager\\CommandHandler\\**",  # writes
-    "WebwareTest\\UserManager\\**",              # tests
+    "Webware\\*",                                 # root ConfigProvider wiring
+    "Webware\\UserManager\\Repository\\**",       # self
+    "Webware\\UserManager\\QueryHandler\\**",     # reads
+    "Webware\\UserManager\\CommandHandler\\**",   # writes
+    "Webware\\UserManager\\Console\\**",         # InitDbCommand uses Schema (table name)
+    "WebwareTest\\UserManager\\**",               # unit tests
+    "WebwareTestIntegration\\UserManager\\**",    # integration tests
 ]
 ```
 
@@ -185,3 +187,34 @@ Add this only after all consumers are migrated, so `mago guard` stays green.
 - `composer test` — 199 tests (adjusted, same behavior) green.
 - `composer test-integration` — 6 tests green.
 - `composer mutation-test` — maintain 100% covered MSI.
+
+## Infection ignores added in this phase (scoped, reviewable)
+
+Three mutator-level ignores were added to `infection.json5.dist`. All are
+config-fallback values kept as **private** constructor state on the built
+middleware, so they cannot be observed without reflection and therefore cannot
+be killed by behaviour tests. Every other mutant in this phase is killed by
+assertions (exact email body/recipient/subject, `age == ttl` boundary,
+`$updated == 0`, missing-`id` fallback, etc.).
+
+| Mutator | Target (`class::method`) | Ignored site(s) |
+|---|---|---|
+| `Coalesce` | `Webware\UserManager\Http\Middleware\Container\ProcessResendVerificationMiddlewareFactory::__invoke` | `src/Http/Middleware/Container/ProcessResendVerificationMiddlewareFactory.php` lines 28, 31, 37, 38, 39, 41 |
+| `IncrementInteger` | `Webware\UserManager\Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory::__invoke` | `src/Http/Middleware/Container/ProcessVerifyEmailMiddlewareFactory.php` line 23 (`86_400` → `86_401`) |
+| `DecrementInteger` | `Webware\UserManager\Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory::__invoke` | `src/Http/Middleware/Container/ProcessVerifyEmailMiddlewareFactory.php` line 23 (`86_400` → `86_399`) |
+
+Details:
+
+- **`Coalesce` (6 sites)** — the resend-mail defaults: `$config['user'] ?? []`,
+  `$config[MailerInterface::class] ?? []`, and the four mail-config fallbacks
+  (`from_email ?? 'noreply@farmers-ims.local'`, `from_name ?? 'Farmers IMS'`,
+  `base_url ?? 'http://localhost:8080'`,
+  `verification_email_subject ?? 'Verify your account'`). These land in the
+  middleware's private `$mailConfig` and are only visible through reflection.
+- **`IncrementInteger` / `DecrementInteger` (1 site)** — the `86_400` (24-hour)
+  token-TTL default. Mutating it to `86_401`/`86_399` is an unobservable
+  1-second difference in a default.
+
+Pre-existing ignores (not added in this phase) remain for
+`Webware\UserManager\Console\InitDbCommand::collectUser`
+(`TrueValue` line 158, `FalseValue` line 159, `CastString` line 162).
