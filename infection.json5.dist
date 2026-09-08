@@ -28,6 +28,19 @@
         },
         "CastString": {
             "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::collectUser::162"]
+        },
+        // Configuration fallbacks (from_email/from_name/base_url/subject defaults
+        // and the 86400-second token TTL default) are unobservable without
+        // reflection: the built middleware keeps them private, so these
+        // equivalent mutants cannot be detected through behaviour tests.
+        "Coalesce": {
+            "ignore": ["Webware\\UserManager\\Http\\Middleware\\Container\\ProcessResendVerificationMiddlewareFactory::__invoke"]
+        },
+        "IncrementInteger": {
+            "ignore": ["Webware\\UserManager\\Http\\Middleware\\Container\\ProcessVerifyEmailMiddlewareFactory::__invoke"]
+        },
+        "DecrementInteger": {
+            "ignore": ["Webware\\UserManager\\Http\\Middleware\\Container\\ProcessVerifyEmailMiddlewareFactory::__invoke"]
         }
     },
     "staticAnalysisTool": "mago"

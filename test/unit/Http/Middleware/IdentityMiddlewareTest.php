@@ -94,6 +94,43 @@ final class IdentityMiddlewareTest extends TestCase
     }
 
     #[Test]
+    public function fallsBackToZeroIdWhenSessionLacksId(): void
+    {
+        $sessionData = ['email' => 'jane@example.com', 'roleId' => ['Member']];
+
+        $session = $this->createStub(SessionInterface::class);
+        $session->method('get')->willReturn($sessionData);
+
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($this->once())
+            ->method('handle')
+            ->with(static::callback(static fn(CheckUserActive $query): bool => 0 === $query->id))
+            ->willReturn(new QueryResult(new CheckUserActive(id: 0), MessageStatus::Success, true));
+
+        $factory = static fn(array $data): UserInterface => new User(roleId: $data['roleId'] ?? null);
+
+        $capturedRequest = null;
+        $handler         = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(static function (ServerRequestInterface $request) use (
+                &$capturedRequest,
+            ): ResponseInterface {
+                $capturedRequest = $request;
+
+                return new EmptyResponse();
+            });
+
+        $middleware = new IdentityMiddleware($messageBus, $factory);
+        $middleware->process(
+            new ServerRequest()->withAttribute(SessionInterface::class, $session),
+            $handler,
+        );
+
+        static::assertInstanceOf(User::class, $capturedRequest?->getAttribute(UserInterface::class));
+    }
+
+    #[Test]
     public function reconstructsUserFromValidSessionData(): void
     {
         $sessionData = ['id' => 5, 'email' => 'jane@example.com', 'roleId' => ['Member']];

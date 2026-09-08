@@ -131,9 +131,36 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         );
     }
 
+    #[Test]
+    public function treatsAgeEqualToTtlAsNotExpired(): void
+    {
+        $token         = bin2hex(random_bytes(16));
+        $user          = new User(id: 3);
+        $commandResult = new CommandResult(new ActivateUserCommand(id: 3), MessageStatus::Success, 1);
+
+        $bus = $this->createMock(MessageBusInterface::class);
+        $bus->expects($this->exactly(2))
+            ->method('handle')
+            ->willReturnCallback(
+                static fn(MessageInterface $message): ResultInterface => $message
+                    instanceof FetchUserByVerificationToken
+                        ? new QueryResult($message, MessageStatus::Success, $user)
+                        : $commandResult,
+            );
+
+        $request = $this->process(
+            bus     : $bus,
+            tokenTtl: 0,
+            request : new ServerRequest()->withAttribute('token', $token),
+        );
+
+        static::assertSame($commandResult, $request->getAttribute(CommandResult::class));
+    }
+
     private function process(
         MessageBusInterface $bus,
         ServerRequestInterface $request,
+        int $tokenTtl = 3600,
     ): ServerRequestInterface {
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
@@ -149,7 +176,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
 
         new ProcessVerifyEmailMiddleware(
             messageBus: $bus,
-            tokenTtl  : 3600,
+            tokenTtl  : $tokenTtl,
         )->process($request, $handler);
 
         return $capturedRequest;
