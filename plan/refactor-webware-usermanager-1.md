@@ -9,11 +9,12 @@ tags: [refactor, architecture, namespace, message-bus, testing]
 
 # Refactor webware-usermanager — Implementation Plan
 
-## Current status (2026-09-07)
+## Current status (2026-09-08)
 
 - Phase 1 (safety net & coverage) — DONE (PR #17, 100% line / 100% MSI).
 - Phase 2 (Http boundary reorganization) — DONE (PR #18).
-- Phase 3 (MessageBus read/write migration) — PROPOSED; see
+- Phase 3 (MessageBus read/write migration) — DONE (branch
+  `refactor/phase3-bus-migration`); see
   `plan/refactor-webware-usermanager-2-phase3-read-migration.md`.
 - Phase 4 (migrations & CLI) — partial: `InitDbCommand` + `UserSchema` in PR #17;
   `webware/webware-migration` consumption deferred (package unreleased).

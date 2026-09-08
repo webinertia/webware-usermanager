@@ -2,9 +2,9 @@
 goal: Migrate all repository reads and writes behind the MessageBus (Phase 3)
 version: 0.2
 date_created: 2026-09-07
-date_updated: 2026-09-07
+date_updated: 2026-09-08
 owner: Joey Smith
-status: 'Proposed'
+status: 'Completed'
 tags: [refactor, architecture, message-bus, query, command, testing]
 ---
 
@@ -16,7 +16,7 @@ tags: [refactor, architecture, message-bus, query, command, testing]
 |---|---|
 | Phase 1 — Safety net & coverage (100% line / 100% MSI) | ✅ DONE (PR #17) |
 | Phase 2 — Http boundary reorganization | ✅ DONE (PR #18) |
-| **Phase 3 — MessageBus read/write migration (this doc)** | **PROPOSED — not started** |
+| **Phase 3 — MessageBus read/write migration (this doc)** | **✅ DONE (branch `refactor/phase3-bus-migration`)** |
 | Phase 4 — Migrations & CLI | partial (InitDbCommand in PR #17; webware-migration deferred) |
 
 ## Resolved conventions (locked 2026-09-07)
