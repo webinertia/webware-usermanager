@@ -26,17 +26,17 @@ final class ResendVerificationHandler implements RequestHandlerInterface
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var array{error?: string, sent?: bool, redirect?: bool}|null $viewModel */
-        $viewModel = $request->getAttribute(self::class);
+        /** @var array{error?: string, sent?: bool, redirect?: bool}|null $templateParams */
+        $templateParams = $request->getAttribute(self::class);
 
-        if (null === $viewModel) {
+        if (null === $templateParams) {
             return new HtmlResponse($this->template->render('user::resend-verification'));
         }
 
-        if ($viewModel['redirect'] ?? false) {
+        if ($templateParams['redirect'] ?? false) {
             return new RedirectResponse($this->loginUrl);
         }
 
-        return new HtmlResponse($this->template->render('user::resend-verification', $viewModel));
+        return new HtmlResponse($this->template->render('user::resend-verification', $templateParams));
     }
 }

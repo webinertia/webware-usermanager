@@ -26,12 +26,12 @@ final class VerifyEmailHandler implements RequestHandlerInterface
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var array{error?: string, expired?: bool}|null $viewModel */
-        $viewModel = $request->getAttribute(self::class);
+        /** @var array{error?: string, expired?: bool}|null $templateParams */
+        $templateParams = $request->getAttribute(self::class);
 
-        if (null !== $viewModel) {
+        if (null !== $templateParams) {
             return new HtmlResponse(
-                $this->template->render('user::verify-email', $viewModel),
+                $this->template->render('user::verify-email', $templateParams),
             );
         }
 

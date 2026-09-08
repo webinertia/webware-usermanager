@@ -20,7 +20,7 @@ use Webware\UserManager\Http\RequestHandler\ResendVerificationHandler;
 final class ResendVerificationHandlerTest extends TestCase
 {
     #[Test]
-    public function redirectsToLoginWhenRedirectViewModel(): void
+    public function redirectsToLoginWhenRedirectTemplateParams(): void
     {
         $handler = new ResendVerificationHandler(
             template: $this->createStub(TemplateRendererInterface::class),
@@ -39,7 +39,7 @@ final class ResendVerificationHandlerTest extends TestCase
     }
 
     #[Test]
-    public function rendersFormWhenNoViewModel(): void
+    public function rendersFormWhenNoTemplateParams(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
@@ -58,7 +58,7 @@ final class ResendVerificationHandlerTest extends TestCase
     }
 
     #[Test]
-    public function rendersViewModelWhenPresent(): void
+    public function rendersTemplateParamsWhenPresent(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())

@@ -20,7 +20,7 @@ use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
 final class VerifyEmailHandlerTest extends TestCase
 {
     #[Test]
-    public function redirectsToLoginWhenNoViewModel(): void
+    public function redirectsToLoginWhenNoTemplateParams(): void
     {
         $handler = new VerifyEmailHandler(
             template: $this->createStub(TemplateRendererInterface::class),
@@ -34,7 +34,7 @@ final class VerifyEmailHandlerTest extends TestCase
     }
 
     #[Test]
-    public function rendersErrorWhenViewModelProvided(): void
+    public function rendersErrorWhenTemplateParamsProvided(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
