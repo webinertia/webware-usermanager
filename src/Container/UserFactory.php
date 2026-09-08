@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Container;
 
-use PhpDb\ResultSet\RowPrototypeInterface;
 use Psl\Type;
 use Psr\Container\ContainerInterface;
 use Webware\Core\UserInterface;
+use Webware\UserManager\Entity\User;
 
 /**
  * DI factory for the UserInterface::class callable service.
@@ -19,13 +19,13 @@ final class UserFactory
 {
     public function __invoke(ContainerInterface $container): callable
     {
-        $prototype = $container->get(RowPrototypeInterface::class);
+        $prototype = $container->get(User::class);
         return static function (array $withData) use ($prototype): UserInterface {
             Type\non_empty_dict(
                 Type\string(),
                 Type\mixed(),
             )->assert($withData);
-            return new $prototype(...$withData);
+            return $prototype->populate($withData);
         };
     }
 }

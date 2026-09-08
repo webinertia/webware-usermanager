@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use PhpDb\Adapter\AdapterInterface;
-use PhpDb\ResultSet\RowPrototypeInterface;
 use PhpDb\ResultSet\RowPrototypeResultSet;
 use PhpDb\Sql\Exception\ExceptionInterface as SqlException;
 use PhpDb\TableGateway\Exception\ExceptionInterface as TableGatewayException;
@@ -17,6 +16,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\Core\SchemaFactory;
 use Webware\UserManager\Container\Configuration;
+use Webware\UserManager\Entity\User;
 
 final class UserRepositoryFactory
 {
@@ -37,7 +37,7 @@ final class UserRepositoryFactory
                 table             : $container->get(SchemaFactory::class)(Schema::User),
                 adapter           : $container->get(AdapterInterface::class),
                 resultSetPrototype: new RowPrototypeResultSet(
-                    rowPrototype: $container->get(RowPrototypeInterface::class),
+                    rowPrototype: $container->get(User::class),
                 ),
             ),
             dispatcher      : $container->get(EventDispatcherInterface::class),

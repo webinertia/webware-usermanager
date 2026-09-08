@@ -91,12 +91,9 @@ final class RegistrationDataFilter extends InputFilter\InputFilter
         ]);
 
         $this->add([
-            'name'              => 'active',
-            'allow_empty'       => true,
-            'continue_if_empty' => true,
-            'required'          => false,
-            'fallback_value'    => false,
-            'filters'           => [
+            'name'           => 'active',
+            'fallback_value' => false,
+            'filters'        => [
                 ['name' => Filter\Boolean::class],
             ],
         ]);

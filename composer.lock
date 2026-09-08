@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53c7f801fad2c28a8509fe22ffcbd398",
+    "content-hash": "fcf0cf8ac50872ef429cd263c4804851",
     "packages": [
         {
             "name": "brick/math",
@@ -5571,6 +5571,74 @@
             "time": "2026-09-04T12:54:20+00:00"
         },
         {
+            "name": "laminas/laminas-config-aggregator",
+            "version": "1.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-config-aggregator.git",
+                "reference": "75331b17a9ba72c5fa8679988ef08a588ddd86af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-config-aggregator/zipball/75331b17a9ba72c5fa8679988ef08a588ddd86af",
+                "reference": "75331b17a9ba72c5fa8679988ef08a588ddd86af",
+                "shasum": ""
+            },
+            "require": {
+                "brick/varexporter": "^0.5.0 || ^0.4.0 || ^0.6.0 || ^0.7.0",
+                "laminas/laminas-stdlib": "^3.18.0",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "webimpress/safe-writer": "^2.2.0"
+            },
+            "conflict": {
+                "nikic/php-parser": "<4.12",
+                "zendframework/zend-config-aggregator": "*"
+            },
+            "require-dev": {
+                "laminas/laminas-coding-standard": "~3.1.0",
+                "laminas/laminas-config": "^3.10.1",
+                "phpunit/phpunit": "^11.5.42",
+                "psalm/plugin-phpunit": "^0.19.5",
+                "vimeo/psalm": "^6.13.1"
+            },
+            "suggest": {
+                "laminas/laminas-config": "Allows loading configuration from XML, INI, YAML, and JSON files",
+                "laminas/laminas-config-aggregator-modulemanager": "Allows loading configuration from laminas-mvc Module classes",
+                "laminas/laminas-config-aggregator-parameters": "Allows usage of templated parameters within your configuration"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\ConfigAggregator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Lightweight library for collecting and merging configuration from different sources",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "config-aggregator",
+                "laminas"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-config-aggregator/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-config-aggregator/issues",
+                "rss": "https://github.com/laminas/laminas-config-aggregator/releases.atom",
+                "source": "https://github.com/laminas/laminas-config-aggregator"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2026-06-01T15:37:55+00:00"
+        },
+        {
             "name": "marc-mabe/php-enum",
             "version": "v4.7.2",
             "source": {
@@ -6022,6 +6090,71 @@
                 "source": "https://github.com/phar-io/version/tree/3.2.1"
             },
             "time": "2022-02-21T01:04:05+00:00"
+        },
+        {
+            "name": "php-standard-library/ansi",
+            "version": "6.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-standard-library/ansi.git",
+                "reference": "5ff4d43d1fbe5a7072f319d9781dbc0b4a8e27eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-standard-library/ansi/zipball/5ff4d43d1fbe5a7072f319d9781dbc0b4a8e27eb",
+                "reference": "5ff4d43d1fbe5a7072f319d9781dbc0b4a8e27eb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.4.0 || ~8.5.0",
+                "php-standard-library/foundation": "^6.0"
+            },
+            "conflict": {
+                "azjezz/psl": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-next": "6.2.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Psl/bootstrap.php"
+                ],
+                "psr-4": {
+                    "Psl\\Ansi\\": "src/Psl/Ansi/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Seifeddine Gmati",
+                    "email": "azjezz@carthage.software"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/php-standard-library/php-standard-library/graphs/contributors"
+                }
+            ],
+            "description": "Pure functions for constructing ANSI escape sequences - text styling, colors, cursor movement, and screen manipulation",
+            "homepage": "https://php-standard-library.dev",
+            "keywords": [
+                "ansi",
+                "colors",
+                "escape-sequences",
+                "terminal"
+            ],
+            "support": {
+                "source": "https://github.com/php-standard-library/ansi/tree/6.2.1"
+            },
+            "time": "2026-03-28T18:39:47+00:00"
         },
         {
             "name": "php-standard-library/async",
@@ -6772,6 +6905,137 @@
             "time": "2026-03-28T18:39:47+00:00"
         },
         {
+            "name": "php-standard-library/math",
+            "version": "6.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-standard-library/math.git",
+                "reference": "25333da6f2b89bc6bc2927c1a8eb5245f59b80d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-standard-library/math/zipball/25333da6f2b89bc6bc2927c1a8eb5245f59b80d4",
+                "reference": "25333da6f2b89bc6bc2927c1a8eb5245f59b80d4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": "~8.4.0 || ~8.5.0",
+                "php-standard-library/foundation": "^6.0"
+            },
+            "conflict": {
+                "azjezz/psl": "*"
+            },
+            "require-dev": {
+                "php-standard-library/iter": "^6.0",
+                "php-standard-library/str": "^6.0",
+                "php-standard-library/vec": "^6.0",
+                "phpunit/phpunit": "^13.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-next": "6.2.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Psl/bootstrap.php"
+                ],
+                "psr-4": {
+                    "Psl\\Math\\": "src/Psl/Math/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Seifeddine Gmati",
+                    "email": "azjezz@carthage.software"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/php-standard-library/php-standard-library/graphs/contributors"
+                }
+            ],
+            "description": "Mathematical functions with strict typing and predictable error handling",
+            "homepage": "https://php-standard-library.dev",
+            "keywords": [
+                "math",
+                "mathematics"
+            ],
+            "support": {
+                "source": "https://github.com/php-standard-library/math/tree/6.2.1"
+            },
+            "time": "2026-03-31T16:59:27+00:00"
+        },
+        {
+            "name": "php-standard-library/os",
+            "version": "6.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-standard-library/os.git",
+                "reference": "7d9b372b74b97abfc228528d7d1903c947d26f23"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-standard-library/os/zipball/7d9b372b74b97abfc228528d7d1903c947d26f23",
+                "reference": "7d9b372b74b97abfc228528d7d1903c947d26f23",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.4.0 || ~8.5.0",
+                "php-standard-library/default": "^6.0"
+            },
+            "conflict": {
+                "azjezz/psl": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-next": "6.2.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Psl/bootstrap.php"
+                ],
+                "psr-4": {
+                    "Psl\\OS\\": "src/Psl/OS/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Seifeddine Gmati",
+                    "email": "azjezz@carthage.software"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/php-standard-library/php-standard-library/graphs/contributors"
+                }
+            ],
+            "description": "Type-safe operating system detection via OperatingSystemFamily enum",
+            "homepage": "https://php-standard-library.dev",
+            "keywords": [
+                "operating-system",
+                "os",
+                "platform"
+            ],
+            "support": {
+                "source": "https://github.com/php-standard-library/os/tree/6.2.1"
+            },
+            "time": "2026-03-28T18:39:47+00:00"
+        },
+        {
             "name": "php-standard-library/process",
             "version": "6.2.1",
             "source": {
@@ -7233,6 +7497,79 @@
                 "source": "https://github.com/php-standard-library/str/tree/6.2.1"
             },
             "time": "2026-04-29T06:23:35+00:00"
+        },
+        {
+            "name": "php-standard-library/terminal",
+            "version": "6.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-standard-library/terminal.git",
+                "reference": "9d348a50391aea1f2496a3d15aaaef49360efbfa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-standard-library/terminal/zipball/9d348a50391aea1f2496a3d15aaaef49360efbfa",
+                "reference": "9d348a50391aea1f2496a3d15aaaef49360efbfa",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.4.0 || ~8.5.0",
+                "php-standard-library/ansi": "^6.0",
+                "php-standard-library/async": "^6.0",
+                "php-standard-library/date-time": "^6.0",
+                "php-standard-library/foundation": "^6.0",
+                "php-standard-library/io": "^6.0",
+                "php-standard-library/math": "^6.0",
+                "php-standard-library/os": "^6.0",
+                "php-standard-library/process": "^6.0",
+                "php-standard-library/str": "^6.0"
+            },
+            "conflict": {
+                "azjezz/psl": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-next": "6.2.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Psl/bootstrap.php"
+                ],
+                "psr-4": {
+                    "Psl\\Terminal\\": "src/Psl/Terminal/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Seifeddine Gmati",
+                    "email": "azjezz@carthage.software"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/php-standard-library/php-standard-library/graphs/contributors"
+                }
+            ],
+            "description": "Full-featured TUI framework with widgets, events, and diff-based rendering",
+            "homepage": "https://php-standard-library.dev",
+            "keywords": [
+                "console",
+                "terminal",
+                "tui",
+                "widgets"
+            ],
+            "support": {
+                "source": "https://github.com/php-standard-library/terminal/tree/6.2.1"
+            },
+            "time": "2026-05-23T20:26:52+00:00"
         },
         {
             "name": "php-standard-library/vec",
@@ -12629,6 +12966,65 @@
             "time": "2025-12-08T11:19:18+00:00"
         },
         {
+            "name": "webimpress/safe-writer",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webimpress/safe-writer.git",
+                "reference": "9d37cc8bee20f7cb2f58f6e23e05097eab5072e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webimpress/safe-writer/zipball/9d37cc8bee20f7cb2f58f6e23e05097eab5072e6",
+                "reference": "9d37cc8bee20f7cb2f58f6e23e05097eab5072e6",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5.4",
+                "vimeo/psalm": "^4.7",
+                "webimpress/coding-standard": "^1.2.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2.x-dev",
+                    "dev-develop": "2.3.x-dev",
+                    "dev-release-1.0": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webimpress\\SafeWriter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "Tool to write files safely, to avoid race conditions",
+            "keywords": [
+                "concurrent write",
+                "file writer",
+                "race condition",
+                "safe writer",
+                "webimpress"
+            ],
+            "support": {
+                "issues": "https://github.com/webimpress/safe-writer/issues",
+                "source": "https://github.com/webimpress/safe-writer/tree/2.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/michalbundyra",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-04-19T16:34:45+00:00"
+        },
+        {
             "name": "webmozart/glob",
             "version": "4.7.0",
             "source": {
@@ -12676,6 +13072,99 @@
                 "source": "https://github.com/webmozarts/glob/tree/4.7.0"
             },
             "time": "2024-03-07T20:33:40+00:00"
+        },
+        {
+            "name": "webware/webware-console",
+            "version": "0.1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webinertia/webware-console.git",
+                "reference": "e142d3f52fad67a641c7bcb91160bc25b2ccfd60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/e142d3f52fad67a641c7bcb91160bc25b2ccfd60",
+                "reference": "e142d3f52fad67a641c7bcb91160bc25b2ccfd60",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-config-aggregator": "^1.20",
+                "laminas/laminas-servicemanager": "^4.5",
+                "php": "~8.4.1 || ~8.5.0",
+                "php-standard-library/terminal": "^6.2",
+                "symfony/console": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "infection/infection": "^0.35",
+                "phpunit/phpunit": "^13.3",
+                "webware/webware-tools": "^0.1.x-dev"
+            },
+            "default-branch": true,
+            "bin": [
+                "bin/webware"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webware\\Console\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Webware\\Console\\Test\\Integration\\": "test/integration/",
+                    "Webware\\Console\\Test\\Unit\\": "test/unit/"
+                }
+            },
+            "scripts": {
+                "console": [
+                    "php bin/webware"
+                ],
+                "console-menu": [
+                    "php bin/webware menu"
+                ],
+                "menu": [
+                    "php bin/webware menu"
+                ],
+                "mutation-test": [
+                    "infection"
+                ],
+                "test": [
+                    "phpunit --testsuite unit"
+                ],
+                "test-coverage": [
+                    "phpunit --coverage-clover clover.xml"
+                ],
+                "test-all": [
+                    "@test",
+                    "@test-integration"
+                ],
+                "test-integration": [
+                    "phpunit --testsuite integration"
+                ]
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Joey Smith",
+                    "email": "jsmith@webinertia.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Webware Console — TUI application providing a menu and better help for Webware and Mezzio CLI commands",
+            "keywords": [
+                "cli",
+                "console",
+                "mezzio",
+                "tui",
+                "webware"
+            ],
+            "support": {
+                "source": "https://github.com/webinertia/webware-console/tree/0.1.x",
+                "issues": "https://github.com/webinertia/webware-console/issues"
+            },
+            "time": "2026-09-06T16:07:05+00:00"
         },
         {
             "name": "webware/webware-tools",
@@ -12735,6 +13224,7 @@
         "php-db/phpdb-mysql": 20,
         "roave/security-advisories": 20,
         "webware/webware-admin": 20,
+        "webware/webware-console": 20,
         "webware/webware-core": 20,
         "webware/webware-htmx": 20,
         "webware/webware-tools": 20

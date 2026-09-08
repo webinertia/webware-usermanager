@@ -47,6 +47,7 @@ RUN set -eux; \
     docker-php-ext-install -j"$(nproc)" \
         intl \
         pcntl \
+        pdo_mysql \
         zip \
     ; \
     pecl install pcov \
