@@ -13,18 +13,6 @@ message = "Avoid `else` clauses."
 count = 1
 
 [[issues]]
-file = "src/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "ambiguous-constant-access"
-message = "Ambiguous constant access detected."
-count = 1
-
-[[issues]]
-file = "src/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 1
-
-[[issues]]
 file = "src/Command/CreateUserCommand.php"
 code = "ambiguous-constant-access"
 message = "Ambiguous constant access detected."
@@ -241,16 +229,106 @@ message = "Use Yoda condition style for safer comparisons"
 count = 4
 
 [[issues]]
-file = "src/InputFilter/UserDataFilter.php"
-code = "no-literal-password"
-message = "Literal passwords or sensitive data should not be stored in code."
+file = "src/Http/Admin/Middleware/ProcessUpdateUserMiddleware.php"
+code = "no-else-clause"
+message = "Avoid `else` clauses."
 count = 1
 
 [[issues]]
-file = "src/InputFilter/UserDataFilter.php"
-code = "no-redundant-use"
-message = "Unused import: `is_string`."
+file = "src/Http/Admin/Middleware/ProcessUpdateUserMiddleware.php"
+code = "prefer-array-spread"
+message = "Use the array spread operator instead of `array_merge()`."
 count = 1
+
+[[issues]]
+file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
+code = "ambiguous-constant-access"
+message = "Ambiguous constant access detected."
+count = 1
+
+[[issues]]
+file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
+code = "yoda-conditions"
+message = "Use Yoda condition style for safer comparisons"
+count = 1
+
+[[issues]]
+file = "src/Http/Middleware/Container/RegistrationMiddlewareFactory.php"
+code = "no-redundant-use"
+message = "Unused import: `UserInterface`."
+count = 1
+
+[[issues]]
+file = "src/Http/Middleware/IdentityMiddleware.php"
+code = "no-else-clause"
+message = "Avoid `else` clauses."
+count = 2
+
+[[issues]]
+file = "src/Http/Middleware/IdentityMiddleware.php"
+code = "no-redundant-use"
+message = "Unused import: `is_array`."
+count = 1
+
+[[issues]]
+file = "src/Http/Middleware/LoginMiddleware.php"
+code = "yoda-conditions"
+message = "Use Yoda condition style for safer comparisons"
+count = 3
+
+[[issues]]
+file = "src/Http/Middleware/RegistrationMiddleware.php"
+code = "prefer-array-spread"
+message = "Use the array spread operator instead of `array_merge()`."
+count = 1
+
+[[issues]]
+file = "src/Http/RequestHandler/Container/VerifyEmailHandlerFactory.php"
+code = "readable-literal"
+message = "Numeric literal could use underscore separators for readability."
+count = 1
+
+[[issues]]
+file = "src/Http/RequestHandler/LogoutHandler.php"
+code = "no-redundant-use"
+message = "Unused import: `SessionMiddleware`."
+count = 1
+
+[[issues]]
+file = "src/Http/RequestHandler/ResendVerificationHandler.php"
+code = "excessive-parameter-list"
+message = "Parameter list is too long."
+count = 1
+
+[[issues]]
+file = "src/Http/RequestHandler/ResendVerificationHandler.php"
+code = "literal-named-argument"
+message = "Literal argument `'/'` should be passed as a named argument for clarity."
+count = 1
+
+[[issues]]
+file = "src/Http/RequestHandler/ResendVerificationHandler.php"
+code = "literal-named-argument"
+message = "Literal argument `'UTF-8'` should be passed as a named argument for clarity."
+count = 2
+
+[[issues]]
+file = "src/Http/RequestHandler/ResendVerificationHandler.php"
+code = "string-style"
+message = "String concatenation can be replaced with interpolation."
+count = 2
+
+[[issues]]
+file = "src/Http/RequestHandler/ResendVerificationHandler.php"
+code = "yoda-conditions"
+message = "Use Yoda condition style for safer comparisons"
+count = 5
+
+[[issues]]
+file = "src/Http/RequestHandler/VerifyEmailHandler.php"
+code = "yoda-conditions"
+message = "Use Yoda condition style for safer comparisons"
+count = 3
 
 [[issues]]
 file = "src/Listener/SendVerificationEmailListener.php"
@@ -286,48 +364,6 @@ count = 1
 file = "src/Listener/SendVerificationEmailListener.php"
 code = "yoda-conditions"
 message = "Use Yoda condition style for safer comparisons"
-count = 1
-
-[[issues]]
-file = "src/Middleware/Container/RegistrationMiddlewareFactory.php"
-code = "no-redundant-use"
-message = "Unused import: `UserInterface`."
-count = 1
-
-[[issues]]
-file = "src/Middleware/IdentityMiddleware.php"
-code = "no-else-clause"
-message = "Avoid `else` clauses."
-count = 2
-
-[[issues]]
-file = "src/Middleware/IdentityMiddleware.php"
-code = "no-redundant-use"
-message = "Unused import: `is_array`."
-count = 1
-
-[[issues]]
-file = "src/Middleware/LoginMiddleware.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 3
-
-[[issues]]
-file = "src/Middleware/ProcessUpdateUserMiddleware.php"
-code = "no-else-clause"
-message = "Avoid `else` clauses."
-count = 1
-
-[[issues]]
-file = "src/Middleware/ProcessUpdateUserMiddleware.php"
-code = "prefer-array-spread"
-message = "Use the array spread operator instead of `array_merge()`."
-count = 1
-
-[[issues]]
-file = "src/Middleware/RegistrationMiddleware.php"
-code = "prefer-array-spread"
-message = "Use the array spread operator instead of `array_merge()`."
 count = 1
 
 [[issues]]
@@ -395,54 +431,6 @@ file = "src/Repository/UserRepositoryInterface.php"
 code = "no-fully-qualified-global-class-like"
 message = "Fully-qualified class-like reference detected."
 count = 1
-
-[[issues]]
-file = "src/RequestHandler/Container/VerifyEmailHandlerFactory.php"
-code = "readable-literal"
-message = "Numeric literal could use underscore separators for readability."
-count = 1
-
-[[issues]]
-file = "src/RequestHandler/LogoutHandler.php"
-code = "no-redundant-use"
-message = "Unused import: `SessionMiddleware`."
-count = 1
-
-[[issues]]
-file = "src/RequestHandler/ResendVerificationHandler.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/RequestHandler/ResendVerificationHandler.php"
-code = "literal-named-argument"
-message = "Literal argument `'/'` should be passed as a named argument for clarity."
-count = 1
-
-[[issues]]
-file = "src/RequestHandler/ResendVerificationHandler.php"
-code = "literal-named-argument"
-message = "Literal argument `'UTF-8'` should be passed as a named argument for clarity."
-count = 2
-
-[[issues]]
-file = "src/RequestHandler/ResendVerificationHandler.php"
-code = "string-style"
-message = "String concatenation can be replaced with interpolation."
-count = 2
-
-[[issues]]
-file = "src/RequestHandler/ResendVerificationHandler.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 5
-
-[[issues]]
-file = "src/RequestHandler/VerifyEmailHandler.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 3
 
 [[issues]]
 file = "src/RouteProvider.php"
