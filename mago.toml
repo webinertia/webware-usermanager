@@ -8,6 +8,88 @@ baseline = "lint-baseline.toml"
 baseline = "analysis-baseline.toml"
 unchecked-exceptions = ['Psl\Type\Exception\ExceptionInterface']
 
+# ---------------------------------------------------------------------------
+# Guard rules — Http boundary (Phase 2) and MessageBus classes.
+#
+# Structural rules describe the POST-move layout (naming + interfaces) so that
+# a class landing in the wrong namespace or with the wrong name is flagged
+# during the move. The perimeter restriction enforces that PSR HTTP server
+# contracts (MiddlewareInterface / RequestHandlerInterface) are usable ONLY
+# from the Http\ namespace (plus tests) — so `mago guard` is RED until Phase 2
+# relocates the current Middleware\ / RequestHandler\ / Admin\RequestHandler\
+# classes under Http\, then GREEN once they land.
+#
+# Commands and their handlers stay in the domain they act on (Command\,
+# CommandHandler\) — they are NOT centralized under MessageBus\ and are not
+# moved.
+#
+# Phase 3 (TASK-004 c/d): `Repository\*` will be restricted to handlers, their
+# factories, the root Webware\UserManager namespace (ConfigProvider DI wiring),
+# Admin\Dashboard (widget aggregation), and tests — enforced via a `perimeter`
+# restriction once the read boundary is migrated.
+# ---------------------------------------------------------------------------
+[guard]
+mode = "default"
+
+# Http\Middleware\ — PSR middleware (non-admin)
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\Http\\Middleware\\*"
+target = "class"
+must-be-named = "*Middleware"
+must-implement = "Psr\\Http\\Server\\MiddlewareInterface"
+reason = "HTTP middleware must live in Http\\Middleware and be named *Middleware."
+
+# Http\Admin\Middleware\ — admin PSR middleware
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\Http\\Admin\\Middleware\\*"
+target = "class"
+must-be-named = "*Middleware"
+must-implement = "Psr\\Http\\Server\\MiddlewareInterface"
+reason = "Admin HTTP middleware must live in Http\\Admin\\Middleware and be named *Middleware."
+
+# Http\RequestHandler\ — PSR request handlers (non-admin)
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\Http\\RequestHandler\\*"
+target = "class"
+must-be-named = "*Handler"
+must-implement = "Psr\\Http\\Server\\RequestHandlerInterface"
+reason = "Request handlers must live in Http\\RequestHandler and be named *Handler."
+
+# Http\Admin\RequestHandler\ — admin PSR request handlers
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\Http\\Admin\\RequestHandler\\*"
+target = "class"
+must-be-named = "*Handler"
+must-implement = "Psr\\Http\\Server\\RequestHandlerInterface"
+reason = "Admin request handlers must live in Http\\Admin\\RequestHandler and be named *Handler."
+
+# Command\ — domain commands
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\Command\\*"
+target = "class"
+must-be-named = "*Command"
+must-implement = "Webware\\MessageBus\\Command\\NamedCommandInterface"
+reason = "Commands live in Command\\ and must implement NamedCommandInterface."
+
+# CommandHandler\ — domain command handlers
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\CommandHandler\\*"
+target = "class"
+must-be-named = "*Handler"
+must-implement = "Webware\\MessageBus\\CommandHandlerInterface"
+reason = "Command handlers live in CommandHandler\\ and must implement CommandHandlerInterface."
+
+# Psr\Http\Server\** — PSR middleware/request-handler contracts are usable only
+# from the Http\ namespace (plus tests). Flags the pre-move classes in
+# Middleware\ / RequestHandler\ / Admin\RequestHandler\ until Phase 2 relocates
+# them under Http\.
+[[guard.perimeter.restrictions]]
+dependency = "Psr\\Http\\Server\\**"
+allow-from = [
+    "Webware\\UserManager\\Http\\**",
+    "WebwareTest\\UserManager\\**",
+]
+
 [source]
 paths = ["src", "test"]
 includes = ["vendor"]
