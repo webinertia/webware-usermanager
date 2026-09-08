@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fcf0cf8ac50872ef429cd263c4804851",
+    "content-hash": "ed9f32693880923f133e3e7c9174965e",
     "packages": [
         {
             "name": "brick/math",
@@ -3555,12 +3555,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-admin.git",
-                "reference": "d923254445ce03307a597b1910255c052bec87c6"
+                "reference": "beb664397a4e44b410ecba3781c0e4e9a0bceeac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/d923254445ce03307a597b1910255c052bec87c6",
-                "reference": "d923254445ce03307a597b1910255c052bec87c6",
+                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/beb664397a4e44b410ecba3781c0e4e9a0bceeac",
+                "reference": "beb664397a4e44b410ecba3781c0e4e9a0bceeac",
                 "shasum": ""
             },
             "require": {
@@ -3642,7 +3642,7 @@
                 "source": "https://github.com/webinertia/webware-admin/tree/0.1.x",
                 "issues": "https://github.com/webinertia/webware-admin/issues"
             },
-            "time": "2026-09-06T09:58:23+00:00"
+            "time": "2026-09-08T13:10:32+00:00"
         },
         {
             "name": "webware/webware-core",
@@ -8670,12 +8670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "52e7bbf74e5fd05322eacacde4392730efd6a8ee"
+                "reference": "85f13ab68f74b04ea01cdfd8548beeb372df5cf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/52e7bbf74e5fd05322eacacde4392730efd6a8ee",
-                "reference": "52e7bbf74e5fd05322eacacde4392730efd6a8ee",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/85f13ab68f74b04ea01cdfd8548beeb372df5cf7",
+                "reference": "85f13ab68f74b04ea01cdfd8548beeb372df5cf7",
                 "shasum": ""
             },
             "conflict": {
@@ -9617,7 +9617,7 @@
                 "twig/twig": "<3.27",
                 "typicms/core": "<12.0.5|>=13,<13.0.9|>=14,<14.0.27|>=15,<15.0.29|>=16,<16.1.7",
                 "typo3/cms": "<9.5.29|>=10,<10.4.35|>=11,<11.5.23|>=12,<12.2",
-                "typo3/cms-backend": "<10.4.57|>=11,<11.5.51|>=12,<12.4.46|>=13,<13.4.34|>=14,<14.3.3",
+                "typo3/cms-backend": "<10.4.60|>=11,<11.5.54|>=12,<12.4.49|>=13,<13.4.35|>=14,<14.3.7",
                 "typo3/cms-belog": ">=10,<=10.4.47|>=11,<=11.5.41|>=12,<=12.4.24|>=13,<=13.4.2",
                 "typo3/cms-beuser": ">=9,<9.5.55|>=10,<10.4.54|>=11,<11.5.48|>=12,<12.4.37|>=13,<13.4.18",
                 "typo3/cms-core": "<10.4.57|>=11,<11.5.51|>=12,<12.4.46|>=13,<13.4.34|>=14,<14.3.6",
@@ -9631,7 +9631,7 @@
                 "typo3/cms-frontend": "<4.3.9|>=4.4,<4.4.5",
                 "typo3/cms-indexed-search": ">=10,<=10.4.47|>=11,<=11.5.41|>=12,<=12.4.24|>=13,<13.4.31|>=14,<14.3.3",
                 "typo3/cms-install": "<4.1.14|>=4.2,<4.2.16|>=4.3,<4.3.9|>=4.4,<4.4.5|>=12.2,<12.4.8|==13.4.2",
-                "typo3/cms-lowlevel": ">=11,<=11.5.41",
+                "typo3/cms-lowlevel": ">=11,<=11.5.41|>=14.2,<14.3.7",
                 "typo3/cms-recordlist": ">=11,<11.5.48",
                 "typo3/cms-recycler": "<10.4.57|>=11,<11.5.51|>=12,<12.4.46|>=13,<13.4.31|>=14,<14.3.3",
                 "typo3/cms-redirects": ">=10,<=10.4.54|>=11,<=11.5.48|>=12,<=12.4.40|>=13,<=13.4.22|>=14,<=14.0.1",
@@ -9805,7 +9805,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-02T17:38:20+00:00"
+            "time": "2026-09-08T10:40:34+00:00"
         },
         {
             "name": "sanmai/di-container",
@@ -13079,12 +13079,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-console.git",
-                "reference": "e142d3f52fad67a641c7bcb91160bc25b2ccfd60"
+                "reference": "72ddca58ebdce693f51371ecbb22e46071ac6d3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/e142d3f52fad67a641c7bcb91160bc25b2ccfd60",
-                "reference": "e142d3f52fad67a641c7bcb91160bc25b2ccfd60",
+                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/72ddca58ebdce693f51371ecbb22e46071ac6d3b",
+                "reference": "72ddca58ebdce693f51371ecbb22e46071ac6d3b",
                 "shasum": ""
             },
             "require": {
@@ -13164,7 +13164,7 @@
                 "source": "https://github.com/webinertia/webware-console/tree/0.1.x",
                 "issues": "https://github.com/webinertia/webware-console/issues"
             },
-            "time": "2026-09-06T16:07:05+00:00"
+            "time": "2026-09-08T13:06:55+00:00"
         },
         {
             "name": "webware/webware-tools",
@@ -13172,12 +13172,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-tools.git",
-                "reference": "feb2e492f5aa44aefc961e8ea02b652f1bb9bb1e"
+                "reference": "3727d9c5097e6b5854d291c41bae0e62e6a75592"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/feb2e492f5aa44aefc961e8ea02b652f1bb9bb1e",
-                "reference": "feb2e492f5aa44aefc961e8ea02b652f1bb9bb1e",
+                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/3727d9c5097e6b5854d291c41bae0e62e6a75592",
+                "reference": "3727d9c5097e6b5854d291c41bae0e62e6a75592",
                 "shasum": ""
             },
             "require": {
@@ -13214,7 +13214,7 @@
                 "issues": "https://github.com/webinertia/webware-tools/issues",
                 "source": "https://github.com/webinertia/webware-tools/tree/0.1.x"
             },
-            "time": "2026-08-24T23:13:33+00:00"
+            "time": "2026-09-08T17:16:21+00:00"
         }
     ],
     "aliases": [],
