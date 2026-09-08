@@ -35,3 +35,16 @@ $logger->method('withName')->willReturn($logger); // should be createStub()
 1. `#[CoversClass(ClassName::class)]` — one per source class under test.
 2. `#[CoversMethod(ClassName::class, 'methodName')]` — one per public/protected method exercised.
 3. `use PHPUnit\Framework\Attributes\CoversClass;` and `use PHPUnit\Framework\Attributes\CoversMethod;` imports.
+
+## Mago Analysis Docblock Types
+
+When resolving `mago analyze` findings that involve docblock type annotations (`@var`, `@param`,
+`@return`, `@property`, `@method`, `@template`, etc.), consult the authoritative reference for
+every supported docblock-only type before writing or correcting any docblock type:
+
+- `vendor/webware/webware-tools/mago-analysis-types.md`
+
+It lists all non-native types mago understands (shapes `array{...}`, `list<T>`, `int<min,max>`,
+`class-string<T>`, `non-empty-string`, `key-of<T>`, conditional types, type aliases, etc.) plus
+parser notes (e.g. which keywords are case-sensitive).
+
