@@ -247,12 +247,6 @@ message = "Ambiguous constant access detected."
 count = 1
 
 [[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 1
-
-[[issues]]
 file = "src/Http/Middleware/Container/RegistrationMiddlewareFactory.php"
 code = "no-redundant-use"
 message = "Unused import: `UserInterface`."
@@ -263,18 +257,6 @@ file = "src/Http/Middleware/IdentityMiddleware.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
 count = 2
-
-[[issues]]
-file = "src/Http/Middleware/IdentityMiddleware.php"
-code = "no-redundant-use"
-message = "Unused import: `is_array`."
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/LoginMiddleware.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 3
 
 [[issues]]
 file = "src/Http/Middleware/RegistrationMiddleware.php"

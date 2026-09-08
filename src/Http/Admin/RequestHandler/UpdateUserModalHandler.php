@@ -9,7 +9,10 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\Core\UserInterface;
+use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
+use Webware\UserManager\Query\FetchUserById;
 
 use function filter_var;
 
@@ -17,17 +20,25 @@ final class UpdateUserModalHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $template,
-        private readonly UserRepositoryInterface $users,
+        private readonly MessageBusInterface $messageBus,
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $id   = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT, ['options' => ['default' => 0]]);
-        $user = $this->users->findById($id);
+        $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
 
-        if ($user === null) {
+        if (false === $id) {
             return new HtmlResponse('', 404);
         }
+
+        $result = $this->messageBus->handle(new FetchUserById(id: $id));
+
+        if ($result->getStatus() === MessageStatus::Failure) {
+            return new HtmlResponse('', 404);
+        }
+
+        /** @var UserInterface $user */
+        $user = $result->getResult();
 
         return new HtmlResponse($this->template->render('user::update-user-modal', [
             'user'   => $user,

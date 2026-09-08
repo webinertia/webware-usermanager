@@ -15,9 +15,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Webware\Core\UserInterface;
+use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
+use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\IdentityMiddleware;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\UserManager\Query\CheckUserActive;
 
 #[CoversClass(IdentityMiddleware::class)]
 #[CoversMethod(IdentityMiddleware::class, '__construct')]
@@ -33,8 +36,11 @@ final class IdentityMiddlewareTest extends TestCase
         $session->expects($this->once())->method('get')->with(UserInterface::class)->willReturn($sessionData);
         $session->expects($this->once())->method('clear');
 
-        $repository = $this->createMock(UserRepositoryInterface::class);
-        $repository->expects($this->once())->method('checkStatus')->with(5)->willReturn(false);
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($this->once())
+            ->method('handle')
+            ->with(static::callback(static fn(CheckUserActive $query): bool => 5 === $query->id))
+            ->willReturn(new QueryResult(new CheckUserActive(id: 5), MessageStatus::Success, false));
 
         $factoryData = null;
         $factory     = static function (array $data) use (&$factoryData): UserInterface {
@@ -46,7 +52,7 @@ final class IdentityMiddlewareTest extends TestCase
         $handler = $this->createStub(RequestHandlerInterface::class);
         $handler->method('handle')->willReturn(new EmptyResponse());
 
-        $middleware = new IdentityMiddleware($repository, $factory);
+        $middleware = new IdentityMiddleware($messageBus, $factory);
 
         $request = new ServerRequest()->withAttribute(SessionInterface::class, $session);
         $middleware->process($request, $handler);
@@ -57,7 +63,7 @@ final class IdentityMiddlewareTest extends TestCase
     #[Test]
     public function createsGuestUserWhenNoSessionPresent(): void
     {
-        $repository = $this->createStub(UserRepositoryInterface::class);
+        $messageBus = $this->createStub(MessageBusInterface::class);
 
         $factoryData = null;
         $factory     = static function (array $data) use (&$factoryData): UserInterface {
@@ -78,7 +84,7 @@ final class IdentityMiddlewareTest extends TestCase
                 return new EmptyResponse();
             });
 
-        $middleware = new IdentityMiddleware($repository, $factory);
+        $middleware = new IdentityMiddleware($messageBus, $factory);
 
         $response = $middleware->process(new ServerRequest(), $handler);
 
@@ -95,8 +101,11 @@ final class IdentityMiddlewareTest extends TestCase
         $session = $this->createStub(SessionInterface::class);
         $session->method('get')->willReturn($sessionData);
 
-        $repository = $this->createMock(UserRepositoryInterface::class);
-        $repository->expects($this->once())->method('checkStatus')->with(5)->willReturn(true);
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($this->once())
+            ->method('handle')
+            ->with(static::callback(static fn(CheckUserActive $query): bool => 5 === $query->id))
+            ->willReturn(new QueryResult(new CheckUserActive(id: 5), MessageStatus::Success, true));
 
         $factoryData = null;
         $factory     = static function (array $data) use (&$factoryData): UserInterface {
@@ -121,7 +130,7 @@ final class IdentityMiddlewareTest extends TestCase
                 return new EmptyResponse();
             });
 
-        $middleware = new IdentityMiddleware($repository, $factory);
+        $middleware = new IdentityMiddleware($messageBus, $factory);
 
         $request = new ServerRequest()->withAttribute(SessionInterface::class, $session);
         $middleware->process($request, $handler);

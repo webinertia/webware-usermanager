@@ -10,10 +10,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Http\Middleware\Container\LoginMiddlewareFactory;
 use Webware\UserManager\Http\Middleware\LoginMiddleware;
-use Webware\UserManager\Repository\UserRepositoryInterface;
 
 #[CoversClass(LoginMiddlewareFactory::class)]
 #[CoversMethod(LoginMiddlewareFactory::class, '__invoke')]
@@ -26,7 +26,7 @@ final class LoginMiddlewareFactoryTest extends TestCase
         $container->method('get')
             ->willReturnMap([
                 ['config', ['authentication' => [Configuration::POST_LOGIN_REDIRECT_KEY => '/dashboard']]],
-                [UserRepositoryInterface::class, $this->createStub(UserRepositoryInterface::class)],
+                [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [LoggerInterface::class, $this->createStub(LoggerInterface::class)],
             ]);
 

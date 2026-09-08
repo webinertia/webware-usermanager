@@ -10,10 +10,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Webware\Core\UserInterface;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\Container\IdentityMiddlewareFactory;
 use Webware\UserManager\Http\Middleware\IdentityMiddleware;
-use Webware\UserManager\Repository\UserRepositoryInterface;
 
 #[CoversClass(IdentityMiddlewareFactory::class)]
 #[CoversMethod(IdentityMiddlewareFactory::class, '__invoke')]
@@ -25,7 +25,7 @@ final class IdentityMiddlewareFactoryTest extends TestCase
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')
             ->willReturnMap([
-                [UserRepositoryInterface::class, $this->createStub(UserRepositoryInterface::class)],
+                [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [UserInterface::class, static fn(): User => new User()],
             ]);
 

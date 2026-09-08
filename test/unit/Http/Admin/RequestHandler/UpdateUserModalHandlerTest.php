@@ -11,9 +11,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
+use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\UserManager\Query\FetchUserById;
 
 #[CoversClass(UpdateUserModalHandler::class)]
 #[CoversMethod(UpdateUserModalHandler::class, '__construct')]
@@ -28,8 +31,15 @@ final class UpdateUserModalHandlerTest extends TestCase
             email: 'jane@example.com',
         );
 
-        $users = $this->createMock(UserRepositoryInterface::class);
-        $users->expects($this->once())->method('findById')->with(5)->willReturn($user);
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($this->once())
+            ->method('handle')
+            ->with(
+                static::callback(
+                    static fn(FetchUserById $query): bool => 5 === $query->id,
+                ),
+            )
+            ->willReturn(new QueryResult(new FetchUserById(id: 5), MessageStatus::Success, $user));
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
@@ -38,8 +48,8 @@ final class UpdateUserModalHandlerTest extends TestCase
             ->willReturn('<form>');
 
         $handler = new UpdateUserModalHandler(
-            template: $template,
-            users   : $users,
+            template  : $template,
+            messageBus: $messageBus,
         );
 
         $request = new ServerRequest()->withAttribute('id', '5');
@@ -51,14 +61,30 @@ final class UpdateUserModalHandlerTest extends TestCase
     }
 
     #[Test]
+    public function returnsNotFoundWhenIdIsInvalid(): void
+    {
+        $handler = new UpdateUserModalHandler(
+            template  : $this->createStub(TemplateRendererInterface::class),
+            messageBus: $this->createStub(MessageBusInterface::class),
+        );
+
+        $request = new ServerRequest()->withAttribute('id', 'not-a-number');
+
+        $response = $handler->handle($request);
+
+        self::assertSame(404, $response->getStatusCode());
+    }
+
+    #[Test]
     public function returnsNotFoundWhenUserMissing(): void
     {
-        $users = $this->createStub(UserRepositoryInterface::class);
-        $users->method('findById')->willReturn(null);
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('handle')
+            ->willReturn(new QueryResult(new FetchUserById(id: 99), MessageStatus::Failure, null));
 
         $handler = new UpdateUserModalHandler(
-            template: $this->createStub(TemplateRendererInterface::class),
-            users   : $users,
+            template  : $this->createStub(TemplateRendererInterface::class),
+            messageBus: $messageBus,
         );
 
         $request = new ServerRequest()->withAttribute('id', '99');
