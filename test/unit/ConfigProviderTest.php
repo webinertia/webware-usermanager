@@ -24,6 +24,18 @@ use Webware\UserManager\Container\UserFactory;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
+use Webware\UserManager\Query\AuthenticateUser;
+use Webware\UserManager\Query\CheckUserActive;
+use Webware\UserManager\Query\FetchUserByEmail;
+use Webware\UserManager\Query\FetchUserById;
+use Webware\UserManager\Query\FetchUserByVerificationToken;
+use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
+use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
+use Webware\UserManager\QueryHandler\FetchUserByEmailHandler;
+use Webware\UserManager\QueryHandler\FetchUserByIdHandler;
+use Webware\UserManager\QueryHandler\FetchUserByVerificationTokenHandler;
+use Webware\UserManager\QueryHandler\FetchUsersHandler;
 use Webware\UserManager\Repository\UserRepository;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\RouteProvider;
@@ -36,6 +48,7 @@ use function dirname;
 #[CoversMethod(ConfigProvider::class, 'getAclConfig')]
 #[CoversMethod(ConfigProvider::class, 'getAuthenticationConfig')]
 #[CoversMethod(ConfigProvider::class, 'getCommandMap')]
+#[CoversMethod(ConfigProvider::class, 'getQueryMap')]
 #[CoversMethod(ConfigProvider::class, 'getDefaultConfig')]
 #[CoversMethod(ConfigProvider::class, 'getDependencies')]
 #[CoversMethod(ConfigProvider::class, 'getInputFilterConfig')]
@@ -186,6 +199,10 @@ final class ConfigProviderTest extends TestCase
             $this->provider->getCommandMap(),
             $config[MessageBusInterface::class][BusProvider::COMMAND_MAP_KEY],
         );
+        self::assertSame(
+            $this->provider->getQueryMap(),
+            $config[MessageBusInterface::class][BusProvider::QUERY_MAP_KEY],
+        );
     }
 
     #[Test]
@@ -198,6 +215,22 @@ final class ConfigProviderTest extends TestCase
                 ],
             ],
             $this->provider->getListeners(),
+        );
+    }
+
+    #[Test]
+    public function queryMapMapsEveryQueryToAHandler(): void
+    {
+        self::assertSame(
+            [
+                AuthenticateUser::class             => AuthenticateUserHandler::class,
+                CheckUserActive::class              => CheckUserActiveHandler::class,
+                FetchUserByEmail::class             => FetchUserByEmailHandler::class,
+                FetchUserById::class                => FetchUserByIdHandler::class,
+                FetchUserByVerificationToken::class => FetchUserByVerificationTokenHandler::class,
+                FetchUsers::class                   => FetchUsersHandler::class,
+            ],
+            $this->provider->getQueryMap(),
         );
     }
 

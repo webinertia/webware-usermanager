@@ -16,6 +16,24 @@ use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Console\Container\InitDbCommandFactory;
 use Webware\UserManager\Console\InitDbCommand;
+use Webware\UserManager\Query\AuthenticateUser;
+use Webware\UserManager\Query\CheckUserActive;
+use Webware\UserManager\Query\FetchUserByEmail;
+use Webware\UserManager\Query\FetchUserById;
+use Webware\UserManager\Query\FetchUserByVerificationToken;
+use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
+use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
+use Webware\UserManager\QueryHandler\Container\AuthenticateUserHandlerFactory;
+use Webware\UserManager\QueryHandler\Container\CheckUserActiveHandlerFactory;
+use Webware\UserManager\QueryHandler\Container\FetchUserByEmailHandlerFactory;
+use Webware\UserManager\QueryHandler\Container\FetchUserByIdHandlerFactory;
+use Webware\UserManager\QueryHandler\Container\FetchUserByVerificationTokenHandlerFactory;
+use Webware\UserManager\QueryHandler\Container\FetchUsersHandlerFactory;
+use Webware\UserManager\QueryHandler\FetchUserByEmailHandler;
+use Webware\UserManager\QueryHandler\FetchUserByIdHandler;
+use Webware\UserManager\QueryHandler\FetchUserByVerificationTokenHandler;
+use Webware\UserManager\QueryHandler\FetchUsersHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\View\Helper\UserAdminUrl;
 use Webware\UserManager\View\Helper\UserAdminUrlFactory;
@@ -163,6 +181,12 @@ final class ConfigProvider
                 CommandHandler\CreateUserHandler::class                        => CommandHandler\Container\CreateUserHandlerFactory::class,
                 CommandHandler\ToggleUserActiveHandler::class                  => CommandHandler\Container\ToggleUserActiveHandlerFactory::class,
                 CommandHandler\UpdateUserHandler::class                        => CommandHandler\Container\UpdateUserHandlerFactory::class,
+                QueryHandler\AuthenticateUserHandler::class                    => QueryHandler\Container\AuthenticateUserHandlerFactory::class,
+                QueryHandler\CheckUserActiveHandler::class                     => QueryHandler\Container\CheckUserActiveHandlerFactory::class,
+                QueryHandler\FetchUserByEmailHandler::class                    => QueryHandler\Container\FetchUserByEmailHandlerFactory::class,
+                QueryHandler\FetchUserByIdHandler::class                       => QueryHandler\Container\FetchUserByIdHandlerFactory::class,
+                QueryHandler\FetchUserByVerificationTokenHandler::class        => QueryHandler\Container\FetchUserByVerificationTokenHandlerFactory::class,
+                QueryHandler\FetchUsersHandler::class                          => QueryHandler\Container\FetchUsersHandlerFactory::class,
                 Http\Middleware\IdentityMiddleware::class                      => Http\Middleware\Container\IdentityMiddlewareFactory::class,
                 Http\Middleware\LoginMiddleware::class                         => Http\Middleware\Container\LoginMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessToggleUserActiveMiddleware::class => Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::class,
@@ -202,6 +226,19 @@ final class ConfigProvider
             RegisterWidgetEvent::class => [
                 ['listener' => RegisterWidgetListener::class, 'priority' => 1],
             ],
+        ];
+    }
+
+    /** @return array<class-string, class-string> */
+    public function getQueryMap(): array
+    {
+        return [
+            Query\AuthenticateUser::class             => QueryHandler\AuthenticateUserHandler::class,
+            Query\CheckUserActive::class              => QueryHandler\CheckUserActiveHandler::class,
+            Query\FetchUserByEmail::class             => QueryHandler\FetchUserByEmailHandler::class,
+            Query\FetchUserById::class                => QueryHandler\FetchUserByIdHandler::class,
+            Query\FetchUserByVerificationToken::class => QueryHandler\FetchUserByVerificationTokenHandler::class,
+            Query\FetchUsers::class                   => QueryHandler\FetchUsersHandler::class,
         ];
     }
 
@@ -248,6 +285,7 @@ final class ConfigProvider
             'authentication'           => $this->getAuthenticationConfig(),
             MessageBusInterface::class => [
                 BusProvider::COMMAND_MAP_KEY => $this->getCommandMap(),
+                BusProvider::QUERY_MAP_KEY   => $this->getQueryMap(),
             ],
             'listeners'                => $this->getListeners(),
             UserInterface::class       => $this->getDefaultConfig(),
