@@ -48,3 +48,21 @@ It lists all non-native types mago understands (shapes `array{...}`, `list<T>`, 
 `class-string<T>`, `non-empty-string`, `key-of<T>`, conditional types, type aliases, etc.) plus
 parser notes (e.g. which keywords are case-sensitive).
 
+### Class-reference string types
+
+Mago distinguishes what a `*::class` string may reference:
+
+- `class-string<T>` — a concrete **class**
+- `interface-string<T>` — an **interface**
+- `enum-string<T>` — an **enum**
+- `trait-string<T>` — a **trait**
+- `class-like-string<T>` — any of class / interface / enum
+
+Webware aliases against interfaces and builds to interfaces, so prefer the precise form:
+
+- DI aliases: `array<interface-string, class-string>` (e.g. `UserRepositoryInterface::class => UserRepository::class`)
+- handler/command/query maps: `array<class-string, class-string>` (e.g. `FetchUsers::class => FetchUsersHandler::class`)
+
+Do not flatten an interface-keyed map to `array<class-string, class-string>`.
+
+
