@@ -587,3 +587,14 @@ $routeCollector->patch(
 - `storeId` migration from column to `params` JSON (separate plan: `plan-storeid-migration.md`)
 - `GuestUser` entity implementation (missing file — tracked in `roleid-audit-results.md`)
 - Non-admin user self-service profile editing
+
+---
+
+## Update — 2026-09-10
+
+The `GuestUser` entity listed under "Excluded from Scope" was never implemented and is
+no longer part of the design: a guest is a `User` carrying
+`UserInterface::GUEST_ROLE`, attached by `IdentityMiddleware` when the session payload
+is absent or the account fails the active check. It is the only `GuestUser` reference in
+this plan, so nothing else here is affected. See `docs/identity-flow.md` for the current
+session and identity contract.

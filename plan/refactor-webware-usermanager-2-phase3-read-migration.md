@@ -47,13 +47,13 @@ tags: [refactor, architecture, message-bus, query, command, testing]
 
 | Consumer | Repository call | Replacement |
 |---|---|---|
-| `Http\Middleware\LoginMiddleware` | `authenticate()` | `AuthenticateUser` query |
-| `Http\Middleware\IdentityMiddleware` | `checkStatus()` | `CheckUserActive` query |
-| `Http\RequestHandler\UserListHandler` | `findAll()` | `FetchUsers` query |
-| `Http\RequestHandler\ResendVerificationHandler` | `findByEmail()` | `FetchUserByEmail` query |
-| `Http\RequestHandler\VerifyEmailHandler` | `findByVerificationToken()` | `FetchUserByVerificationToken` query |
-| `Http\Admin\RequestHandler\UpdateUserModalHandler` | `findById()` | `FetchUserById` query |
-| `Admin\Dashboard\RegisterWidgetListener` | `findAll()` | `FetchUsers` query |
+| `Http\Middleware\LoginMiddleware` | `authenticate()` | `AuthenticateUserQuery` |
+| `Http\Middleware\IdentityMiddleware` | `checkStatus()` | `CheckUserActiveQuery` |
+| `Http\RequestHandler\UserListHandler` | `findAll()` | `FetchUsersQuery` |
+| `Http\RequestHandler\ResendVerificationHandler` | `findByEmail()` | `FetchUserByEmailQuery` |
+| `Http\RequestHandler\VerifyEmailHandler` | `findByVerificationToken()` | `FetchUserByVerificationTokenQuery` |
+| `Http\Admin\RequestHandler\UpdateUserModalHandler` | `findById()` | `FetchUserByIdQuery` |
+| `Admin\Dashboard\RegisterWidgetListener` | `findAll()` | `FetchUsersQuery` |
 
 ### Writes called directly from HTTP classes (must move to middleware)
 
@@ -79,12 +79,12 @@ is `final readonly` with a `handle()` returning `QueryResult`; each has a
 
 | Query | Payload via `getResult()` | Not-found |
 |---|---|---|
-| `Query\FetchUserById` (`int $id`) | `User` | `Failure` (null) |
-| `Query\FetchUserByEmail` (`string $email`) | `User` | `Failure` (null) |
-| `Query\FetchUserByVerificationToken` (`string $token`) | `User` | `Failure` (null) |
-| `Query\FetchUsers` | `list<User>` (adapted from ResultSet) | `Success` + `[]` |
-| `Query\AuthenticateUser` (`string $credential`, `#[SensitiveParameter] ?string $password`) | `AuthenticationResult` | `Failure` (null) |
-| `Query\CheckUserActive` (`int $id`) | `bool` | n/a |
+| `Query\FetchUserByIdQuery` (`int $id`) | `User` | `Failure` (null) |
+| `Query\FetchUserByEmailQuery` (`string $email`) | `User` | `Failure` (null) |
+| `Query\FetchUserByVerificationTokenQuery` (`string $token`) | `User` | `Failure` (null) |
+| `Query\FetchUsersQuery` | `list<User>` (adapted from ResultSet) | `Success` + `[]` |
+| `Query\AuthenticateUserQuery` (`string $credential`, `#[SensitiveParameter] ?string $password`) | `AuthenticationResult` | `Failure` (null) |
+| `Query\CheckUserActiveQuery` (`int $id`) | `bool` | n/a |
 
 ## Commands (for the residual writes)
 
@@ -98,26 +98,26 @@ Each with a `CommandHandler` + `Container\*Factory`, wired under `command_map`.
 ## Consumer changes
 
 1. **`LoginMiddleware`** — inject `MessageBusInterface`; dispatch
-   `AuthenticateUser(credential: $email, password: $password)`; read the
+   `AuthenticateUserQuery(credential: $email, password: $password)`; read the
    `AuthenticationResult` from `getResult()`. Behavior unchanged.
 2. **`IdentityMiddleware`** — inject `MessageBusInterface`; dispatch
-   `CheckUserActive(id: $userInfo['id'])`; read `bool` from `getResult()`.
-3. **`UserListHandler`** — inject `MessageBusInterface`; dispatch `FetchUsers`;
+   `CheckUserActiveQuery(id: $userInfo['id'])`; read `bool` from `getResult()`.
+3. **`UserListHandler`** — inject `MessageBusInterface`; dispatch `FetchUsersQuery`;
    render the returned `list<User>`. (Follow-up: render-only via middleware once
    the webware-tools guard rule lands.)
 4. **`UpdateUserModalHandler`** — inject `MessageBusInterface`; dispatch
-   `FetchUserById`; `Failure` → 404, `Success` → render modal.
+   `FetchUserByIdQuery`; `Failure` → 404, `Success` → render modal.
 5. **`VerifyEmailHandler`** — becomes render-only. New
    `ProcessVerifyEmailMiddleware` (in `Http\Middleware\`) does: read token →
-   `FetchUserByVerificationToken` → on `Failure` set error, on `Success` check
+   `FetchUserByVerificationTokenQuery` → on `Failure` set error, on `Success` check
    expiry → dispatch `ActivateUser` → set messenger → attach `CommandResult`.
    Handler renders redirect/error.
 6. **`ResendVerificationHandler`** — becomes render-only. New
-   `ProcessResendVerificationMiddleware` does: read email → `FetchUserByEmail` →
+   `ProcessResendVerificationMiddleware` does: read email → `FetchUserByEmailQuery` →
    on `Failure` render "sent" (silent), on `Success` if active redirect to login,
    else dispatch `RegenerateVerificationToken` → send email → render "sent".
 7. **`RegisterWidgetListener`** — inject `MessageBusInterface`; dispatch
-   `FetchUsers`; iterate `list<User>` to count active/inactive. (No repository
+   `FetchUsersQuery`; iterate `list<User>` to count active/inactive. (No repository
    exception.)
 8. **`ConfigProvider`** — add `query_map` + `command_map` entries and all new
    factory DI entries.
@@ -125,10 +125,10 @@ Each with a `CommandHandler` + `Container\*Factory`, wired under `command_map`.
 
 ## Design decisions (resolved)
 
-- **D1 — `authenticate`** → `AuthenticateUser` **query**. Handler delegates to
+- **D1 — `authenticate`** → `AuthenticateUserQuery`. Handler delegates to
   `$repo->authenticate()`; returns `QueryResult` whose `getResult()` is the
   `AuthenticationResult`.
-- **D2 — `checkStatus`** → dedicated `CheckUserActive` **query** (keeps the
+- **D2 — `checkStatus`** → dedicated `CheckUserActiveQuery` (keeps the
   lightweight `SELECT active`).
 - **D3 — residual writes** → move to **middleware** (policy: mutations happen in
   the middleware layer). Reason: middleware *acts* on incoming data and is
@@ -136,7 +136,7 @@ Each with a `CommandHandler` + `Container\*Factory`, wired under `command_map`.
   terminal and composable only at the end — zero flexibility. Handlers become
   render-only. Future webware-tools guard rule (separate repo) will forbid
   handlers from depending on `MessageBusInterface`.
-- **D4 — `RegisterWidgetListener`** → **moves to the bus** (`FetchUsers`). No
+- **D4 — `RegisterWidgetListener`** → **moves to the bus** (`FetchUsersQuery`). No
   repository one-off; it's a convention violation.
 - **D5 — payload type** → maintain current `User` (RowPrototype) entity. A
   follow-up audits all repository return types for non-RowPrototype values.
