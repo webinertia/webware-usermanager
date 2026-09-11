@@ -61,7 +61,7 @@ Mago distinguishes what a `*::class` string may reference:
 Webware aliases against interfaces and builds to interfaces, so prefer the precise form:
 
 - DI aliases: `array<interface-string, class-string>` (e.g. `UserRepositoryInterface::class => UserRepository::class`)
-- handler/command/query maps: `array<class-string, class-string>` (e.g. `FetchUsers::class => FetchUsersHandler::class`)
+- handler/command/query maps: `array<class-string, class-string>` (e.g. `FetchUsersQuery::class => FetchUsersHandler::class`)
 
 Do not flatten an interface-keyed map to `array<class-string, class-string>`.
 

@@ -26,12 +26,12 @@ use Webware\UserManager\Container\UserFactory;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
-use Webware\UserManager\Query\AuthenticateUser;
-use Webware\UserManager\Query\CheckUserActive;
-use Webware\UserManager\Query\FetchUserByEmail;
-use Webware\UserManager\Query\FetchUserById;
-use Webware\UserManager\Query\FetchUserByVerificationToken;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\AuthenticateUserQuery;
+use Webware\UserManager\Query\CheckUserActiveQuery;
+use Webware\UserManager\Query\FetchUserByEmailQuery;
+use Webware\UserManager\Query\FetchUserByIdQuery;
+use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
+use Webware\UserManager\Query\FetchUsersQuery;
 use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
 use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
 use Webware\UserManager\QueryHandler\FetchUserByEmailHandler;
@@ -227,12 +227,12 @@ final class ConfigProviderTest extends TestCase
     {
         self::assertSame(
             [
-                AuthenticateUser::class             => AuthenticateUserHandler::class,
-                CheckUserActive::class              => CheckUserActiveHandler::class,
-                FetchUserByEmail::class             => FetchUserByEmailHandler::class,
-                FetchUserById::class                => FetchUserByIdHandler::class,
-                FetchUserByVerificationToken::class => FetchUserByVerificationTokenHandler::class,
-                FetchUsers::class                   => FetchUsersHandler::class,
+                AuthenticateUserQuery::class             => AuthenticateUserHandler::class,
+                CheckUserActiveQuery::class              => CheckUserActiveHandler::class,
+                FetchUserByEmailQuery::class             => FetchUserByEmailHandler::class,
+                FetchUserByIdQuery::class                => FetchUserByIdHandler::class,
+                FetchUserByVerificationTokenQuery::class => FetchUserByVerificationTokenHandler::class,
+                FetchUsersQuery::class                   => FetchUsersHandler::class,
             ],
             $this->provider->getQueryMap(),
         );

@@ -18,7 +18,7 @@ use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
-use Webware\UserManager\Query\AuthenticateUser;
+use Webware\UserManager\Query\AuthenticateUserQuery;
 
 use function is_string;
 
@@ -49,7 +49,7 @@ final class LoginMiddleware implements MiddlewareInterface
 
         /** @var AuthenticationResult $result */
         $result = $this->messageBus->handle(
-            new AuthenticateUser(
+            new AuthenticateUserQuery(
                 credential: $email,
                 password  : $password,
             ),

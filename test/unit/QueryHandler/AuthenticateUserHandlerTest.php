@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
-use Webware\UserManager\Query\AuthenticateUser;
+use Webware\UserManager\Query\AuthenticateUserQuery;
 use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -32,7 +32,7 @@ final class AuthenticateUserHandlerTest extends TestCase
 
         $handler = new AuthenticateUserHandler($users);
         $result  = $handler->handle(
-            new AuthenticateUser(
+            new AuthenticateUserQuery(
                 credential: 'jane@example.com',
                 password  : bin2hex(random_bytes(16)),
             ),

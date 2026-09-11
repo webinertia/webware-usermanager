@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Query\FetchUserById;
+use Webware\UserManager\Query\FetchUserByIdQuery;
 use Webware\UserManager\QueryHandler\FetchUserByIdHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -26,7 +26,7 @@ final class FetchUserByIdHandlerTest extends TestCase
         $users->method('findById')->willReturn(null);
 
         $handler = new FetchUserByIdHandler($users);
-        $result  = $handler->handle(new FetchUserById(id: 7));
+        $result  = $handler->handle(new FetchUserByIdQuery(id: 7));
 
         self::assertSame(MessageStatus::Failure, $result->getStatus());
         self::assertNull($result->getResult());
@@ -40,7 +40,7 @@ final class FetchUserByIdHandlerTest extends TestCase
         $users->method('findById')->willReturn($user);
 
         $handler = new FetchUserByIdHandler($users);
-        $result  = $handler->handle(new FetchUserById(id: 7));
+        $result  = $handler->handle(new FetchUserByIdQuery(id: 7));
 
         self::assertSame(MessageStatus::Success, $result->getStatus());
         self::assertSame($user, $result->getResult());

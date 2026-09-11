@@ -19,7 +19,7 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\RegenerateVerificationTokenCommand;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\RequestHandler\ResendVerificationHandler;
-use Webware\UserManager\Query\FetchUserByEmail;
+use Webware\UserManager\Query\FetchUserByEmailQuery;
 use Webware\UserManager\View\Helper\UserUrl;
 
 use function htmlspecialchars;
@@ -63,7 +63,7 @@ final readonly class ProcessResendVerificationMiddleware implements MiddlewareIn
             ));
         }
 
-        $result = $this->messageBus->handle(new FetchUserByEmail(email: $email));
+        $result = $this->messageBus->handle(new FetchUserByEmailQuery(email: $email));
 
         if ($result->getStatus() === MessageStatus::Failure) {
             // Silently skip unknown emails — do not reveal whether the address

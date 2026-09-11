@@ -26,7 +26,7 @@ use Webware\UserManager\Command\RegenerateVerificationTokenCommand;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\ProcessResendVerificationMiddleware;
 use Webware\UserManager\Http\RequestHandler\ResendVerificationHandler;
-use Webware\UserManager\Query\FetchUserByEmail;
+use Webware\UserManager\Query\FetchUserByEmailQuery;
 use Webware\UserManager\View\Helper\UserUrl;
 
 use function bin2hex;
@@ -68,7 +68,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         $bus->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(
-                static fn(MessageInterface $message): ResultInterface => $message instanceof FetchUserByEmail
+                static fn(MessageInterface $message): ResultInterface => $message instanceof FetchUserByEmailQuery
                     ? new QueryResult($message, MessageStatus::Success, $user)
                     : $commandResult,
             );
@@ -104,7 +104,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         $bus = $this->createStub(MessageBusInterface::class);
         $bus->method('handle')
             ->willReturn(new QueryResult(
-                new FetchUserByEmail(email: 'jane@example.com'),
+                new FetchUserByEmailQuery(email: 'jane@example.com'),
                 MessageStatus::Success,
                 new User(
                     id    : 7,
@@ -145,7 +145,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         $bus->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(
-                static fn(MessageInterface $message): ResultInterface => $message instanceof FetchUserByEmail
+                static fn(MessageInterface $message): ResultInterface => $message instanceof FetchUserByEmailQuery
                     ? new QueryResult($message, MessageStatus::Success, $user)
                     : $commandResult,
             );
@@ -222,7 +222,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         $bus = $this->createStub(MessageBusInterface::class);
         $bus->method('handle')
             ->willReturn(new QueryResult(
-                new FetchUserByEmail(email: 'ghost@example.com'),
+                new FetchUserByEmailQuery(email: 'ghost@example.com'),
                 MessageStatus::Failure,
                 null,
             ));

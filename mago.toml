@@ -79,6 +79,22 @@ must-be-named = "*Handler"
 must-implement = "Webware\\MessageBus\\CommandHandlerInterface"
 reason = "Command handlers live in CommandHandler\\ and must implement CommandHandlerInterface."
 
+# Query\ — read-side queries
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\Query\\*"
+target = "class"
+must-be-named = "*Query"
+must-implement = "Webware\\MessageBus\\Query\\QueryInterface"
+reason = "Queries live in Query\\ and must implement QueryInterface."
+
+# QueryHandler\ — read-side query handlers
+[[guard.structural.rules]]
+on = "Webware\\UserManager\\QueryHandler\\*"
+target = "class"
+must-be-named = "*Handler"
+must-implement = "Webware\\MessageBus\\QueryHandlerInterface"
+reason = "Query handlers live in QueryHandler\\ and must implement QueryHandlerInterface."
+
 # Psr\Http\Server\** — PSR middleware/request-handler contracts are usable only
 # from the Http\ namespace (plus tests). Flags the pre-move classes in
 # Middleware\ / RequestHandler\ / Admin\RequestHandler\ until Phase 2 relocates
@@ -100,6 +116,20 @@ allow-from = [
     "Webware\\UserManager\\Repository\\**",
     "Webware\\UserManager\\QueryHandler\\**",
     "Webware\\UserManager\\CommandHandler\\**",
+    "Webware\\UserManager\\Console\\**",
+    "WebwareTest\\UserManager\\**",
+    "WebwareTestIntegration\\UserManager\\**",
+]
+
+# PhpDb\** — persistence types stay behind the persistence boundary. Only the
+# repository, the row entity it hydrates, the schema/DDL console commands, and
+# tests may import them, so ResultSet/RowPrototype types never reach middleware,
+# HTTP handlers, or query payloads.
+[[guard.perimeter.restrictions]]
+dependency = "PhpDb\\**"
+allow-from = [
+    "Webware\\UserManager\\Entity\\**",
+    "Webware\\UserManager\\Repository\\**",
     "Webware\\UserManager\\Console\\**",
     "WebwareTest\\UserManager\\**",
     "WebwareTestIntegration\\UserManager\\**",

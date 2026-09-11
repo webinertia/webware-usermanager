@@ -7,7 +7,7 @@ namespace Webware\UserManager\QueryHandler;
 use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\MessageBus\QueryHandlerInterface;
-use Webware\UserManager\Query\FetchUserByEmail;
+use Webware\UserManager\Query\FetchUserByEmailQuery;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
 final readonly class FetchUserByEmailHandler implements QueryHandlerInterface
@@ -16,7 +16,7 @@ final readonly class FetchUserByEmailHandler implements QueryHandlerInterface
         private UserRepositoryInterface $users,
     ) {}
 
-    public function handle(FetchUserByEmail $query): QueryResult
+    public function handle(FetchUserByEmailQuery $query): QueryResult
     {
         $user = $this->users->findByEmail($query->email);
 

@@ -8,7 +8,7 @@ use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\MessageBus\QueryHandlerInterface;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\FetchUsersQuery;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
 final readonly class FetchUsersHandler implements QueryHandlerInterface
@@ -17,7 +17,7 @@ final readonly class FetchUsersHandler implements QueryHandlerInterface
         private UserRepositoryInterface $users,
     ) {}
 
-    public function handle(FetchUsers $query): QueryResult
+    public function handle(FetchUsersQuery $query): QueryResult
     {
         $resultSet = $this->users->findAll();
 

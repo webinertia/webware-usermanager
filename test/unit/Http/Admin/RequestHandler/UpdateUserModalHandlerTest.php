@@ -16,7 +16,7 @@ use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
-use Webware\UserManager\Query\FetchUserById;
+use Webware\UserManager\Query\FetchUserByIdQuery;
 
 #[CoversClass(UpdateUserModalHandler::class)]
 #[CoversMethod(UpdateUserModalHandler::class, '__construct')]
@@ -36,10 +36,10 @@ final class UpdateUserModalHandlerTest extends TestCase
             ->method('handle')
             ->with(
                 static::callback(
-                    static fn(FetchUserById $query): bool => 5 === $query->id,
+                    static fn(FetchUserByIdQuery $query): bool => 5 === $query->id,
                 ),
             )
-            ->willReturn(new QueryResult(new FetchUserById(id: 5), MessageStatus::Success, $user));
+            ->willReturn(new QueryResult(new FetchUserByIdQuery(id: 5), MessageStatus::Success, $user));
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
@@ -80,7 +80,7 @@ final class UpdateUserModalHandlerTest extends TestCase
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
         $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUserById(id: 99), MessageStatus::Failure, null));
+            ->willReturn(new QueryResult(new FetchUserByIdQuery(id: 99), MessageStatus::Failure, null));
 
         $handler = new UpdateUserModalHandler(
             template  : $this->createStub(TemplateRendererInterface::class),

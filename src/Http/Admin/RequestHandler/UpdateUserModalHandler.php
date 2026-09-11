@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
-use Webware\UserManager\Query\FetchUserById;
+use Webware\UserManager\Query\FetchUserByIdQuery;
 
 use function filter_var;
 
@@ -31,7 +31,7 @@ final class UpdateUserModalHandler implements RequestHandlerInterface
             return new HtmlResponse('', 404);
         }
 
-        $result = $this->messageBus->handle(new FetchUserById(id: $id));
+        $result = $this->messageBus->handle(new FetchUserByIdQuery(id: $id));
 
         if ($result->getStatus() === MessageStatus::Failure) {
             return new HtmlResponse('', 404);

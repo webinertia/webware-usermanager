@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Query\FetchUserByEmail;
+use Webware\UserManager\Query\FetchUserByEmailQuery;
 use Webware\UserManager\QueryHandler\FetchUserByEmailHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -26,7 +26,7 @@ final class FetchUserByEmailHandlerTest extends TestCase
         $users->method('findByEmail')->willReturn(null);
 
         $handler = new FetchUserByEmailHandler($users);
-        $result  = $handler->handle(new FetchUserByEmail(email: 'jane@example.com'));
+        $result  = $handler->handle(new FetchUserByEmailQuery(email: 'jane@example.com'));
 
         self::assertSame(MessageStatus::Failure, $result->getStatus());
         self::assertNull($result->getResult());
@@ -40,7 +40,7 @@ final class FetchUserByEmailHandlerTest extends TestCase
         $users->method('findByEmail')->willReturn($user);
 
         $handler = new FetchUserByEmailHandler($users);
-        $result  = $handler->handle(new FetchUserByEmail(email: 'jane@example.com'));
+        $result  = $handler->handle(new FetchUserByEmailQuery(email: 'jane@example.com'));
 
         self::assertSame(MessageStatus::Success, $result->getStatus());
         self::assertSame($user, $result->getResult());

@@ -18,7 +18,7 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\ActivateUserCommand;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
-use Webware\UserManager\Query\FetchUserByVerificationToken;
+use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
 
 /**
  * Resolves the verification token and activates the account before delegating
@@ -47,7 +47,7 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
             ));
         }
 
-        $result = $this->messageBus->handle(new FetchUserByVerificationToken(token: $token));
+        $result = $this->messageBus->handle(new FetchUserByVerificationTokenQuery(token: $token));
 
         if ($result->getStatus() === MessageStatus::Failure) {
             return $handler->handle($request->withAttribute(

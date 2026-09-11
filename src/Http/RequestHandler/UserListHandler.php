@@ -13,7 +13,7 @@ use Webware\Htmx\Response\Header;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\FetchUsersQuery;
 
 use function json_encode;
 
@@ -27,7 +27,7 @@ final class UserListHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $response = new HtmlResponse($this->template->render('user::list-users', [
-            'users' => $this->messageBus->handle(new FetchUsers())->getResult(),
+            'users' => $this->messageBus->handle(new FetchUsersQuery())->getResult(),
         ]));
 
         $commandResult = $request->getAttribute(CommandResult::class);

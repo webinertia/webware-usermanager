@@ -8,21 +8,21 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Webware\UserManager\Query\AuthenticateUser;
+use Webware\UserManager\Query\AuthenticateUserQuery;
 
 use function bin2hex;
 use function random_bytes;
 
-#[CoversClass(AuthenticateUser::class)]
-#[CoversMethod(AuthenticateUser::class, '__construct')]
-final class AuthenticateUserTest extends TestCase
+#[CoversClass(AuthenticateUserQuery::class)]
+#[CoversMethod(AuthenticateUserQuery::class, '__construct')]
+final class AuthenticateUserQueryTest extends TestCase
 {
     #[Test]
     public function constructorAssignsCredentialAndPassword(): void
     {
         $password = bin2hex(random_bytes(16));
 
-        $query = new AuthenticateUser(
+        $query = new AuthenticateUserQuery(
             credential: 'jane@example.com',
             password  : $password,
         );
@@ -34,7 +34,7 @@ final class AuthenticateUserTest extends TestCase
     #[Test]
     public function passwordDefaultsToNull(): void
     {
-        $query = new AuthenticateUser(credential: 'jane@example.com');
+        $query = new AuthenticateUserQuery(credential: 'jane@example.com');
 
         self::assertSame('jane@example.com', $query->credential);
         self::assertNull($query->password);

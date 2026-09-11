@@ -7,7 +7,7 @@ namespace Webware\UserManager\QueryHandler;
 use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\MessageBus\QueryHandlerInterface;
-use Webware\UserManager\Query\FetchUserById;
+use Webware\UserManager\Query\FetchUserByIdQuery;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
 final readonly class FetchUserByIdHandler implements QueryHandlerInterface
@@ -16,7 +16,7 @@ final readonly class FetchUserByIdHandler implements QueryHandlerInterface
         private UserRepositoryInterface $users,
     ) {}
 
-    public function handle(FetchUserById $query): QueryResult
+    public function handle(FetchUserByIdQuery $query): QueryResult
     {
         $user = $this->users->findById($query->id);
 

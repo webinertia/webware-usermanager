@@ -9,4 +9,4 @@ use Webware\MessageBus\Query\QueryInterface;
 /**
  * Fetch all users.
  */
-final readonly class FetchUsers implements QueryInterface {}
+final readonly class FetchUsersQuery implements QueryInterface {}

@@ -23,7 +23,7 @@ use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\LoginMiddleware;
-use Webware\UserManager\Query\AuthenticateUser;
+use Webware\UserManager\Query\AuthenticateUserQuery;
 
 use function bin2hex;
 use function hash_equals;
@@ -40,7 +40,7 @@ final class LoginMiddlewareTest extends TestCase
         $messageBus = $this->createStub(MessageBusInterface::class);
         $messageBus->method('handle')
             ->willReturn(new QueryResult(
-                new AuthenticateUser(
+                new AuthenticateUserQuery(
                     credential: 'jane@example.com',
                     password  : bin2hex(random_bytes(16)),
                 ),
@@ -72,7 +72,7 @@ final class LoginMiddlewareTest extends TestCase
         $messageBus = $this->createStub(MessageBusInterface::class);
         $messageBus->method('handle')
             ->willReturn(new QueryResult(
-                new AuthenticateUser(
+                new AuthenticateUserQuery(
                     credential: 'jane@example.com',
                     password  : bin2hex(random_bytes(16)),
                 ),
@@ -148,13 +148,13 @@ final class LoginMiddlewareTest extends TestCase
         $messageBus->expects($this->once())
             ->method('handle')
             ->with(static::callback(
-                static fn(AuthenticateUser $query): bool => (
+                static fn(AuthenticateUserQuery $query): bool => (
                     'jane@example.com' === $query->credential
                     && hash_equals($password, $query->password ?? '')
                 ),
             ))
             ->willReturn(new QueryResult(
-                new AuthenticateUser(
+                new AuthenticateUserQuery(
                     credential: 'jane@example.com',
                     password  : $password,
                 ),

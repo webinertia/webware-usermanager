@@ -7,11 +7,11 @@ namespace Webware\UserManager\Query;
 use Webware\MessageBus\Query\QueryInterface;
 
 /**
- * Check whether a user is active.
+ * Fetch a user by email address.
  */
-final readonly class CheckUserActive implements QueryInterface
+final readonly class FetchUserByEmailQuery implements QueryInterface
 {
     public function __construct(
-        public int $id,
+        public string $email,
     ) {}
 }

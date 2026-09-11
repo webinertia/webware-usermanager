@@ -7,14 +7,14 @@ namespace WebwareTest\UserManager\Query;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\FetchUsersQuery;
 
-#[CoversClass(FetchUsers::class)]
-final class FetchUsersTest extends TestCase
+#[CoversClass(FetchUsersQuery::class)]
+final class FetchUsersQueryTest extends TestCase
 {
     #[Test]
     public function canBeInstantiated(): void
     {
-        self::assertInstanceOf(FetchUsers::class, new FetchUsers());
+        self::assertInstanceOf(FetchUsersQuery::class, new FetchUsersQuery());
     }
 }

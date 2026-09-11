@@ -20,7 +20,7 @@ use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\IdentityMiddleware;
-use Webware\UserManager\Query\CheckUserActive;
+use Webware\UserManager\Query\CheckUserActiveQuery;
 
 #[CoversClass(IdentityMiddleware::class)]
 #[CoversMethod(IdentityMiddleware::class, '__construct')]
@@ -39,8 +39,8 @@ final class IdentityMiddlewareTest extends TestCase
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects($this->once())
             ->method('handle')
-            ->with(static::callback(static fn(CheckUserActive $query): bool => 5 === $query->id))
-            ->willReturn(new QueryResult(new CheckUserActive(id: 5), MessageStatus::Success, false));
+            ->with(static::callback(static fn(CheckUserActiveQuery $query): bool => 5 === $query->id))
+            ->willReturn(new QueryResult(new CheckUserActiveQuery(id: 5), MessageStatus::Success, false));
 
         $factoryData = null;
         $factory     = static function (array $data) use (&$factoryData): UserInterface {
@@ -104,8 +104,8 @@ final class IdentityMiddlewareTest extends TestCase
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects($this->once())
             ->method('handle')
-            ->with(static::callback(static fn(CheckUserActive $query): bool => 0 === $query->id))
-            ->willReturn(new QueryResult(new CheckUserActive(id: 0), MessageStatus::Success, true));
+            ->with(static::callback(static fn(CheckUserActiveQuery $query): bool => 0 === $query->id))
+            ->willReturn(new QueryResult(new CheckUserActiveQuery(id: 0), MessageStatus::Success, true));
 
         $factory = static fn(array $data): UserInterface => new User(roleId: $data['roleId'] ?? null);
 
@@ -141,8 +141,8 @@ final class IdentityMiddlewareTest extends TestCase
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects($this->once())
             ->method('handle')
-            ->with(static::callback(static fn(CheckUserActive $query): bool => 5 === $query->id))
-            ->willReturn(new QueryResult(new CheckUserActive(id: 5), MessageStatus::Success, true));
+            ->with(static::callback(static fn(CheckUserActiveQuery $query): bool => 5 === $query->id))
+            ->willReturn(new QueryResult(new CheckUserActiveQuery(id: 5), MessageStatus::Success, true));
 
         $factoryData = null;
         $factory     = static function (array $data) use (&$factoryData): UserInterface {

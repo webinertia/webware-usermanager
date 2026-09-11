@@ -8,12 +8,13 @@ use SensitiveParameter;
 use Webware\MessageBus\Query\QueryInterface;
 
 /**
- * Fetch a user by verification token.
+ * Authenticate a user by credential and password.
  */
-final readonly class FetchUserByVerificationToken implements QueryInterface
+final readonly class AuthenticateUserQuery implements QueryInterface
 {
     public function __construct(
+        public string $credential,
         #[SensitiveParameter]
-        public string $token,
+        public ?string $password = null,
     ) {}
 }

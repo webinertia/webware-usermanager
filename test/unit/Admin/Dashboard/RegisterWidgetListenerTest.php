@@ -15,7 +15,7 @@ use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Admin\Dashboard\Widget;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\FetchUsersQuery;
 
 use function iterator_to_array;
 
@@ -29,7 +29,7 @@ final class RegisterWidgetListenerTest extends TestCase
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
         $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUsers(), MessageStatus::Success, [
+            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, [
                 new User(
                     id    : 1,
                     active: true,

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Query\FetchUserByVerificationToken;
+use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
 use Webware\UserManager\QueryHandler\FetchUserByVerificationTokenHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -29,7 +29,7 @@ final class FetchUserByVerificationTokenHandlerTest extends TestCase
         $users->method('findByVerificationToken')->willReturn(null);
 
         $handler = new FetchUserByVerificationTokenHandler($users);
-        $result  = $handler->handle(new FetchUserByVerificationToken(token: bin2hex(random_bytes(16))));
+        $result  = $handler->handle(new FetchUserByVerificationTokenQuery(token: bin2hex(random_bytes(16))));
 
         self::assertSame(MessageStatus::Failure, $result->getStatus());
         self::assertNull($result->getResult());
@@ -43,7 +43,7 @@ final class FetchUserByVerificationTokenHandlerTest extends TestCase
         $users->method('findByVerificationToken')->willReturn($user);
 
         $handler = new FetchUserByVerificationTokenHandler($users);
-        $result  = $handler->handle(new FetchUserByVerificationToken(token: bin2hex(random_bytes(16))));
+        $result  = $handler->handle(new FetchUserByVerificationTokenQuery(token: bin2hex(random_bytes(16))));
 
         self::assertSame(MessageStatus::Success, $result->getStatus());
         self::assertSame($user, $result->getResult());

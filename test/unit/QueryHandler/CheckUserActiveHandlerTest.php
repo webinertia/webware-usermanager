@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\MessageBus\MessageStatus;
-use Webware\UserManager\Query\CheckUserActive;
+use Webware\UserManager\Query\CheckUserActiveQuery;
 use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -25,7 +25,7 @@ final class CheckUserActiveHandlerTest extends TestCase
         $users->method('checkStatus')->willReturn(true);
 
         $handler = new CheckUserActiveHandler($users);
-        $result  = $handler->handle(new CheckUserActive(id: 7));
+        $result  = $handler->handle(new CheckUserActiveQuery(id: 7));
 
         self::assertSame(MessageStatus::Success, $result->getStatus());
         self::assertTrue($result->getResult());

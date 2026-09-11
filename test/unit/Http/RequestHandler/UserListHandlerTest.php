@@ -19,7 +19,7 @@ use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\FetchUsersQuery;
 
 #[CoversClass(UserListHandler::class)]
 #[CoversMethod(UserListHandler::class, '__construct')]
@@ -31,7 +31,7 @@ final class UserListHandlerTest extends TestCase
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
         $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUsers(), MessageStatus::Success, []));
+            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, []));
 
         $template = $this->createStub(TemplateRendererInterface::class);
         $template->method('render')->willReturn('<ul>');
@@ -56,7 +56,7 @@ final class UserListHandlerTest extends TestCase
         $user       = new User(id: 1);
         $messageBus = $this->createStub(MessageBusInterface::class);
         $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUsers(), MessageStatus::Success, [$user]));
+            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, [$user]));
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())

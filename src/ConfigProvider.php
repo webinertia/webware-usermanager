@@ -16,12 +16,12 @@ use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Console\Container\InitDbCommandFactory;
 use Webware\UserManager\Console\InitDbCommand;
-use Webware\UserManager\Query\AuthenticateUser;
-use Webware\UserManager\Query\CheckUserActive;
-use Webware\UserManager\Query\FetchUserByEmail;
-use Webware\UserManager\Query\FetchUserById;
-use Webware\UserManager\Query\FetchUserByVerificationToken;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\AuthenticateUserQuery;
+use Webware\UserManager\Query\CheckUserActiveQuery;
+use Webware\UserManager\Query\FetchUserByEmailQuery;
+use Webware\UserManager\Query\FetchUserByIdQuery;
+use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
+use Webware\UserManager\Query\FetchUsersQuery;
 use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
 use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
 use Webware\UserManager\QueryHandler\Container\AuthenticateUserHandlerFactory;
@@ -239,12 +239,12 @@ final class ConfigProvider
     public function getQueryMap(): array
     {
         return [
-            Query\AuthenticateUser::class             => QueryHandler\AuthenticateUserHandler::class,
-            Query\CheckUserActive::class              => QueryHandler\CheckUserActiveHandler::class,
-            Query\FetchUserByEmail::class             => QueryHandler\FetchUserByEmailHandler::class,
-            Query\FetchUserById::class                => QueryHandler\FetchUserByIdHandler::class,
-            Query\FetchUserByVerificationToken::class => QueryHandler\FetchUserByVerificationTokenHandler::class,
-            Query\FetchUsers::class                   => QueryHandler\FetchUsersHandler::class,
+            Query\AuthenticateUserQuery::class             => QueryHandler\AuthenticateUserHandler::class,
+            Query\CheckUserActiveQuery::class              => QueryHandler\CheckUserActiveHandler::class,
+            Query\FetchUserByEmailQuery::class             => QueryHandler\FetchUserByEmailHandler::class,
+            Query\FetchUserByIdQuery::class                => QueryHandler\FetchUserByIdHandler::class,
+            Query\FetchUserByVerificationTokenQuery::class => QueryHandler\FetchUserByVerificationTokenHandler::class,
+            Query\FetchUsersQuery::class                   => QueryHandler\FetchUsersHandler::class,
         ];
     }
 

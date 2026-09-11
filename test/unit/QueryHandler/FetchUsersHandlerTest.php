@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Query\FetchUsers;
+use Webware\UserManager\Query\FetchUsersQuery;
 use Webware\UserManager\QueryHandler\FetchUsersHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -33,7 +33,7 @@ final class FetchUsersHandlerTest extends TestCase
         $users->method('findAll')->willReturn($resultSet);
 
         $handler = new FetchUsersHandler($users);
-        $result  = $handler->handle(new FetchUsers());
+        $result  = $handler->handle(new FetchUsersQuery());
 
         self::assertSame(MessageStatus::Success, $result->getStatus());
 
@@ -54,7 +54,7 @@ final class FetchUsersHandlerTest extends TestCase
         $users->method('findAll')->willReturn($resultSet);
 
         $handler = new FetchUsersHandler($users);
-        $result  = $handler->handle(new FetchUsers());
+        $result  = $handler->handle(new FetchUsersQuery());
 
         self::assertSame(MessageStatus::Success, $result->getStatus());
         self::assertSame([], $result->getResult());

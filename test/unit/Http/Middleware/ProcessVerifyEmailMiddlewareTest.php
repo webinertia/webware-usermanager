@@ -25,7 +25,7 @@ use Webware\UserManager\Command\ActivateUserCommand;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\ProcessVerifyEmailMiddleware;
 use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
-use Webware\UserManager\Query\FetchUserByVerificationToken;
+use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
 
 use function bin2hex;
 use function random_bytes;
@@ -46,7 +46,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             ->method('handle')
             ->willReturnCallback(
                 static fn(MessageInterface $message): ResultInterface => $message
-                    instanceof FetchUserByVerificationToken
+                    instanceof FetchUserByVerificationTokenQuery
                         ? new QueryResult($message, MessageStatus::Success, $user)
                         : $commandResult,
             );
@@ -87,7 +87,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         $bus = $this->createStub(MessageBusInterface::class);
         $bus->method('handle')
             ->willReturn(new QueryResult(
-                new FetchUserByVerificationToken(token: $token),
+                new FetchUserByVerificationTokenQuery(token: $token),
                 MessageStatus::Failure,
                 null,
             ));
@@ -115,7 +115,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         $bus = $this->createStub(MessageBusInterface::class);
         $bus->method('handle')
             ->willReturn(new QueryResult(
-                new FetchUserByVerificationToken(token: $token),
+                new FetchUserByVerificationTokenQuery(token: $token),
                 MessageStatus::Success,
                 $user,
             ));
@@ -143,7 +143,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             ->method('handle')
             ->willReturnCallback(
                 static fn(MessageInterface $message): ResultInterface => $message
-                    instanceof FetchUserByVerificationToken
+                    instanceof FetchUserByVerificationTokenQuery
                         ? new QueryResult($message, MessageStatus::Success, $user)
                         : $commandResult,
             );
