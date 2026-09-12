@@ -26,10 +26,14 @@ New findings only appear from changed code or a mago/`webware-tools` bump. The w
 therefore purely "fix the 373 known findings", which is why it is split into tranches
 with one PR each.
 
-**Current state (2026-09-11, `chore/mago-burndown-2-mechanical` at `b42df51`):** lint
+**Current state (2026-09-11, `chore/mago-burndown-2-mechanical` at `5cd36c1`):** lint
 suppresses **43** (was 123) and analysis **230** (was 250). Tranche 1 landed as PR #22;
-tranche 2 is partially applied on its branch. The unapproved Psl `unchecked-exceptions`
-exemption in `mago.toml` is reverted in its own PR (#23, against `0.1.x`).
+tranche 2 is partially applied on its branch.
+
+The unapproved Psl `unchecked-exceptions` exemption in `mago.toml` is gone: reverted in
+PR #23, merged to `0.1.x` as `8edf30b`, then merged into this branch. Nothing suppresses
+`unhandled-thrown-type` any more, so all 72 baselined findings of that code are genuinely
+outstanding work for tranche 5, and any new throw site must be documented at the source.
 
 ## Policy (locked 2026-09-11)
 
