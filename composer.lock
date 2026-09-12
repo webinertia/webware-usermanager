@@ -13083,12 +13083,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-console.git",
-                "reference": "d7d2f8175fb0610f5de86e6ace70273f06e4bce7"
+                "reference": "1df0c0f34e37f889b80581ef7c07ddd594dacc73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/d7d2f8175fb0610f5de86e6ace70273f06e4bce7",
-                "reference": "d7d2f8175fb0610f5de86e6ace70273f06e4bce7",
+                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/1df0c0f34e37f889b80581ef7c07ddd594dacc73",
+                "reference": "1df0c0f34e37f889b80581ef7c07ddd594dacc73",
                 "shasum": ""
             },
             "require": {
@@ -13168,7 +13168,7 @@
                 "source": "https://github.com/webinertia/webware-console/tree/0.1.x",
                 "issues": "https://github.com/webinertia/webware-console/issues"
             },
-            "time": "2026-09-10T20:41:50+00:00"
+            "time": "2026-09-12T10:41:15+00:00"
         },
         {
             "name": "webware/webware-tools",
