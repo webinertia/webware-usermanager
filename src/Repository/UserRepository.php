@@ -51,7 +51,7 @@ final class UserRepository implements UserRepositoryInterface
 
         if (! $user->active) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                'Failed login attempt for inactive user: ' . $user->getIdentity(),
+                "Failed login attempt for inactive user: {$user->getIdentity()}",
             )
                 ->setContext(['credential' => $credential]));
             return new AuthenticationResult(AuthenticationStatus::NotActive);
@@ -59,7 +59,7 @@ final class UserRepository implements UserRepositoryInterface
 
         if (! password_verify($password ?? '', $user->passwordHash)) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                'Failed login attempt for user: ' . $user->getIdentity(),
+                "Failed login attempt for user: {$user->getIdentity()}",
             )
                 ->setContext(['credential' => $credential]));
             return new AuthenticationResult(AuthenticationStatus::InvalidCredentials);
@@ -67,7 +67,7 @@ final class UserRepository implements UserRepositoryInterface
 
         $this->dispatcher->dispatch(
             new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                $user->firstName . ' ' . $user->lastName . ' authenticated successfully.',
+                "{$user->firstName} {$user->lastName} authenticated successfully.",
             )
                 ->setContext(['identity' => $user->getIdentity()]),
         );

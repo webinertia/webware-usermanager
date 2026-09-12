@@ -50,13 +50,7 @@ final class SendVerificationEmailListener
                     . '<p>This link expires in 24 hours.</p>',
             )
             ->altBody(
-                'Hello '
-                    . $command->firstName
-                    . ",\n\n"
-                    . "Please verify your email address by visiting the following link:\n"
-                    . $verificationUrl
-                    . "\n\n"
-                    . "This link expires in 24 hours.\n",
+                "Hello {$command->firstName},\n\nPlease verify your email address by visiting the following link:\n{$verificationUrl}\n\nThis link expires in 24 hours.\n",
             );
 
         $this->mailer->send();
