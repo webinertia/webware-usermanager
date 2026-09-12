@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webware\UserManager\Container;
 
 use Psl\Type;
+use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\Container\ContainerInterface;
 use Webware\Core\UserInterface;
 use Webware\UserManager\Entity\User;
@@ -20,12 +21,18 @@ final class UserFactory
     public function __invoke(ContainerInterface $container): callable
     {
         $prototype = $container->get(User::class);
-        return static function (array $withData) use ($prototype): UserInterface {
-            Type\non_empty_dict(
-                Type\string(),
-                Type\mixed(),
-            )->assert($withData);
-            return $prototype->populate($withData);
-        };
+
+        return (
+            /**
+             * @throws PslTypeException
+             */
+            static function (array $withData) use ($prototype): UserInterface {
+                Type\non_empty_dict(
+                    Type\string(),
+                    Type\mixed(),
+                )->assert($withData);
+                return $prototype->populate($withData);
+            }
+        );
     }
 }
