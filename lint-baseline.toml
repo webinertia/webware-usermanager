@@ -1,12 +1,6 @@
 variant = "loose"
 
 [[issues]]
-file = "src/Admin/Dashboard/Container/RegisterWidgetListenerFactory.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
-count = 1
-
-[[issues]]
 file = "src/Admin/Dashboard/RegisterWidgetListener.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
@@ -68,12 +62,6 @@ count = 1
 
 [[issues]]
 file = "src/ConfigProvider.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
-count = 2
-
-[[issues]]
-file = "src/ConfigProvider.php"
 code = "no-literal-password"
 message = "Literal passwords or sensitive data should not be stored in code."
 count = 1
@@ -107,12 +95,6 @@ file = "src/Entity/User.php"
 code = "halstead"
 message = "Method has a high halstead difficulty and effort"
 count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "literal-named-argument"
-message = "Literal argument `true` should be passed as a named argument for clarity."
-count = 2
 
 [[issues]]
 file = "src/Entity/User.php"
@@ -193,18 +175,6 @@ message = "Parameter list is too long."
 count = 1
 
 [[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "literal-named-argument"
-message = "Literal argument `'/'` should be passed as a named argument for clarity."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "literal-named-argument"
-message = "Literal argument `'UTF-8'` should be passed as a named argument for clarity."
-count = 2
-
-[[issues]]
 file = "src/Repository/UserRepository.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."
@@ -232,22 +202,4 @@ count = 1
 file = "src/Repository/UserRepositoryInterface.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/RouteProvider.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
-count = 2
-
-[[issues]]
-file = "src/RouteProvider.php"
-code = "string-style"
-message = "String concatenation can be replaced with interpolation."
-count = 3
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
 count = 1

@@ -73,7 +73,7 @@ final class ConfigProvider
                 AdminConfiguration::ADMIN_ROUTE_NAME_PREFIX_VALUE
                     . rtrim(
                         Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE,
-                        '.',
+                        characters: '.',
                     ) => true,
                 AdminConfiguration::ADMIN_ROUTE_NAME_PREFIX_VALUE
                     . Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE
@@ -102,17 +102,17 @@ final class ConfigProvider
                     AdminConfiguration::ADMIN_ROUTE_NAME_PREFIX_VALUE
                         . rtrim(
                             Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE,
-                            '.',
+                            characters: '.',
                         ) => [],
                     AdminConfiguration::ADMIN_ROUTE_NAME_PREFIX_VALUE
                         . Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE
-                        . 'create'                                                             => [],
+                        . 'create'                                                                         => [],
                     AdminConfiguration::ADMIN_ROUTE_NAME_PREFIX_VALUE
                         . Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE
-                        . 'update'                                                             => [],
+                        . 'update'                                                                         => [],
                     AdminConfiguration::ADMIN_ROUTE_NAME_PREFIX_VALUE
                         . Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE
-                        . 'toggle.update'                                                      => [],
+                        . 'toggle.update'                                                                  => [],
                 ],
             ],
             'deny'      => [

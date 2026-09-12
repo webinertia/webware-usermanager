@@ -133,7 +133,10 @@ final readonly class RouteProvider implements RouteProviderInterface
             $middlewareFactory->prepare([
                 UserListHandler::class,
             ]),
-            rtrim($this->adminRouteNamePrefix, '.'),
+            rtrim(
+                string    : $this->adminRouteNamePrefix,
+                characters: '.',
+            ),
         )->setOptions([
             'navigation' => 'admin',
             'label'      => 'Users',
@@ -154,13 +157,16 @@ final readonly class RouteProvider implements RouteProviderInterface
                 'navigation' => 'admin',
                 'label'      => 'Create User',
                 'icon'       => 'bi-person-plus-fill',
-                'parent'     => rtrim($this->adminRouteNamePrefix, '.'),
+                'parent'     => rtrim(
+                    string    : $this->adminRouteNamePrefix,
+                    characters: '.',
+                ),
                 'order'      => 10,
             ]);
 
         // Update the user (PATCH) — re-renders the user list (mirrors webware-acl's role.update route)
         $routeCollector->route(
-            '/' . $this->adminRouteSegment . '/update/{id:\d+}',
+            "/{$this->adminRouteSegment}/update/{id:\d+}",
             $middlewareFactory->prepare([
                 BodyParamsMiddleware::class,
                 ProcessUpdateUserMiddleware::class,
@@ -172,7 +178,7 @@ final readonly class RouteProvider implements RouteProviderInterface
 
         // Return the htmx modal for updating a user
         $routeCollector->route(
-            '/' . $this->adminRouteSegment . '/update/{id:\d+}',
+            "/{$this->adminRouteSegment}/update/{id:\d+}",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 UpdateUserModalHandler::class,
@@ -182,7 +188,7 @@ final readonly class RouteProvider implements RouteProviderInterface
         );
 
         $routeCollector->post(
-            '/' . $this->adminRouteSegment . '/{id:\d+}/toggle',
+            "/{$this->adminRouteSegment}/{id:\d+}/toggle",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 ProcessToggleUserActiveMiddleware::class,

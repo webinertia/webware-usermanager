@@ -48,7 +48,7 @@ class User implements UserInterface, NamedCommandInterface
             set(array|string|null $value) {
                 if (is_string($value)) {
                     if (json_validate($value)) {
-                        $decoded      = json_decode($value, true);
+                        $decoded      = json_decode($value, associative: true);
                         $this->roleId = is_array($decoded) ? $decoded : [];
                     } else {
                         $this->roleId = [$value];
@@ -109,7 +109,7 @@ class User implements UserInterface, NamedCommandInterface
             set(array|string|null $value) {
                 if (is_string($value)) {
                     if (json_validate($value)) {
-                        $decoded       = json_decode($value, true);
+                        $decoded       = json_decode($value, associative: true);
                         $this->details = is_array($decoded) ? $decoded : [];
                     } else {
                         $this->details = [$value];

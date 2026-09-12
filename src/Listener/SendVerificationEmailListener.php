@@ -26,7 +26,10 @@ final class SendVerificationEmailListener
     {
         $command         = $event->getTarget();
         $token           = $command->verificationToken;
-        $verificationUrl = rtrim($this->baseUrl, '/')
+        $verificationUrl = rtrim(
+            string    : $this->baseUrl,
+            characters: '/',
+        )
         . ($this->userUrl)('verify.email.read', ['token' => $token]);
 
         $adapter = $this->mailer->getAdapter();
@@ -41,11 +44,11 @@ final class SendVerificationEmailListener
             ->isHtml(true)
             ->body(
                 '<p>Hello '
-                    . htmlspecialchars($command->firstName, ENT_QUOTES, 'UTF-8')
+                    . htmlspecialchars($command->firstName, flags: ENT_QUOTES, encoding: 'UTF-8')
                     . ',</p>'
                     . '<p>Thank you for registering. Please verify your email address by clicking the link below.</p>'
                     . '<p><a href="'
-                    . htmlspecialchars($verificationUrl, ENT_QUOTES, 'UTF-8')
+                    . htmlspecialchars($verificationUrl, flags: ENT_QUOTES, encoding: 'UTF-8')
                     . '">Verify my email</a></p>'
                     . '<p>This link expires in 24 hours.</p>',
             )
