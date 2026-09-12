@@ -42,14 +42,12 @@ final class RegistrationMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $body = $request->getParsedBody();
-        $data = array_merge(
-            is_array($body) ? $body : [],
-            [
-                'verificationToken' => Uuid::uuid7()->toString(),
-                'roleId'            => json_encode(self::DEFAULT_ROLE),
-                'active'            => '0',
-            ],
-        );
+        $data = [
+            ...(is_array($body) ? $body : []),
+            'verificationToken' => Uuid::uuid7()->toString(),
+            'roleId'            => json_encode(self::DEFAULT_ROLE),
+            'active'            => '0',
+        ];
 
         $filterResult = $this->filter->validate($data);
 

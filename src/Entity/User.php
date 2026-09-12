@@ -227,7 +227,7 @@ class User implements UserInterface, NamedCommandInterface
             createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
             tokenCreatedAt   : $this->tokenCreatedAt,
-            details          : array_merge($details, [$name => $value]),
+            details          : [...$details, $name => $value],
         );
     }
 
@@ -332,7 +332,7 @@ class User implements UserInterface, NamedCommandInterface
 
         return new static(
             id               : $this->id,
-            roleId           : array_merge($roles, array_values($roleId)),
+            roleId           : [...$roles, ...array_values($roleId)],
             firstName        : $this->firstName,
             lastName         : $this->lastName,
             email            : $this->email,
