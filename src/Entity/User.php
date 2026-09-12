@@ -214,6 +214,8 @@ class User implements UserInterface, NamedCommandInterface
 
     public function withDetail(string $name, mixed $value): static
     {
+        $details = is_array($this->details) ? $this->details : [];
+
         return new static(
             id               : $this->id,
             roleId           : $this->roleId,
@@ -225,7 +227,7 @@ class User implements UserInterface, NamedCommandInterface
             createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
             tokenCreatedAt   : $this->tokenCreatedAt,
-            details          : array_merge($this->details, [$name => $value]),
+            details          : array_merge($details, [$name => $value]),
         );
     }
 
@@ -326,9 +328,11 @@ class User implements UserInterface, NamedCommandInterface
             $roleId = [$roleId];
         }
 
+        $roles = is_array($this->roleId) ? $this->roleId : [];
+
         return new static(
             id               : $this->id,
-            roleId           : array_merge($this->roleId, array_values($roleId)),
+            roleId           : array_merge($roles, array_values($roleId)),
             firstName        : $this->firstName,
             lastName         : $this->lastName,
             email            : $this->email,

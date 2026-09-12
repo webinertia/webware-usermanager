@@ -198,6 +198,16 @@ final class UserTest extends TestCase
     }
 
     #[Test]
+    public function withDetailMergesIntoNullDetails(): void
+    {
+        $user = new User();
+
+        $clone = $user->withDetail('b', 2);
+
+        static::assertSame(['b' => 2], $clone->details);
+    }
+
+    #[Test]
     public function withEmailLowercasesAndReturnsNewInstance(): void
     {
         $user = new User(email: 'jane@example.com');
@@ -254,6 +264,14 @@ final class UserTest extends TestCase
         $clone = new User(roleId: ['member'])->withRoleId('admin');
 
         static::assertSame(['member', 'admin'], $clone->roleId);
+    }
+
+    #[Test]
+    public function withRoleIdMergesIntoNullRoleId(): void
+    {
+        $clone = new User()->withRoleId('admin');
+
+        static::assertSame(['admin'], $clone->roleId);
     }
 
     #[Test]

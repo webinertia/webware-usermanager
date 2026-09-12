@@ -368,24 +368,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "possibly-invalid-argument"
-message = "Possible argument type mismatch for argument #1 of `array_merge`: expected `array<array-key, mixed>`, but possibly received `array<array-key, mixed>|null|string`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "possibly-null-argument"
-message = "Argument #1 of function `array_merge` is possibly `null`, but parameter type `array<array-key, mixed>` does not accept it."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "possibly-null-argument"
-message = "Argument #1 of function `array_merge` is possibly `null`, but parameter type `array<string, mixed>` does not accept it."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "property-type-coercion"
 message = "A value of a less specific type `array<array-key, mixed>` is being assigned to property `$details` (array<string, mixed>|null)."
 count = 1
