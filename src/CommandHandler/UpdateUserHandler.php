@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler;
 
+use Psl\Type;
+use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Throwable;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
@@ -13,7 +15,6 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
-use function assert;
 use function json_encode;
 
 final class UpdateUserHandler implements CommandHandlerInterface
@@ -22,9 +23,12 @@ final class UpdateUserHandler implements CommandHandlerInterface
         private readonly UserRepositoryInterface $users,
     ) {}
 
+    /**
+     * @throws PslTypeException
+     */
     public function handle(CommandInterface $command): CommandResultInterface
     {
-        assert($command instanceof UpdateUserCommand);
+        Type\instance_of(UpdateUserCommand::class)->assert($command);
 
         $user = $this->users->findById($command->id);
 

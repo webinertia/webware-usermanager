@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler;
 
+use Psl\Type;
+use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\Command\CommandResultInterface;
@@ -12,17 +14,18 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\ToggleUserActiveCommand;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
-use function assert;
-
 final class ToggleUserActiveHandler implements CommandHandlerInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $users,
     ) {}
 
+    /**
+     * @throws PslTypeException
+     */
     public function handle(CommandInterface $command): CommandResultInterface
     {
-        assert($command instanceof ToggleUserActiveCommand);
+        Type\instance_of(ToggleUserActiveCommand::class)->assert($command);
 
         $user = $this->users->findById($command->id);
 

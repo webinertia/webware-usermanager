@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler;
 
+use Psl\Type;
+use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
@@ -14,8 +16,6 @@ use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
-use function assert;
-
 final class CreateUserHandler implements CommandHandlerInterface
 {
     public function __construct(
@@ -23,9 +23,12 @@ final class CreateUserHandler implements CommandHandlerInterface
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
+    /**
+     * @throws PslTypeException
+     */
     public function handle(CommandInterface $command): CommandResultInterface
     {
-        assert($command instanceof CreateUserCommand);
+        Type\instance_of(CreateUserCommand::class)->assert($command);
 
         if ($result = $this->users->save($command)) {
             $this->eventDispatcher->dispatch(new SendVerificationEmailEvent($command));
