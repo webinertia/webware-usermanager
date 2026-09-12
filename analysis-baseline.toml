@@ -434,20 +434,8 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "redundant-type-comparison"
-message = "Redundant condition: variable `$value` (type `null`) is already known to be `null`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `RuntimeException` in `Webware\UserManager\Entity\User::exchangeArray`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "unreachable-else-clause"
-message = "Unreachable else clause"
 count = 1
 
 [[issues]]
@@ -974,18 +962,6 @@ count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
-code = "mixed-operand"
-message = "Invalid left operand: type `mixed` cannot be reliably used in string concatenation."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-operand"
-message = "Invalid middle operand: type `mixed` cannot be reliably used in string concatenation."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
 code = "mixed-return-statement"
 message = 'Could not infer a precise return type for function `Webware\UserManager\Repository\UserRepository::findByConfiguredCredential`. Saw type `mixed`.'
 count = 1
@@ -1043,12 +1019,6 @@ file = "src/Repository/UserRepository.php"
 code = "possible-method-access-on-null"
 message = "Attempting to call a method on `null`."
 count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "possibly-null-operand"
-message = "Possibly null right operand used in string concatenation (type `null|string`)."
-count = 2
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
