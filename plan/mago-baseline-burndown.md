@@ -61,7 +61,7 @@ Integration tests need MySQL and run in the tooling container
 | Code | Level | Count | Tranche |
 |---|---|---|---|
 | `string-style` | help | 30 | 1 |
-| `no-else-clause` | help | 21 | 1 (approval required) |
+| `no-else-clause` | help | 21 | Deferred — kept baselined |
 | `literal-named-argument` | warning | 11 | 1 |
 | `no-fully-qualified-global-class-like` | help | 11 | 1 |
 | `yoda-conditions` | help | 11 | 1 |
@@ -129,7 +129,7 @@ Integration tests need MySQL and run in the tooling container
 
 | # | Scope | Findings | Branch | PR | Status |
 |---|---|---|---|---|---|
-| 1 | Mechanical lint: autofixable style codes | 93 | `chore/mago-burndown-1-lint-mechanical` | — | In progress |
+| 1 | Mechanical lint: autofixable style codes | 93 | `chore/mago-burndown-1-lint-mechanical` | — | 72 fixed; 21 `no-else-clause` deferred (baselined) |
 | 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | — | — | Not started |
 | 3 | Type precision at the source: `imprecise-type`, `mixed-*`, `unsafe-instantiation`, `less-specific-argument`, docblock narrowing | 82 | — | — | Not started |
 | 4 | Error-level correctness: `possibly-*`, `non-existent-property`, `uninitialized-property`, `invalid-*`, `unreachable-else-clause`, plus the remaining lint errors | 38 | — | — | Not started |
@@ -139,6 +139,38 @@ Tranche 3 and 4 will move as findings resolve each other: fixing a type at its s
 (retiring `imprecise-type` or a `mixed-*` root) typically retires downstream findings in
 the same code family, so each tranche's count is re-measured when its branch opens
 rather than assumed from this table.
+
+## Deferred findings (kept in the baseline)
+
+**`no-else-clause` (21)** — deferred 2026-09-11 by owner decision: left baselined until
+each site is worked through individually.
+
+Rationale: mago ships no safe autofix for this rule, and its stated intent (guard
+clauses and early returns) is a control-flow restructure rather than a mechanical
+rewrite.
+
+| Site group | Count | Why it is not mechanical |
+|---|---|---|
+| `Entity/User.php` property hooks | 10 | value-producing `if`/`elseif`/`else` inside `set` hooks — needs either an early `return;` after assignment or extracted normalizer helpers, and extraction adds methods while `too-many-methods` (3) and `cyclomatic-complexity` (1) are still pending in tranche 4 |
+| `Command/CreateUserCommand.php` hooks | 7 | same shape as above |
+| `Http/Middleware/IdentityMiddleware.php` | 2 | authentication path — dropping `else` splits the identity/guest decision across two terminal `return $handler->handle(...)` calls |
+| `Http/Admin/Middleware/ProcessUpdateUserMiddleware.php` | 1 | a straightforward guard clause, grouped with the above for consistency |
+| `Admin/Dashboard/RegisterWidgetListener.php` | 1 | `if`/`else` counter inside a `foreach`; becomes `continue` or a ternary |
+
+The 21 entries stay in `lint-baseline.toml` so `mago lint` remains green. When any site
+is fixed later, prune its entry with `--remove-outdated-baseline-entries` in the same
+commit.
+
+## Progress log
+
+| Commit | Scope | Findings fixed | Lint baseline after |
+|---|---|---|---|
+| `2ef53ef` | `no-redundant-use` | 9 | 114 |
+| `aef5133` | `no-fully-qualified-global-class-like` | 11 | 103 |
+| `473c813` | `yoda-conditions` | 11 | 92 |
+| `a07a8d3` | `string-style` (autofixable subset) | 27 | 65 |
+| `ac0393c` | `literal-named-argument` + remaining `string-style` | 14 | 51 |
+| `f7eba41` | prune `analysis-baseline.toml` (6 entries obsoleted by the above) | — | 51 |
 
 ## Notes for the analyze tranches
 
