@@ -26,9 +26,10 @@ New findings only appear from changed code or a mago/`webware-tools` bump. The w
 therefore purely "fix the 373 known findings", which is why it is split into tranches
 with one PR each.
 
-**Current state (2026-09-11, `chore/mago-burndown-2-mechanical` at `9d23f50`):** lint
-suppresses **50** (was 123) and analysis **230** (was 250). Tranche 1 landed as PR #22;
-tranche 2 is partially applied on its branch.
+**Current state (2026-09-11, `chore/mago-burndown-2-mechanical` at `b42df51`):** lint
+suppresses **43** (was 123) and analysis **230** (was 250). Tranche 1 landed as PR #22;
+tranche 2 is partially applied on its branch. The unapproved Psl `unchecked-exceptions`
+exemption in `mago.toml` is reverted in its own PR (#23, against `0.1.x`).
 
 ## Policy (locked 2026-09-11)
 
@@ -62,11 +63,14 @@ Integration tests need MySQL and run in the tooling container
 
 ### Coverage gotchas (measured 2026-09-11)
 
-- **`zend.assertions=1` is mandatory.** Each `CommandHandler` asserts its command type
-  as the first line of `handle()`. With the default `zend.assertions=-1` that line never
-  executes, so a plain `phpunit --coverage-text` run reports 5 classes at 50% methods
-  (94.44% / 97.15% / 99.44%). With `-d zend.assertions=1` the same run is 100%
-  (90/90 classes, 176/176 methods, 1449/1449 lines).
+- **The `zend.assertions=1` requirement is gone** (tranche 2). Each `CommandHandler`
+  used to assert its command type as the first line of `handle()`; with the default
+  `zend.assertions=-1` that line never executed, so a plain `phpunit --coverage-text`
+  run reported 5 classes at 50% methods (94.44% / 97.15% / 99.44%) and the flag was
+  needed to reach 100%. The handlers now use `Type\instance_of()->assert()`, which is
+  an ordinary statement, so coverage is 100% with or without the flag. The flag is
+  still passed for the recorded gate because it costs nothing and keeps the command
+  stable.
 - **`composer test-coverage` has no `--testsuite` filter**, so it runs unit *and*
   integration. On the host the 6 integration tests error out (the DB hostname `mysql`
   only resolves inside the compose network) and the run reports `Errors: 6`. It is a
@@ -92,8 +96,8 @@ Integration tests need MySQL and run in the tooling container
 | `excessive-parameter-list` | error | 6 | 4 |
 | `ambiguous-constant-access` | help | 4 | 2 |
 | `no-isset` | warning | 4 | 2 |
-| `prefer-array-spread` | warning | 4 | 2 |
-| `assert-description` | warning | 3 | 2 |
+| `prefer-array-spread` | warning | 4 | 2 — **done** |
+| `assert-description` | warning | 3 | 2 — **done** (no `assert()` calls remain) |
 | `too-many-methods` | error | 3 | 4 |
 | `cyclomatic-complexity` | error | 1 | 4 |
 | `halstead` | warning | 1 | 4 |
@@ -153,7 +157,7 @@ Integration tests need MySQL and run in the tooling container
 | # | Scope | Findings | Branch | PR | Status |
 |---|---|---|---|---|---|
 | 1 | Mechanical lint: autofixable style codes | 93 | `chore/mago-burndown-1-lint-mechanical` | #22 merged | 72 fixed; 21 `no-else-clause` deferred (baselined) |
-| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | — | 11 fixed + 3 retired by the `with*` null-merge fix; remainder awaiting decisions |
+| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | — | 11 fixed; `prefer-array-spread` (4) and `assert-description` (3) retired; 3 retired by the `with*` null-merge fix; remainder awaiting decisions |
 | 3 | Type precision at the source: `imprecise-type`, `mixed-*`, `unsafe-instantiation`, `less-specific-argument`, docblock narrowing | 82 | — | — | Not started |
 | 4 | Error-level correctness: `possibly-*`, `non-existent-property`, `uninitialized-property`, `invalid-*`, `unreachable-else-clause`, plus the remaining lint errors | 38 | — | — | Not started |
 | 5 | `unhandled-thrown-type` — document `@throws` using the interface the concrete exception implements | 72 | — | — | Not started |
