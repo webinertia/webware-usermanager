@@ -6,7 +6,6 @@ baseline = "lint-baseline.toml"
 
 [analyzer]
 baseline = "analysis-baseline.toml"
-unchecked-exceptions = ['Psl\Type\Exception\ExceptionInterface']
 
 # ---------------------------------------------------------------------------
 # Guard rules — Http boundary (Phase 2) and MessageBus classes.
