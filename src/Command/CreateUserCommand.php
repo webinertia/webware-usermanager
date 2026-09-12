@@ -6,7 +6,6 @@ namespace Webware\UserManager\Command;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Ramsey\Uuid\Uuid;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;

@@ -6,7 +6,6 @@ namespace Webware\UserManager\Http\RequestHandler;
 
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Session\RetrieveSession;
-use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

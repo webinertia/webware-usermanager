@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use Closure;
-use DateTimeImmutable;
 use Monolog\Level;
 use PhpDb\Exception\ExceptionInterface;
 use PhpDb\ResultSet\ResultSetInterface;

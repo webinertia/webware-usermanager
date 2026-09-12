@@ -7,7 +7,6 @@ namespace Webware\UserManager\Http\Middleware\Container;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
-use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Middleware\RegistrationMiddleware;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
