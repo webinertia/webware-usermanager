@@ -340,3 +340,28 @@ INSERT INTO `acl_rule` (type, roleId, resourceId, ...) VALUES ('Allow', 'Develop
 | 5 | `user.roleId` is `JSON` (array of strings) but `acl_role.roleId` and `acl_rule.roleId` are `VARCHAR(50)` (single string) — no FK or referential integrity possible | Schema |
 | 6 | Stale schema comment: `002_user.sql:4` says role_id is a plain VARCHAR and roles are in config — both are now false | `data/schema/002_user.sql` |
 | 7 | `parseRoleId()` creates `GenericRole` objects but `getRoles()` PHPDoc still says `string[]` (was never updated) | `User.php:158` |
+
+---
+
+## Update — 2026-09-10
+
+This audit was taken 2026-06-16 against the pre-extraction entity, before the move to
+the RowPrototype implementation. Re-checked against the current package:
+
+- **`GuestUser` does not exist.** A guest is a `User` carrying
+  `UserInterface::GUEST_ROLE`; `IdentityMiddleware` attaches one when the session
+  payload is absent or the account fails the `CheckUserActiveQuery` check.
+- **`User::getRoleId()`** (`src/Entity/User.php`, previously `User.php:152/158`) is
+  typed `array|string|null` and returns `$this->roleId` verbatim. The promoted-property
+  setter normalizes a JSON string to an array and wraps a bare string, so
+  `new User(roleId: 'Guest')` reports `['Guest']`.
+- **Single-role consumers are served on the ACL side, not by changing this entity.**
+  `Webware\Acl\Role\UserRoleIterator` yields one `Webware\Acl\Role\SingleRoleUserProxy`
+  per role (`new SingleRoleUserProxy($this->user, $this->roles[$this->position])`), so
+  each yielded object's `getRoleId()` returns a single role id for Laminas
+  `RoleInterface` consumers. Issues 1 and 2 above are therefore by design: the entity
+  stays multi-role, and the ACL view is one role per proxy.
+- Entries 3, 4 and 7 above are resolved in the current entity: `withRoleId()` accepts
+  `array|string` (so its string branch is live) and `parseRoleId()` / `GenericRole` no
+  longer exist — roleId normalization happens in the setter. All line numbers in the
+  tables above refer to the pre-extraction file and have shifted.

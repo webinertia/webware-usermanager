@@ -34,7 +34,6 @@ use const PASSWORD_DEFAULT;
 #[CoversMethod(UserRepository::class, 'findById')]
 #[CoversMethod(UserRepository::class, 'findByVerificationToken')]
 #[CoversMethod(UserRepository::class, 'save')]
-#[CoversMethod(UserRepository::class, 'findRoleIdByName')]
 #[CoversMethod(UserRepository::class, 'insert')]
 #[CoversMethod(UserRepository::class, 'update')]
 final class UserRepositoryTest extends TestCase
@@ -249,14 +248,6 @@ final class UserRepositoryTest extends TestCase
 
         self::assertInstanceOf(User::class, $user);
         self::assertSame(1, $user->id);
-    }
-
-    #[Test]
-    public function findRoleIdByNameReturnsRoleName(): void
-    {
-        $adapter = $this->createAdapter([]);
-
-        self::assertSame('Member', $this->repository($adapter)->findRoleIdByName('Member'));
     }
 
     #[Test]

@@ -10,9 +10,9 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Admin\RequestHandler\Container\UpdateUserModalHandlerFactory;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
-use Webware\UserManager\Repository\UserRepositoryInterface;
 
 #[CoversClass(UpdateUserModalHandlerFactory::class)]
 #[CoversMethod(UpdateUserModalHandlerFactory::class, '__invoke')]
@@ -25,7 +25,7 @@ final class UpdateUserModalHandlerFactoryTest extends TestCase
         $container->method('get')
             ->willReturnMap([
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
-                [UserRepositoryInterface::class, $this->createStub(UserRepositoryInterface::class)],
+                [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
             ]);
 
         self::assertInstanceOf(UpdateUserModalHandler::class, (new UpdateUserModalHandlerFactory())($container));

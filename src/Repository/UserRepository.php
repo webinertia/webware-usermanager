@@ -156,12 +156,6 @@ final class UserRepository implements UserRepositoryInterface
         return $this->gateway->selectWith($select)->current();
     }
 
-    #[\Override]
-    public function findRoleIdByName(string $roleName): string
-    {
-        return $roleName;
-    }
-
     /** @param array<string, mixed> $data */
     #[\Override]
     public function insert(array $data): int

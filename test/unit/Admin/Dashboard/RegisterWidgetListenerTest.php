@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace WebwareTest\UserManager\Admin\Dashboard;
 
-use PhpDb\ResultSet\RowPrototypeResultSet;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\Admin\Event\RegisterWidgetEvent;
+use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
+use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Admin\Dashboard\Widget;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\UserManager\Query\FetchUsersQuery;
 
 use function iterator_to_array;
 
@@ -25,19 +27,26 @@ final class RegisterWidgetListenerTest extends TestCase
     #[Test]
     public function registersWidgetWithUserCounts(): void
     {
-        $resultSet = new RowPrototypeResultSet(new User());
-        $resultSet->initialize([
-            ['id' => 1, 'active' => 1],
-            ['id' => 2, 'active' => 0],
-            ['id' => 3, 'active' => 1],
-        ]);
-
-        $users = $this->createStub(UserRepositoryInterface::class);
-        $users->method('findAll')->willReturn($resultSet);
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('handle')
+            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, [
+                new User(
+                    id    : 1,
+                    active: true,
+                ),
+                new User(
+                    id    : 2,
+                    active: false,
+                ),
+                new User(
+                    id    : 3,
+                    active: true,
+                ),
+            ]));
 
         $listener = new RegisterWidgetListener(
             resourceId: 'user.manager',
-            users     : $users,
+            messageBus: $messageBus,
         );
 
         $event = new RegisterWidgetEvent();

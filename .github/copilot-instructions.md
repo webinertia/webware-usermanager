@@ -35,3 +35,34 @@ $logger->method('withName')->willReturn($logger); // should be createStub()
 1. `#[CoversClass(ClassName::class)]` — one per source class under test.
 2. `#[CoversMethod(ClassName::class, 'methodName')]` — one per public/protected method exercised.
 3. `use PHPUnit\Framework\Attributes\CoversClass;` and `use PHPUnit\Framework\Attributes\CoversMethod;` imports.
+
+## Mago Analysis Docblock Types
+
+When resolving `mago analyze` findings that involve docblock type annotations (`@var`, `@param`,
+`@return`, `@property`, `@method`, `@template`, etc.), consult the authoritative reference for
+every supported docblock-only type before writing or correcting any docblock type:
+
+- `vendor/webware/webware-tools/mago-analysis-types.md`
+
+It lists all non-native types mago understands (shapes `array{...}`, `list<T>`, `int<min,max>`,
+`class-string<T>`, `non-empty-string`, `key-of<T>`, conditional types, type aliases, etc.) plus
+parser notes (e.g. which keywords are case-sensitive).
+
+### Class-reference string types
+
+Mago distinguishes what a `*::class` string may reference:
+
+- `class-string<T>` — a concrete **class**
+- `interface-string<T>` — an **interface**
+- `enum-string<T>` — an **enum**
+- `trait-string<T>` — a **trait**
+- `class-like-string<T>` — any of class / interface / enum
+
+Webware aliases against interfaces and builds to interfaces, so prefer the precise form:
+
+- DI aliases: `array<interface-string, class-string>` (e.g. `UserRepositoryInterface::class => UserRepository::class`)
+- handler/command/query maps: `array<class-string, class-string>` (e.g. `FetchUsersQuery::class => FetchUsersHandler::class`)
+
+Do not flatten an interface-keyed map to `array<class-string, class-string>`.
+
+

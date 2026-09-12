@@ -60,11 +60,6 @@ interface UserRepositoryInterface
     public function findByVerificationToken(#[SensitiveParameter] string $token): ?UserInterface;
 
     /**
-     * Return the role identifier string for the given role name.
-     */
-    public function findRoleIdByName(string $roleName): string;
-
-    /**
      * Persist a new user row and return the generated id.
      *
      * @param array<string, mixed> $data

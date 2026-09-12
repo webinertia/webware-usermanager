@@ -7,7 +7,6 @@ namespace WebwareTest\UserManager\Http\RequestHandler;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\ServerRequest;
 use Mezzio\Template\TemplateRendererInterface;
-use PhpDb\ResultSet\RowPrototypeResultSet;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,10 +14,12 @@ use PHPUnit\Framework\TestCase;
 use Webware\Htmx\Response\Header;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
+use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\UserManager\Query\FetchUsersQuery;
 
 #[CoversClass(UserListHandler::class)]
 #[CoversMethod(UserListHandler::class, '__construct')]
@@ -28,17 +29,16 @@ final class UserListHandlerTest extends TestCase
     #[Test]
     public function addsCloseModalTriggerOnSuccess(): void
     {
-        $resultSet = new RowPrototypeResultSet(new User());
-
-        $users = $this->createStub(UserRepositoryInterface::class);
-        $users->method('findAll')->willReturn($resultSet);
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('handle')
+            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, []));
 
         $template = $this->createStub(TemplateRendererInterface::class);
         $template->method('render')->willReturn('<ul>');
 
         $handler = new UserListHandler(
-            template: $template,
-            users   : $users,
+            template  : $template,
+            messageBus: $messageBus,
         );
 
         $result  = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Success, null);
@@ -53,20 +53,20 @@ final class UserListHandlerTest extends TestCase
     #[Test]
     public function rendersUserListWithoutTrigger(): void
     {
-        $resultSet = new RowPrototypeResultSet(new User());
-
-        $users = $this->createStub(UserRepositoryInterface::class);
-        $users->method('findAll')->willReturn($resultSet);
+        $user       = new User(id: 1);
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('handle')
+            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, [$user]));
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
             ->method('render')
-            ->with('user::list-users', ['users' => $resultSet])
+            ->with('user::list-users', ['users' => [$user]])
             ->willReturn('<ul>');
 
         $handler = new UserListHandler(
-            template: $template,
-            users   : $users,
+            template  : $template,
+            messageBus: $messageBus,
         );
 
         $response = $handler->handle(new ServerRequest());

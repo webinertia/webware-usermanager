@@ -77,8 +77,9 @@ Laminas ACL needs:
 | `RowPrototypeInterface` | `php-db/phpdb` | Row hydration (`populate()` / `toArray()`) |
 
 `GUEST_ROLE` (`'Guest'`) is the canonical role id for anonymous users. There
-is no dedicated `isGuest()` method — consumers compare the user's `getRoleId()`
-against `UserInterface::GUEST_ROLE`.
+is no dedicated `isGuest()` method — consumers inspect the user's roles
+(`getRoles()`, or `getRoleId()` on a `SingleRoleUserProxy`) for
+`UserInterface::GUEST_ROLE`.
 
 Every concrete user entity produced by the authentication layer **must**
 implement this interface so that ACL checks, ownership assertions, and row
@@ -139,8 +140,12 @@ Mezzio and Webware interfaces is required.
 Any class used as the concrete implementation must:
 
 1. Implement `Webware\Core\UserInterface` (satisfies all four parent interfaces above).
-2. `getRoleId(): string` — return the user's primary role string (e.g.
-   `'member'`); guests return `UserInterface::GUEST_ROLE`.
+2. `getRoleId()` — return the user's role data. `User` returns the raw `roleId`
+   (`array|string|null`, normalized to an array by the setter), so a guest reports
+   `['Guest']` rather than the bare string. Consumers that need exactly one role id
+   read it from `Webware\Acl\Role\SingleRoleUserProxy`, which
+   `Webware\Acl\Role\UserRoleIterator` yields once per role so Laminas `RoleInterface`
+   sees a single role.
 3. `getResourceId(): string` — return a stable identifier for ACL resource
    checks against the user's own profile (typically `'user'`).
 4. `getOwnerId(): mixed` — return the user's primary key (`int|string|null`) so
@@ -158,8 +163,8 @@ Any class used as the concrete implementation must:
 
 ```
 □ Concrete user class implements Webware\Core\UserInterface
-□ GuestUser::getRoleId() returns UserInterface::GUEST_ROLE
-□ User::getRoleId() returns the user's primary role string
+□ Guests are User instances carrying UserInterface::GUEST_ROLE (no separate GuestUser class)
+□ User::getRoleId() returns roleId as-is (array|string|null); single-role consumers use Webware\Acl\Role\SingleRoleUserProxy
 □ getOwnerId() returns the user's PK (not store_id — that comes via getDetail('store_id'))
 □ getDetail('store_id') returns an int for store-scoped ownership assertions
 □ ACL implementations type-hint Webware\Core\AclInterface (not the old per-package interface)

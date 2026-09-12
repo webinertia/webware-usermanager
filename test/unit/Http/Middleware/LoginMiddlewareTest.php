@@ -16,13 +16,17 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Webware\Core\UserInterface;
 use Webware\Message\SystemMessengerInterface;
+use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
+use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\LoginMiddleware;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\UserManager\Query\AuthenticateUserQuery;
 
 use function bin2hex;
+use function hash_equals;
 use function random_bytes;
 
 #[CoversClass(LoginMiddleware::class)]
@@ -33,9 +37,16 @@ final class LoginMiddlewareTest extends TestCase
     #[Test]
     public function addsActivationHintWhenAccountNotActive(): void
     {
-        $repository = $this->createStub(UserRepositoryInterface::class);
-        $repository->method('authenticate')
-            ->willReturn(new AuthenticationResult(AuthenticationStatus::NotActive));
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('handle')
+            ->willReturn(new QueryResult(
+                new AuthenticateUserQuery(
+                    credential: 'jane@example.com',
+                    password  : bin2hex(random_bytes(16)),
+                ),
+                MessageStatus::Success,
+                new AuthenticationResult(AuthenticationStatus::NotActive),
+            ));
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
         $messenger->expects($this->once())->method('danger')->with('Invalid email or password.');
@@ -44,7 +55,7 @@ final class LoginMiddlewareTest extends TestCase
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->expects($this->once())->method('handle')->willReturn(new EmptyResponse());
 
-        $middleware = $this->middleware(repository: $repository);
+        $middleware = $this->middleware(messageBus: $messageBus);
 
         $request = new ServerRequest()->withMethod('POST')
             ->withAttribute(SystemMessengerInterface::class, $messenger)
@@ -58,9 +69,16 @@ final class LoginMiddlewareTest extends TestCase
     #[Test]
     public function logsAndNotifiesOnInvalidCredentials(): void
     {
-        $repository = $this->createStub(UserRepositoryInterface::class);
-        $repository->method('authenticate')
-            ->willReturn(new AuthenticationResult(AuthenticationStatus::InvalidCredentials));
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('handle')
+            ->willReturn(new QueryResult(
+                new AuthenticateUserQuery(
+                    credential: 'jane@example.com',
+                    password  : bin2hex(random_bytes(16)),
+                ),
+                MessageStatus::Success,
+                new AuthenticationResult(AuthenticationStatus::InvalidCredentials),
+            ));
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->once())
@@ -74,7 +92,7 @@ final class LoginMiddlewareTest extends TestCase
         $handler->expects($this->once())->method('handle')->willReturn(new EmptyResponse());
 
         $middleware = $this->middleware(
-            repository: $repository,
+            messageBus: $messageBus,
             logger    : $logger,
         );
 
@@ -126,17 +144,29 @@ final class LoginMiddlewareTest extends TestCase
             active: true,
         );
 
-        $repository = $this->createMock(UserRepositoryInterface::class);
-        $repository->expects($this->once())
-            ->method('authenticate')
-            ->with('jane@example.com', $password)
-            ->willReturn(new AuthenticationResult(AuthenticationStatus::Success, $user));
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($this->once())
+            ->method('handle')
+            ->with(static::callback(
+                static fn(AuthenticateUserQuery $query): bool => (
+                    'jane@example.com' === $query->credential
+                    && hash_equals($password, $query->password ?? '')
+                ),
+            ))
+            ->willReturn(new QueryResult(
+                new AuthenticateUserQuery(
+                    credential: 'jane@example.com',
+                    password  : $password,
+                ),
+                MessageStatus::Success,
+                new AuthenticationResult(AuthenticationStatus::Success, $user),
+            ));
 
         $session = $this->createMock(SessionInterface::class);
         $session->expects($this->once())->method('set')->with(UserInterface::class, $user->toArray());
         $session->expects($this->once())->method('regenerate')->willReturnSelf();
 
-        $middleware = $this->middleware(repository: $repository);
+        $middleware = $this->middleware(messageBus: $messageBus);
 
         $request = new ServerRequest()->withMethod('POST')
             ->withAttribute(SessionInterface::class, $session)
@@ -149,14 +179,14 @@ final class LoginMiddlewareTest extends TestCase
     }
 
     private function middleware(
-        ?UserRepositoryInterface $repository = null,
+        ?MessageBusInterface $messageBus = null,
         ?LoggerInterface $logger = null,
     ): LoginMiddleware {
-        $repository ??= $this->createStub(UserRepositoryInterface::class);
+        $messageBus ??= $this->createStub(MessageBusInterface::class);
         $logger     ??= $this->createStub(LoggerInterface::class);
 
         return new LoginMiddleware(
-            repository : $repository,
+            messageBus : $messageBus,
             logger     : $logger,
             redirectUrl: '/dashboard',
         );

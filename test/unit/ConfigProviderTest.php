@@ -15,7 +15,9 @@ use Webware\Core\UserInterface;
 use Webware\MessageBus\ConfigProvider as BusProvider;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
+use Webware\UserManager\Command\ActivateUserCommand;
 use Webware\UserManager\Command\CreateUserCommand;
+use Webware\UserManager\Command\RegenerateVerificationTokenCommand;
 use Webware\UserManager\Command\ToggleUserActiveCommand;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\ConfigProvider;
@@ -24,6 +26,18 @@ use Webware\UserManager\Container\UserFactory;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
+use Webware\UserManager\Query\AuthenticateUserQuery;
+use Webware\UserManager\Query\CheckUserActiveQuery;
+use Webware\UserManager\Query\FetchUserByEmailQuery;
+use Webware\UserManager\Query\FetchUserByIdQuery;
+use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
+use Webware\UserManager\Query\FetchUsersQuery;
+use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
+use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
+use Webware\UserManager\QueryHandler\FetchUserByEmailHandler;
+use Webware\UserManager\QueryHandler\FetchUserByIdHandler;
+use Webware\UserManager\QueryHandler\FetchUserByVerificationTokenHandler;
+use Webware\UserManager\QueryHandler\FetchUsersHandler;
 use Webware\UserManager\Repository\UserRepository;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\RouteProvider;
@@ -36,6 +50,7 @@ use function dirname;
 #[CoversMethod(ConfigProvider::class, 'getAclConfig')]
 #[CoversMethod(ConfigProvider::class, 'getAuthenticationConfig')]
 #[CoversMethod(ConfigProvider::class, 'getCommandMap')]
+#[CoversMethod(ConfigProvider::class, 'getQueryMap')]
 #[CoversMethod(ConfigProvider::class, 'getDefaultConfig')]
 #[CoversMethod(ConfigProvider::class, 'getDependencies')]
 #[CoversMethod(ConfigProvider::class, 'getInputFilterConfig')]
@@ -124,8 +139,10 @@ final class ConfigProviderTest extends TestCase
     {
         $map = $this->provider->getCommandMap();
 
-        self::assertCount(3, $map);
+        self::assertCount(5, $map);
+        self::assertArrayHasKey(ActivateUserCommand::class, $map);
         self::assertArrayHasKey(CreateUserCommand::class, $map);
+        self::assertArrayHasKey(RegenerateVerificationTokenCommand::class, $map);
         self::assertArrayHasKey(ToggleUserActiveCommand::class, $map);
         self::assertArrayHasKey(UpdateUserCommand::class, $map);
     }
@@ -186,6 +203,10 @@ final class ConfigProviderTest extends TestCase
             $this->provider->getCommandMap(),
             $config[MessageBusInterface::class][BusProvider::COMMAND_MAP_KEY],
         );
+        self::assertSame(
+            $this->provider->getQueryMap(),
+            $config[MessageBusInterface::class][BusProvider::QUERY_MAP_KEY],
+        );
     }
 
     #[Test]
@@ -198,6 +219,22 @@ final class ConfigProviderTest extends TestCase
                 ],
             ],
             $this->provider->getListeners(),
+        );
+    }
+
+    #[Test]
+    public function queryMapMapsEveryQueryToAHandler(): void
+    {
+        self::assertSame(
+            [
+                AuthenticateUserQuery::class             => AuthenticateUserHandler::class,
+                CheckUserActiveQuery::class              => CheckUserActiveHandler::class,
+                FetchUserByEmailQuery::class             => FetchUserByEmailHandler::class,
+                FetchUserByIdQuery::class                => FetchUserByIdHandler::class,
+                FetchUserByVerificationTokenQuery::class => FetchUserByVerificationTokenHandler::class,
+                FetchUsersQuery::class                   => FetchUsersHandler::class,
+            ],
+            $this->provider->getQueryMap(),
         );
     }
 

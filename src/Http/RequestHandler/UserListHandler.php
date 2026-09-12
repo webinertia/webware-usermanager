@@ -11,8 +11,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Webware\Htmx\Response\Header;
 use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\UserManager\Query\FetchUsersQuery;
 
 use function json_encode;
 
@@ -20,13 +21,13 @@ final class UserListHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $template,
-        private readonly UserRepositoryInterface $users,
+        private readonly MessageBusInterface $messageBus,
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $response = new HtmlResponse($this->template->render('user::list-users', [
-            'users' => $this->users->findAll(),
+            'users' => $this->messageBus->handle(new FetchUsersQuery())->getResult(),
         ]));
 
         $commandResult = $request->getAttribute(CommandResult::class);

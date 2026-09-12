@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Webware\UserManager\Admin\Dashboard;
 
 use Webware\Admin\Event\RegisterWidgetEvent;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Repository\UserRepositoryInterface;
+use Webware\UserManager\Query\FetchUsersQuery;
 
 use function count;
 
@@ -14,17 +15,18 @@ final class RegisterWidgetListener
 {
     public function __construct(
         private readonly string $resourceId,
-        private readonly UserRepositoryInterface $users,
+        private readonly MessageBusInterface $messageBus,
     ) {}
 
     public function __invoke(RegisterWidgetEvent $event): void
     {
-        $allUsers      = $this->users->findAll();
+        /** @var list<User> $allUsers */
+        $allUsers = $this->messageBus->handle(new FetchUsersQuery())->getResult();
+
         $totalUsers    = count($allUsers);
         $activeUsers   = 0;
         $inactiveUsers = 0;
 
-        /** @var User $user */
         foreach ($allUsers as $user) {
             if ($user->active) {
                 $activeUsers++;

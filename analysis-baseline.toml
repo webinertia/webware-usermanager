@@ -608,20 +608,8 @@ count = 1
 
 [[issues]]
 file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "possibly-false-argument"
-message = 'Argument #1 of method `Webware\UserManager\Repository\UserRepositoryInterface::findById` is possibly `false`, but parameter type `int` does not accept it.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/IdentityMiddlewareFactory.php"
-code = "less-specific-nested-argument-type"
-message = 'Argument type mismatch for argument #2 of `Webware\UserManager\Http\Middleware\IdentityMiddleware::__construct`: expected `(callable(array<array-key, mixed>): Webware\Core\UserInterface)`, but provided type `Webware\Core\UserInterface` is less specific.'
 count = 1
 
 [[issues]]
@@ -676,42 +664,6 @@ count = 1
 file = "src/Http/Middleware/IdentityMiddleware.php"
 code = "missing-property-type"
 message = "Property `$userFactory` is missing a type hint."
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/IdentityMiddleware.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #1 of `Webware\UserManager\Repository\UserRepositoryInterface::checkStatus`: expected `int`, but found `mixed`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/IdentityMiddleware.php"
-code = "mixed-argument"
-message = "Invalid argument type for argument #1 of `callable`: expected `array<array-key, mixed>`, but found `nonnull`."
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/IdentityMiddleware.php"
-code = "mixed-array-access"
-message = "Unsafe array access on type `nonnull`."
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/IdentityMiddleware.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/LoginMiddleware.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #1 of `Webware\UserManager\Repository\UserRepositoryInterface::authenticate`: expected `string`, but found `nonnull`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/LoginMiddleware.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #2 of `Webware\UserManager\Repository\UserRepositoryInterface::authenticate`: expected `null|string`, but found `nonnull`.'
 count = 1
 
 [[issues]]
@@ -793,48 +745,6 @@ message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInter
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/Container/ResendVerificationHandlerFactory.php"
-code = "impossible-nonnull-entry-check"
-message = '''Impossible `isset` check on key `'Webware\Mailer\MailerInterface'` accessed on `array{'user': array{'base_url': string, 'from_email': string, 'from_name': string}, Webware\Mailer\MailerInterface::class: array{'verification_email_subject': string}}`.'''
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/ResendVerificationHandlerFactory.php"
-code = "redundant-cast"
-message = "Redundant cast to `(string)`: the expression already has this type."
-count = 4
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/ResendVerificationHandlerFactory.php"
-code = "redundant-docblock-type"
-message = "Redundant docblock type for variable `$helperManager`."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/ResendVerificationHandlerFactory.php"
-code = "redundant-null-coalesce"
-message = "Redundant null coalesce: left-hand side can never be `null` or undefined."
-count = 4
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/ResendVerificationHandlerFactory.php"
-code = "redundant-null-coalesce"
-message = "Redundant null coalesce: left-hand side is always `null`."
-count = 2
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/ResendVerificationHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\ResendVerificationHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/ResendVerificationHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\ResendVerificationHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
 file = "src/Http/RequestHandler/Container/UserListHandlerFactory.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\UserListHandlerFactory::__invoke`.'
@@ -844,30 +754,6 @@ count = 1
 file = "src/Http/RequestHandler/Container/UserListHandlerFactory.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\UserListHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/VerifyEmailHandlerFactory.php"
-code = "redundant-docblock-type"
-message = "Redundant docblock type for variable `$helperManager`."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/VerifyEmailHandlerFactory.php"
-code = "redundant-null-coalesce"
-message = "Redundant null coalesce: left-hand side can never be `null` or undefined."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/VerifyEmailHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\VerifyEmailHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/VerifyEmailHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\VerifyEmailHandlerFactory::__invoke`.'
 count = 1
 
 [[issues]]
@@ -920,60 +806,6 @@ count = 1
 
 [[issues]]
 file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "mixed-argument"
-message = "Invalid argument type for argument #1 of `htmlspecialchars`: expected `string`, but found `mixed`."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "mixed-operand"
-message = "Invalid left operand: type `mixed` cannot be reliably used in string concatenation."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "mixed-operand"
-message = "Invalid middle operand: type `mixed` cannot be reliably used in string concatenation."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "mixed-operand"
-message = "Invalid right operand: type `mixed` cannot be reliably used in string concatenation."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "non-existent-property"
-message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "non-existent-property"
-message = 'Property `$firstName` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "non-existent-property"
-message = 'Property `$lastName` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "possibly-invalid-argument"
-message = 'Possible argument type mismatch for argument #1 of `Webware\UserManager\Repository\UserRepositoryInterface::update`: expected `int`, but possibly received `int|null|string`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "possibly-null-argument"
-message = 'Argument #1 of method `Webware\UserManager\Repository\UserRepositoryInterface::update` is possibly `null`, but parameter type `int` does not accept it.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\ResendVerificationHandler::handle`.'
 count = 1
@@ -1000,48 +832,6 @@ count = 1
 file = "src/Http/RequestHandler/UserListHandler.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\UserListHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 2
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "mixed-method-access"
-message = "Attempting to access a method on a non-object type (`nonnull`)."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "mixed-operand"
-message = "Left operand in `>` comparison has `mixed` type."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "mixed-operand"
-message = "Right operand in binary operation has type `mixed`."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "non-existent-property"
-message = 'Property `$tokenCreatedAt` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "possibly-invalid-argument"
-message = 'Possible argument type mismatch for argument #1 of `Webware\UserManager\Repository\UserRepositoryInterface::update`: expected `int`, but possibly received `int|null|string`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "possibly-null-argument"
-message = 'Argument #1 of method `Webware\UserManager\Repository\UserRepositoryInterface::update` is possibly `null`, but parameter type `int` does not accept it.'
 count = 1
 
 [[issues]]

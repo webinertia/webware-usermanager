@@ -6,16 +6,19 @@ namespace Webware\UserManager\Http\Middleware\Container;
 
 use Psr\Container\ContainerInterface;
 use Webware\Core\UserInterface;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Middleware\IdentityMiddleware;
-use Webware\UserManager\Repository\UserRepositoryInterface;
 
 final readonly class IdentityMiddlewareFactory
 {
     public function __invoke(ContainerInterface $container): IdentityMiddleware
     {
+        /** @var callable(array<string, mixed>): UserInterface $userFactory */
+        $userFactory = $container->get(UserInterface::class);
+
         return new IdentityMiddleware(
-            repository : $container->get(UserRepositoryInterface::class),
-            userFactory: $container->get(UserInterface::class),
+            messageBus : $container->get(MessageBusInterface::class),
+            userFactory: $userFactory,
         );
     }
 }
