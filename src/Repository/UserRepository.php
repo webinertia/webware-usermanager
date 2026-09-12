@@ -14,6 +14,7 @@ use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use PhpDb\TableGateway\TableGateway;
 use Psl\Type;
+use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
@@ -85,6 +86,9 @@ final class UserRepository implements UserRepositoryInterface
         return (bool) ($row['active'] ?? false);
     }
 
+    /**
+     * @throws PslTypeException
+     */
     #[Override]
     public function findAll(
         array $selectColumns = [Sql\Select::SQL_STAR],
