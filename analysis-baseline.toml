@@ -326,18 +326,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Entity\User::toArray`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Entity\User::withId`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "mixed-argument"
 message = "Invalid argument type for argument #1 of `DateTimeImmutable::__construct`: expected `string`, but found `nonnull`."
 count = 1
@@ -452,12 +440,6 @@ count = 1
 
 [[issues]]
 file = "src/Event/SendVerificationEmailEvent.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Event\SendVerificationEmailEvent::getTarget`.'
-count = 1
-
-[[issues]]
-file = "src/Event/SendVerificationEmailEvent.php"
 code = "mixed-return-statement"
 message = 'Could not infer a precise return type for function `Webware\UserManager\Event\SendVerificationEmailEvent::getToken`. Saw type `mixed`.'
 count = 1
@@ -548,20 +530,8 @@ count = 1
 
 [[issues]]
 file = "src/Http/Admin/RequestHandler/CreateUserHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/CreateUserHandler.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/ToggleUserActiveHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler::handle`.'
 count = 1
 
 [[issues]]
@@ -578,20 +548,8 @@ count = 1
 
 [[issues]]
 file = "src/Http/Admin/RequestHandler/UpdateUserHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserHandler.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler::handle`.'
 count = 1
 
 [[issues]]
@@ -746,12 +704,6 @@ count = 1
 
 [[issues]]
 file = "src/Http/RequestHandler/LoginHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\RequestHandler\LoginHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/LoginHandler.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
 count = 1
@@ -766,12 +718,6 @@ count = 1
 file = "src/Http/RequestHandler/LoginHandler.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\LoginHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/LogoutHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\RequestHandler\LogoutHandler::handle`.'
 count = 1
 
 [[issues]]
@@ -796,12 +742,6 @@ count = 1
 file = "src/Http/RequestHandler/ResendVerificationHandler.php"
 code = "unhandled-thrown-type"
 message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\ResendVerificationHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/UserListHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\RequestHandler\UserListHandler::handle`.'
 count = 1
 
 [[issues]]
@@ -952,7 +892,7 @@ count = 2
 file = "src/Repository/UserRepository.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 3
+count = 2
 
 [[issues]]
 file = "src/Repository/UserRepository.php"

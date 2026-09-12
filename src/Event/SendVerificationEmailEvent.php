@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Event;
 
+use Override;
 use Webware\Event\Event;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Command\UpdateUserCommand;
@@ -19,6 +20,7 @@ final class SendVerificationEmailEvent extends Event
         return $this->target->email;
     }
 
+    #[Override]
     public function getTarget(): CreateUserCommand|UpdateUserCommand
     {
         return $this->target;

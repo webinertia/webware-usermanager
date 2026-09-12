@@ -6,6 +6,7 @@ namespace Webware\UserManager\Http\RequestHandler;
 
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -24,6 +25,7 @@ final class UserListHandler implements RequestHandlerInterface
         private readonly MessageBusInterface $messageBus,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $response = new HtmlResponse($this->template->render('user::list-users', [

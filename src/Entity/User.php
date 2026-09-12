@@ -189,6 +189,7 @@ class User implements UserInterface, NamedCommandInterface
         return new static(...$data);
     }
 
+    #[Override]
     public function toArray(): array
     {
         return (array) $this;
@@ -262,6 +263,7 @@ class User implements UserInterface, NamedCommandInterface
         );
     }
 
+    #[Override]
     public function withId(int|string|null $id): static
     {
         return new static(

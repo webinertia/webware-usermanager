@@ -6,6 +6,7 @@ namespace Webware\UserManager\Http\Admin\RequestHandler;
 
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,6 +20,7 @@ final class ToggleUserActiveHandler implements RequestHandlerInterface
         private readonly TemplateRendererInterface $template,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         /** @var CommandResult|null $result */

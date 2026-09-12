@@ -6,6 +6,7 @@ namespace Webware\UserManager\Http\Admin\RequestHandler;
 
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -23,6 +24,7 @@ final class UpdateUserModalHandler implements RequestHandlerInterface
         private readonly MessageBusInterface $messageBus,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
