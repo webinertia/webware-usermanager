@@ -41,7 +41,7 @@ final class UserRepository implements UserRepositoryInterface
     ): AuthenticationResult {
         $user = $this->findByConfiguredCredential($this->credentialColumn, $credential);
 
-        if ($user === null) {
+        if (null === $user) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
                 'Failed login attempt.',
             )

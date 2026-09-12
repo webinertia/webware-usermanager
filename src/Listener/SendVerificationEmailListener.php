@@ -31,7 +31,7 @@ final class SendVerificationEmailListener
 
         $adapter = $this->mailer->getAdapter();
 
-        if ($adapter === null) {
+        if (null === $adapter) {
             return;
         }
 

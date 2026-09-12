@@ -36,7 +36,7 @@ class User implements UserInterface, NamedCommandInterface
         public private(set) int|string|null $id = null {
             get => $this->id ?? null;
             set(int|string|null $value) {
-                if ($value === null) {
+                if (null === $value) {
                     $this->id = null;
                 } else {
                     $this->id = is_string($value) ? (int) $value : $value;
@@ -63,7 +63,7 @@ class User implements UserInterface, NamedCommandInterface
         public private(set) ?string $email = null {
             get => $this->email;
             set(?string $value) {
-                $this->email = $value !== null ? strtolower($value) : null;
+                $this->email = null !== $value ? strtolower($value) : null;
             }
         },
         #[SensitiveParameter] public private(set) ?string $passwordHash = null,
@@ -114,7 +114,7 @@ class User implements UserInterface, NamedCommandInterface
                     } else {
                         $this->details = [$value];
                     }
-                } elseif (is_array($value) || $value === null) {
+                } elseif (is_array($value) || null === $value) {
                     $this->details = $value;
                 } else {
                     throw new InvalidArgumentException('$details must be an array, JSON string, or null');
@@ -298,7 +298,7 @@ class User implements UserInterface, NamedCommandInterface
 
     public function withPasswordHash(string $passwordHash): static
     {
-        if (password_get_info($passwordHash)['algo'] === null) {
+        if (null === password_get_info($passwordHash)['algo']) {
             $passwordHash = password_hash($passwordHash, PASSWORD_DEFAULT);
         }
 

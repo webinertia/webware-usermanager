@@ -27,7 +27,7 @@ final readonly class UserAdminUrl implements StatefulHelperInterface
         ?string $fragmentIdentifier = null,
         array $options = [],
     ): string {
-        $prefix = $routeName === '' ? rtrim($this->routeNamePrefix, '.') : $this->routeNamePrefix;
+        $prefix = '' === $routeName ? rtrim($this->routeNamePrefix, '.') : $this->routeNamePrefix;
 
         return ($this->urlHelper)(
             $prefix . $routeName,
