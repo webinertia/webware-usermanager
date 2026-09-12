@@ -134,8 +134,7 @@ final class UserRepository implements UserRepositoryInterface
     {
         $sql    = $this->gateway->getSql();
         $select = $sql->select()->where(['user.email' => $email])->limit(1);
-        $row    = $this->gateway->selectWith($select)->current();
-        return $row;
+        return $this->gateway->selectWith($select)->current();
     }
 
     #[Override]

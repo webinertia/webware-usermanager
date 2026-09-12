@@ -182,12 +182,6 @@ count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
-code = "inline-variable-return"
-message = "Variable assignment can be inlined into the return statement."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
 code = "no-isset"
 message = "Use of the `isset` construct."
 count = 1
