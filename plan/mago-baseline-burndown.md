@@ -187,13 +187,26 @@ the public surface), so they belong with tranche 4 rather than a mechanical pass
 
 ## Findings discovered during the burndown
 
-**Latent fatal in `User::withDetail()` and `User::withRoleId()`** (`src/Entity/User.php`).
-Both call `array_merge()` on a property declared `array|string|null` whose setter accepts
-`null`: `details` (`elseif (is_array($value) || $value === null)`) and `roleId`. In PHP 8,
-`array_merge(null, [...])` raises a `TypeError`, so `withDetail()` on a user hydrated with
-`details = null` would fatal. Not fixed here because the correction changes runtime
-behaviour and needs approval; it is also the reason the `prefer-array-spread` rewrite is
-worth revisiting with a typed local instead of being dropped entirely.
+**Fatal in `User::withRoleId()`, false positive in `User::withDetail()`**
+(`src/Entity/User.php`). Both call `array_merge()` on a property declared
+`array|string|null`, which is why the analyzer reported `possibly-invalid-argument` on
+each. Reverting the prototype and exercising both on a default `User` showed the two are
+not equivalent:
+
+- `withRoleId()` — genuine `TypeError: array_merge(): Argument #1 must be of type array,
+  null given` on `new User()`. Its hook getter is `get => $this->roleId ?? null`, which
+  passes `null` through.
+- `withDetail()` — not a runtime fault. Its hook getter is `get => $this->details ?? []`,
+  which coerces `null` to `[]` before `array_merge()` sees it. The analyzer does not
+  narrow through the getter hook, so the finding is defensive-only here.
+
+Fixed with variant B (an `is_array()` guard into a local), chosen over an `(array)` cast so
+no cast is introduced on a nullable value. The `withDetail()` guard is retained as a
+type-consistent guard against the declared `array|string|null` even though the getter
+currently makes the string branch unreachable.
+
+This also unblocks the `prefer-array-spread` rewrite, which becomes safe once the merged
+operand is a typed local rather than a nullable property.
 
 ## Notes for the analyze tranches
 
