@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use Closure;
-use DateTimeImmutable;
 use Monolog\Level;
+use Override;
 use PhpDb\Exception\ExceptionInterface;
 use PhpDb\ResultSet\ResultSetInterface;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
@@ -33,7 +33,7 @@ final class UserRepository implements UserRepositoryInterface
         private readonly string $credentialColumn,
     ) {}
 
-    #[\Override]
+    #[Override]
     public function authenticate(
         string $credential,
         #[SensitiveParameter]
@@ -41,7 +41,7 @@ final class UserRepository implements UserRepositoryInterface
     ): AuthenticationResult {
         $user = $this->findByConfiguredCredential($this->credentialColumn, $credential);
 
-        if ($user === null) {
+        if (null === $user) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
                 'Failed login attempt.',
             )
@@ -51,7 +51,7 @@ final class UserRepository implements UserRepositoryInterface
 
         if (! $user->active) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                'Failed login attempt for inactive user: ' . $user->getIdentity(),
+                "Failed login attempt for inactive user: {$user->getIdentity()}",
             )
                 ->setContext(['credential' => $credential]));
             return new AuthenticationResult(AuthenticationStatus::NotActive);
@@ -59,7 +59,7 @@ final class UserRepository implements UserRepositoryInterface
 
         if (! password_verify($password ?? '', $user->passwordHash)) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                'Failed login attempt for user: ' . $user->getIdentity(),
+                "Failed login attempt for user: {$user->getIdentity()}",
             )
                 ->setContext(['credential' => $credential]));
             return new AuthenticationResult(AuthenticationStatus::InvalidCredentials);
@@ -67,7 +67,7 @@ final class UserRepository implements UserRepositoryInterface
 
         $this->dispatcher->dispatch(
             new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                $user->firstName . ' ' . $user->lastName . ' authenticated successfully.',
+                "{$user->firstName} {$user->lastName} authenticated successfully.",
             )
                 ->setContext(['identity' => $user->getIdentity()]),
         );
@@ -75,7 +75,7 @@ final class UserRepository implements UserRepositoryInterface
         return new AuthenticationResult(AuthenticationStatus::Success, $user);
     }
 
-    #[\Override]
+    #[Override]
     public function checkStatus(int $id): bool
     {
         $sql    = $this->gateway->getSql();
@@ -85,7 +85,7 @@ final class UserRepository implements UserRepositoryInterface
         return (bool) ($row['active'] ?? false);
     }
 
-    #[\Override]
+    #[Override]
     public function findAll(
         array $selectColumns = [Sql\Select::SQL_STAR],
         PredicateInterface|array|string|Closure|null $where = null,
@@ -129,7 +129,7 @@ final class UserRepository implements UserRepositoryInterface
         return $resultSet;
     }
 
-    #[\Override]
+    #[Override]
     public function findByEmail(string $email): ?UserInterface
     {
         $sql    = $this->gateway->getSql();
@@ -138,7 +138,7 @@ final class UserRepository implements UserRepositoryInterface
         return $row;
     }
 
-    #[\Override]
+    #[Override]
     public function findById(int $id): ?UserInterface
     {
         $sql    = $this->gateway->getSql();
@@ -147,7 +147,7 @@ final class UserRepository implements UserRepositoryInterface
         return $this->gateway->selectWith($select)->current();
     }
 
-    #[\Override]
+    #[Override]
     public function findByVerificationToken(#[SensitiveParameter] string $token): ?UserInterface
     {
         $sql    = $this->gateway->getSql();
@@ -157,7 +157,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /** @param array<string, mixed> $data */
-    #[\Override]
+    #[Override]
     public function insert(array $data): int
     {
         $sql    = $this->gateway->getSql();
@@ -171,7 +171,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * @throws ExceptionInterface
      */
-    #[\Override]
+    #[Override]
     public function save(CommandInterface $command): int
     {
         if (! isset($command->id)) {
@@ -183,7 +183,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /** @param array<string, mixed> $data */
-    #[\Override]
+    #[Override]
     public function update(int $id, array $data): int
     {
         $sql    = $this->gateway->getSql();

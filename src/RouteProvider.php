@@ -45,80 +45,80 @@ final readonly class RouteProvider implements RouteProviderInterface
     ): void {
         // Login routes — AclMiddleware runs before Auth (login/register are guest grants)
         $routeCollector->get(
-            '/' . $this->routeSegment . '/login',
+            "/{$this->routeSegment}/login",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 LoginHandler::class,
             ]),
-            $this->routeNamePrefix . 'session.read',
+            "{$this->routeNamePrefix}session.read",
         );
 
         $routeCollector->post(
-            '/' . $this->routeSegment . '/login',
+            "/{$this->routeSegment}/login",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 LoginMiddleware::class,
                 LoginHandler::class,
             ]),
-            $this->routeNamePrefix . 'session.create',
+            "{$this->routeNamePrefix}session.create",
         );
 
         // Registration routes
         $routeCollector->get(
-            '/' . $this->routeSegment . '/register',
+            "/{$this->routeSegment}/register",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 RegistrationHandler::class,
             ]),
-            $this->routeNamePrefix . 'register.read',
+            "{$this->routeNamePrefix}register.read",
         );
 
         $routeCollector->post(
-            '/' . $this->routeSegment . '/register',
+            "/{$this->routeSegment}/register",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 RegistrationMiddleware::class,
                 RegistrationHandler::class,
             ]),
-            $this->routeNamePrefix . 'register.create',
+            "{$this->routeNamePrefix}register.create",
         );
 
         $routeCollector->get(
-            '/' . $this->routeSegment . '/verify.email/{token}',
+            "/{$this->routeSegment}/verify.email/{token}",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 ProcessVerifyEmailMiddleware::class,
                 VerifyEmailHandler::class,
             ]),
-            $this->routeNamePrefix . 'verify.email.read',
+            "{$this->routeNamePrefix}verify.email.read",
         );
 
         $routeCollector->get(
-            '/' . $this->routeSegment . '/resend.verification',
+            "/{$this->routeSegment}/resend.verification",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 ProcessResendVerificationMiddleware::class,
                 ResendVerificationHandler::class,
             ]),
-            $this->routeNamePrefix . 'resend.verification.read',
+            "{$this->routeNamePrefix}resend.verification.read",
         );
 
         $routeCollector->post(
-            '/' . $this->routeSegment . '/resend.verification',
+            "/{$this->routeSegment}/resend.verification",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 ProcessResendVerificationMiddleware::class,
                 ResendVerificationHandler::class,
             ]),
-            $this->routeNamePrefix . 'resend.verification.create',
+            "{$this->routeNamePrefix}resend.verification.create",
         );
 
         $routeCollector->get(
-            '/' . $this->routeSegment . '/logout',
+            "/{$this->routeSegment}/logout",
             $middlewareFactory->prepare([
                 LogoutHandler::class,
             ]),
-            $this->routeNamePrefix . 'logout.read',
+            "{$this->routeNamePrefix}logout.read",
         )->setOptions([
             'navigation' => 'user',
             'label'      => 'Logout',
@@ -129,11 +129,14 @@ final readonly class RouteProvider implements RouteProviderInterface
 
         // Admin
         $routeCollector->get(
-            '/' . $this->adminRouteSegment,
+            "/{$this->adminRouteSegment}",
             $middlewareFactory->prepare([
                 UserListHandler::class,
             ]),
-            rtrim($this->adminRouteNamePrefix, '.'),
+            rtrim(
+                string    : $this->adminRouteNamePrefix,
+                characters: '.',
+            ),
         )->setOptions([
             'navigation' => 'admin',
             'label'      => 'Users',
@@ -143,52 +146,55 @@ final readonly class RouteProvider implements RouteProviderInterface
         ]);
 
         $routeCollector->route(
-            '/' . $this->adminRouteSegment . '/create',
+            "/{$this->adminRouteSegment}/create",
             $middlewareFactory->prepare([
                 CreateUserHandler::class,
             ]),
             ['GET', 'POST'],
-            $this->adminRouteNamePrefix . 'create',
+            "{$this->adminRouteNamePrefix}create",
         )
             ->setOptions([
                 'navigation' => 'admin',
                 'label'      => 'Create User',
                 'icon'       => 'bi-person-plus-fill',
-                'parent'     => rtrim($this->adminRouteNamePrefix, '.'),
+                'parent'     => rtrim(
+                    string    : $this->adminRouteNamePrefix,
+                    characters: '.',
+                ),
                 'order'      => 10,
             ]);
 
         // Update the user (PATCH) — re-renders the user list (mirrors webware-acl's role.update route)
         $routeCollector->route(
-            '/' . $this->adminRouteSegment . '/update/{id:\d+}',
+            "/{$this->adminRouteSegment}/update/{id:\d+}",
             $middlewareFactory->prepare([
                 BodyParamsMiddleware::class,
                 ProcessUpdateUserMiddleware::class,
                 UpdateUserHandler::class,
             ]),
             ['PATCH'],
-            $this->adminRouteNamePrefix . 'update',
+            "{$this->adminRouteNamePrefix}update",
         );
 
         // Return the htmx modal for updating a user
         $routeCollector->route(
-            '/' . $this->adminRouteSegment . '/update/{id:\d+}',
+            "/{$this->adminRouteSegment}/update/{id:\d+}",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 UpdateUserModalHandler::class,
             ]),
             ['GET'],
-            $this->adminRouteNamePrefix . 'update.modal',
+            "{$this->adminRouteNamePrefix}update.modal",
         );
 
         $routeCollector->post(
-            '/' . $this->adminRouteSegment . '/{id:\d+}/toggle',
+            "/{$this->adminRouteSegment}/{id:\d+}/toggle",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 ProcessToggleUserActiveMiddleware::class,
                 ToggleUserActiveHandler::class,
             ]),
-            $this->adminRouteNamePrefix . 'toggle.update',
+            "{$this->adminRouteNamePrefix}toggle.update",
         );
     }
 }

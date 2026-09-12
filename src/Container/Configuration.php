@@ -40,7 +40,7 @@ final readonly class Configuration extends Config
             throw Exception\ContainerException::forMissingConfigKey(self::MEZZIO_AUTH_KEY, $callingFactory);
         }
 
-        if (! is_array($config[self::MEZZIO_AUTH_KEY]) || $config[self::MEZZIO_AUTH_KEY] === []) {
+        if (! is_array($config[self::MEZZIO_AUTH_KEY]) || [] === $config[self::MEZZIO_AUTH_KEY]) {
             throw Exception\ContainerException::forInvalidConfigType(
                 self::MEZZIO_AUTH_KEY,
                 'array',

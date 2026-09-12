@@ -6,7 +6,6 @@ namespace Webware\UserManager\Command;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Ramsey\Uuid\Uuid;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
@@ -42,7 +41,7 @@ class CreateUserCommand implements NamedCommandInterface
         public private(set) string $passwordHash {
             get => $this->passwordHash;
             set(string $value) {
-                if (password_get_info($value)['algo'] === null) {
+                if (null === password_get_info($value)['algo']) {
                     $this->passwordHash = password_hash($value, PASSWORD_DEFAULT);
                 } else {
                     $this->passwordHash = $value;

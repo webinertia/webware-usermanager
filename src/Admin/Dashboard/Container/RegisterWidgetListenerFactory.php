@@ -19,7 +19,7 @@ final readonly class RegisterWidgetListenerFactory
         $resourceId = rtrim(
             AdminConfiguration::getAdminRouteNamePrefix($container, self::class)
                 . Configuration::getAdminRouteNamePrefix($container, self::class),
-            '.',
+            characters: '.',
         );
 
         return new RegisterWidgetListener(

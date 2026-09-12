@@ -26,7 +26,7 @@ final class ToggleUserActiveHandler implements CommandHandlerInterface
 
         $user = $this->users->findById($command->id);
 
-        if ($user === null) {
+        if (null === $user) {
             return new CommandResult($command, MessageStatus::Failure, 'User not found.');
         }
 

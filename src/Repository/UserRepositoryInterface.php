@@ -12,6 +12,7 @@ use PhpDb\Sql\Predicate\PredicateInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\CommandInterface;
+use Webware\UserManager\Auth\AuthenticationResult;
 
 interface UserRepositoryInterface
 {
@@ -25,7 +26,7 @@ interface UserRepositoryInterface
         string $credential,
         #[SensitiveParameter]
         ?string $password = null,
-    ): \Webware\UserManager\Auth\AuthenticationResult;
+    ): AuthenticationResult;
 
     /**
      * Check if a user is active.

@@ -1,12 +1,6 @@
 variant = "loose"
 
 [[issues]]
-file = "src/Admin/Dashboard/Container/RegisterWidgetListenerFactory.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
-count = 1
-
-[[issues]]
 file = "src/Admin/Dashboard/RegisterWidgetListener.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
@@ -37,18 +31,6 @@ message = "Avoid `elseif` clauses."
 count = 3
 
 [[issues]]
-file = "src/Command/CreateUserCommand.php"
-code = "no-redundant-use"
-message = "Unused import: `Uuid`."
-count = 1
-
-[[issues]]
-file = "src/Command/CreateUserCommand.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 1
-
-[[issues]]
 file = "src/Command/UpdateUserCommand.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."
@@ -67,45 +49,9 @@ message = "Avoid assignments in conditions."
 count = 1
 
 [[issues]]
-file = "src/CommandHandler/CreateUserHandler.php"
-code = "no-redundant-use"
-message = "Unused import: `DateTimeImmutable`."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/CreateUserHandler.php"
-code = "no-redundant-use"
-message = "Unused import: `Throwable`."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/CreateUserHandler.php"
-code = "no-redundant-use"
-message = "Unused import: `Uuid`."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/CreateUserHandler.php"
-code = "no-redundant-use"
-message = "Unused import: `json_encode`."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/CreateUserHandler.php"
-code = "no-redundant-use"
-message = "Unused import: `password_hash`."
-count = 1
-
-[[issues]]
 file = "src/CommandHandler/ToggleUserActiveHandler.php"
 code = "assert-description"
 message = "Missing description in assert function."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/ToggleUserActiveHandler.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
 count = 1
 
 [[issues]]
@@ -113,18 +59,6 @@ file = "src/CommandHandler/UpdateUserHandler.php"
 code = "assert-description"
 message = "Missing description in assert function."
 count = 1
-
-[[issues]]
-file = "src/CommandHandler/UpdateUserHandler.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
-count = 2
 
 [[issues]]
 file = "src/ConfigProvider.php"
@@ -142,18 +76,6 @@ count = 1
 file = "src/Container/Configuration.php"
 code = "no-isset"
 message = "Use of the `isset` construct."
-count = 1
-
-[[issues]]
-file = "src/Container/Configuration.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 1
-
-[[issues]]
-file = "src/Container/RouteProviderFactory.php"
-code = "string-style"
-message = "String concatenation can be replaced with interpolation."
 count = 1
 
 [[issues]]
@@ -176,12 +98,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "literal-named-argument"
-message = "Literal argument `true` should be passed as a named argument for clarity."
-count = 2
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
 count = 7
@@ -191,12 +107,6 @@ file = "src/Entity/User.php"
 code = "no-else-clause"
 message = "Avoid `elseif` clauses."
 count = 3
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference detected."
-count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
@@ -223,12 +133,6 @@ message = "Class has too many methods."
 count = 1
 
 [[issues]]
-file = "src/Entity/User.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 4
-
-[[issues]]
 file = "src/Http/Admin/Middleware/ProcessUpdateUserMiddleware.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
@@ -247,12 +151,6 @@ message = "Ambiguous constant access detected."
 count = 1
 
 [[issues]]
-file = "src/Http/Middleware/Container/RegistrationMiddlewareFactory.php"
-code = "no-redundant-use"
-message = "Unused import: `UserInterface`."
-count = 1
-
-[[issues]]
 file = "src/Http/Middleware/IdentityMiddleware.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
@@ -265,12 +163,6 @@ message = "Use the array spread operator instead of `array_merge()`."
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/LogoutHandler.php"
-code = "no-redundant-use"
-message = "Unused import: `SessionMiddleware`."
-count = 1
-
-[[issues]]
 file = "src/Listener/SendVerificationEmailListener.php"
 code = "ambiguous-constant-access"
 message = "Ambiguous constant access detected."
@@ -280,30 +172,6 @@ count = 2
 file = "src/Listener/SendVerificationEmailListener.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "literal-named-argument"
-message = "Literal argument `'/'` should be passed as a named argument for clarity."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "literal-named-argument"
-message = "Literal argument `'UTF-8'` should be passed as a named argument for clarity."
-count = 2
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "string-style"
-message = "String concatenation can be replaced with interpolation."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
 count = 1
 
 [[issues]]
@@ -320,33 +188,9 @@ count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference detected."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference is already in scope."
-count = 8
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
 code = "no-isset"
 message = "Use of the `isset` construct."
 count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "no-redundant-use"
-message = "Unused import: `DateTimeImmutable`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "string-style"
-message = "String concatenation can be replaced with interpolation."
-count = 3
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
@@ -355,43 +199,7 @@ message = "Class has too many methods."
 count = 1
 
 [[issues]]
-file = "src/Repository/UserRepository.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
-count = 1
-
-[[issues]]
 file = "src/Repository/UserRepositoryInterface.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryInterface.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference detected."
-count = 1
-
-[[issues]]
-file = "src/RouteProvider.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
-count = 2
-
-[[issues]]
-file = "src/RouteProvider.php"
-code = "string-style"
-message = "String concatenation can be replaced with interpolation."
-count = 25
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "literal-named-argument"
-message = "Literal argument `'.'` should be passed as a named argument for clarity."
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "yoda-conditions"
-message = "Use Yoda condition style for safer comparisons"
 count = 1

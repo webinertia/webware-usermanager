@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler;
 
-use DateTimeImmutable;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Ramsey\Uuid\Uuid;
-use Throwable;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\Command\CommandResultInterface;
@@ -18,8 +15,6 @@ use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
 use function assert;
-use function json_encode;
-use function password_hash;
 
 final class CreateUserHandler implements CommandHandlerInterface
 {

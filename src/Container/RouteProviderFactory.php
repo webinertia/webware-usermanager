@@ -23,7 +23,7 @@ final readonly class RouteProviderFactory
         return new RouteProvider(
             $routeSegment,
             $routeNamePrefix,
-            $adminBaseRouteSegment . '/' . $moduleAdminRouteSegment,
+            "{$adminBaseRouteSegment}/{$moduleAdminRouteSegment}",
             $adminBaseRouteNamePrefix . $moduleAdminRouteNamePrefix,
         );
     }
