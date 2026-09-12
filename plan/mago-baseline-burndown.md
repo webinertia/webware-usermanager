@@ -129,8 +129,8 @@ Integration tests need MySQL and run in the tooling container
 
 | # | Scope | Findings | Branch | PR | Status |
 |---|---|---|---|---|---|
-| 1 | Mechanical lint: autofixable style codes | 93 | `chore/mago-burndown-1-lint-mechanical` | — | 72 fixed; 21 `no-else-clause` deferred (baselined) |
-| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | — | — | Not started |
+| 1 | Mechanical lint: autofixable style codes | 93 | `chore/mago-burndown-1-lint-mechanical` | #22 merged | 72 fixed; 21 `no-else-clause` deferred (baselined) |
+| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | — | 11 fixed; remainder awaiting decisions |
 | 3 | Type precision at the source: `imprecise-type`, `mixed-*`, `unsafe-instantiation`, `less-specific-argument`, docblock narrowing | 82 | — | — | Not started |
 | 4 | Error-level correctness: `possibly-*`, `non-existent-property`, `uninitialized-property`, `invalid-*`, `unreachable-else-clause`, plus the remaining lint errors | 38 | — | — | Not started |
 | 5 | `unhandled-thrown-type` — document `@throws` using the interface the concrete exception implements | 72 | — | — | Not started |
@@ -140,20 +140,18 @@ Tranche 3 and 4 will move as findings resolve each other: fixing a type at its s
 the same code family, so each tranche's count is re-measured when its branch opens
 rather than assumed from this table.
 
-## Deferred findings (kept in the baseline)
+## Deferred / blocked findings
 
-**`no-else-clause` (21)** — deferred 2026-09-11 by owner decision: left baselined until
-each site is worked through individually.
-
-Rationale: mago ships no safe autofix for this rule, and its stated intent (guard
-clauses and early returns) is a control-flow restructure rather than a mechanical
-rewrite.
+**`no-else-clause` (21)** - deferred 2026-09-11 by owner decision: left baselined until
+each site is worked through individually. Mago ships no safe autofix for this rule, and
+its stated intent (guard clauses and early returns) is a control-flow restructure rather
+than a mechanical rewrite.
 
 | Site group | Count | Why it is not mechanical |
 |---|---|---|
-| `Entity/User.php` property hooks | 10 | value-producing `if`/`elseif`/`else` inside `set` hooks — needs either an early `return;` after assignment or extracted normalizer helpers, and extraction adds methods while `too-many-methods` (3) and `cyclomatic-complexity` (1) are still pending in tranche 4 |
+| `Entity/User.php` property hooks | 10 | value-producing `if`/`elseif`/`else` inside `set` hooks - needs either an early `return;` after assignment or extracted normalizer helpers, and extraction adds methods while `too-many-methods` (3) and `cyclomatic-complexity` (1) are still pending in tranche 4 |
 | `Command/CreateUserCommand.php` hooks | 7 | same shape as above |
-| `Http/Middleware/IdentityMiddleware.php` | 2 | authentication path — dropping `else` splits the identity/guest decision across two terminal `return $handler->handle(...)` calls |
+| `Http/Middleware/IdentityMiddleware.php` | 2 | authentication path - dropping `else` splits the identity/guest decision across two terminal `return $handler->handle(...)` calls |
 | `Http/Admin/Middleware/ProcessUpdateUserMiddleware.php` | 1 | a straightforward guard clause, grouped with the above for consistency |
 | `Admin/Dashboard/RegisterWidgetListener.php` | 1 | `if`/`else` counter inside a `foreach`; becomes `continue` or a ternary |
 
@@ -161,16 +159,41 @@ The 21 entries stay in `lint-baseline.toml` so `mago lint` remains green. When a
 is fixed later, prune its entry with `--remove-outdated-baseline-entries` in the same
 commit.
 
-## Progress log
+**`prefer-array-spread` (4)** - deferred 2026-09-11 after the safe autofix was applied,
+reviewed, and reverted. It rewrote `array_merge` into spreads over properties typed
+`array|string|null`, which the analyzer rejects (`invalid-array-element: Cannot use spread
+operator on non-iterable type null|string` in `Entity/User.php`) and which also degraded
+the argument to `non-empty-array<array-key, mixed>` (`less-specific-argument`). The change
+fixed 4 findings and created 7. The middleware sites additionally generate
+`...is_array($body) ? $body : []`, a spread over a ternary operand. Doing this properly
+needs a typed local (`$details = $this->details ?? [];`) rather than a raw spread, which
+is behaviour-adjacent and needs approval.
 
-| Commit | Scope | Findings fixed | Lint baseline after |
-|---|---|---|---|
-| `2ef53ef` | `no-redundant-use` | 9 | 114 |
-| `aef5133` | `no-fully-qualified-global-class-like` | 11 | 103 |
-| `473c813` | `yoda-conditions` | 11 | 92 |
-| `a07a8d3` | `string-style` (autofixable subset) | 27 | 65 |
-| `ac0393c` | `literal-named-argument` + remaining `string-style` | 14 | 51 |
-| `f7eba41` | prune `analysis-baseline.toml` (6 entries obsoleted by the above) | — | 51 |
+**Potentially-unsafe set** - mago classifies these as `--potentially-unsafe`, and owner
+policy forbids that flag: `redundant-null-coalesce` (6), `redundant-logical-operation`
+(2), `unused-parameter` (1). For the coalesces the analyzer asserts that a config fallback
+can never be null, which is a claim about runtime config shape rather than a local fact,
+and `unused-parameter` removal alters a signature. Each site needs a manual decision.
+
+**`redundant-cast` (4)** - `SendVerificationEmailListenerFactory` casts four config values
+with `(string)`. Removing them trusts a local `@var` annotation about the shape of the
+`config` service, which is not validated at runtime. Recommendation: keep the casts and
+correct the annotation, or leave the entries baselined.
+
+**Structural lint codes** - `excessive-parameter-list` (6), `too-many-methods` (3),
+`cyclomatic-complexity` (1), `halstead` (1), `no-literal-password` (1) need refactors or
+design decisions (splitting a parameter list changes call sites; splitting a class changes
+the public surface), so they belong with tranche 4 rather than a mechanical pass.
+
+## Findings discovered during the burndown
+
+**Latent fatal in `User::withDetail()` and `User::withRoleId()`** (`src/Entity/User.php`).
+Both call `array_merge()` on a property declared `array|string|null` whose setter accepts
+`null`: `details` (`elseif (is_array($value) || $value === null)`) and `roleId`. In PHP 8,
+`array_merge(null, [...])` raises a `TypeError`, so `withDetail()` on a user hydrated with
+`details = null` would fatal. Not fixed here because the correction changes runtime
+behaviour and needs approval; it is also the reason the `prefer-array-spread` rewrite is
+worth revisiting with a typed local instead of being dropped entirely.
 
 ## Notes for the analyze tranches
 
