@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
+use RuntimeException;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
@@ -124,7 +125,7 @@ class User implements UserInterface, NamedCommandInterface
 
     public function exchangeArray(array $data): array
     {
-        throw new \RuntimeException('User entity does not support exchangeArray()');
+        throw new RuntimeException('User entity does not support exchangeArray()');
     }
 
     /** @param mixed $default */

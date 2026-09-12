@@ -158,12 +158,6 @@ count = 3
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference detected."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "no-isset"
 message = "Use of the `isset` construct."
 count = 2
@@ -272,18 +266,6 @@ count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference detected."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference is already in scope."
-count = 8
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
 code = "no-isset"
 message = "Use of the `isset` construct."
 count = 1
@@ -310,12 +292,6 @@ count = 1
 file = "src/Repository/UserRepositoryInterface.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryInterface.php"
-code = "no-fully-qualified-global-class-like"
-message = "Fully-qualified class-like reference detected."
 count = 1
 
 [[issues]]
