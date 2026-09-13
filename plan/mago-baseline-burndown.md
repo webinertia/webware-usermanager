@@ -221,9 +221,12 @@ Our own keys (`from_email`, `from_name`, `base_url` under bare `$config['user']`
 component's declared contract at all.
 
 Tracked as **webinertia/webware-mailer#14** (typed property-hook config contract on
-`AdapterInterface`, immutable `with*()` adapters, config path, `CommandBus` → `MessageBus`,
-PSR middleware to `Http\Middleware`). These entries stay baselined until that lands; the
-usermanager-side key consts/accessor wait on the same contract.
+`AdapterInterface`, immutable `with*()` adapters, config path, `CommandBus` split into
+per-type `Command\` + `CommandHandler\`, PSR middleware to `Http\Middleware`). The namespace
+and boundary direction is governed by **webinertia/webware-tools#20**, which carries the
+constitution amendment and the central guard rules — neither component defines those rules
+locally. These entries stay baselined until the mailer work lands; the usermanager-side key
+consts/accessor wait on the same contract.
 
 **Structural lint codes** - `excessive-parameter-list` (6), `too-many-methods` (3),
 `cyclomatic-complexity` (1), `halstead` (1), `no-literal-password` (1) need refactors or
