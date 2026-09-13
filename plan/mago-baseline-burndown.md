@@ -122,11 +122,11 @@ Integration tests need MySQL and run in the tooling container
 | `unsafe-instantiation` | warning | 10 | 3 |
 | `possibly-invalid-argument` | error | 9 | 4 |
 | `non-existent-property` | error | 8 | 4 |
-| `redundant-null-coalesce` | help | 6 | 2 |
+| `redundant-null-coalesce` | help | 6 | 2 — **blocked upstream** (mailer #14) |
 | `less-specific-argument` | error | 5 | 3 |
 | `mixed-return-statement` | error | 5 | 3 |
 | `redundant-comparison` | help | 5 | 2 |
-| `redundant-cast` | help | 4 | 2 |
+| `redundant-cast` | help | 4 | 2 — **blocked upstream** (mailer #14) |
 | `redundant-condition` | warning | 4 | 2 |
 | `redundant-type-comparison` | warning | 4 | 2 |
 | `uninitialized-property` | error | 4 | 4 |
@@ -190,26 +190,40 @@ The 21 entries stay in `lint-baseline.toml` so `mago lint` remains green. When a
 is fixed later, prune its entry with `--remove-outdated-baseline-entries` in the same
 commit.
 
-**`prefer-array-spread` (4)** - deferred 2026-09-11 after the safe autofix was applied,
-reviewed, and reverted. It rewrote `array_merge` into spreads over properties typed
-`array|string|null`, which the analyzer rejects (`invalid-array-element: Cannot use spread
-operator on non-iterable type null|string` in `Entity/User.php`) and which also degraded
-the argument to `non-empty-array<array-key, mixed>` (`less-specific-argument`). The change
-fixed 4 findings and created 7. The middleware sites additionally generate
-`...is_array($body) ? $body : []`, a spread over a ternary operand. Doing this properly
-needs a typed local (`$details = $this->details ?? [];`) rather than a raw spread, which
-is behaviour-adjacent and needs approval.
+**`prefer-array-spread` (4)** - **done** (2026-09-11). Landed as `refactor: use array spread
+instead of array_merge`, after the `with*` null-merge fix supplied the typed local that
+the raw spread needed. Equivalence was verified case by case: integer keys are renumbered
+in both forms and string keys let the later operand win in both, so precedence is
+unchanged at every site. Mago ships no autofix for this rule.
 
 **Potentially-unsafe set** - mago classifies these as `--potentially-unsafe`, and owner
-policy forbids that flag: `redundant-null-coalesce` (6), `redundant-logical-operation`
-(2), `unused-parameter` (1). For the coalesces the analyzer asserts that a config fallback
-can never be null, which is a claim about runtime config shape rather than a local fact,
-and `unused-parameter` removal alters a signature. Each site needs a manual decision.
+policy forbids that flag: `redundant-logical-operation` (2), `unused-parameter` (1).
+`unused-parameter` removal alters a signature. Each site needs a manual decision.
+The six `redundant-null-coalesce` findings previously listed here were not a local
+problem at all — see the config-contract entry below.
 
-**`redundant-cast` (4)** - `SendVerificationEmailListenerFactory` casts four config values
-with `(string)`. Removing them trusts a local `@var` annotation about the shape of the
-`config` service, which is not validated at runtime. Recommendation: keep the casts and
-correct the annotation, or leave the entries baselined.
+**`redundant-cast` (4) and `redundant-null-coalesce` (6) — blocked upstream**
+(`webware/webware-mailer`). All ten sit in `SendVerificationEmailListenerFactory`, and an
+eleventh (`impossible-nonnull-entry-check`, 1) shares the cause: a single over-specific
+`@var` shape annotation on the `config` service. The annotation claims every leaf is a
+present non-null `string`, so the analyzer reports the four `??` fallbacks and the four
+`(string)` casts as redundant. The annotation is false — the `config` service is not
+validated at runtime, which is exactly why the fallbacks and casts exist.
+
+Correcting the annotation locally retires 11 findings with no behaviour change, but it
+treats the symptom. The root cause is that mailer publishes no config contract: both
+`getAdapterConfig()` and `getMessageConfig()` declare `@return array<string, mixed>`, and
+the section is read from two different paths by two different consumers
+(`PhpMailerFactory` reads `config[AdapterInterface::class]` at top level;
+`MailerMiddlewareFactory` reads `config[ConfigProvider::class][AdapterInterface::class]`).
+Our own keys (`from_email`, `from_name`, `base_url` under bare `$config['user']`;
+`verification_email_subject` under `$config[MailerInterface::class]`) belong to no
+component's declared contract at all.
+
+Tracked as **webinertia/webware-mailer#14** (typed property-hook config contract on
+`AdapterInterface`, immutable `with*()` adapters, config path, `CommandBus` → `MessageBus`,
+PSR middleware to `Http\Middleware`). These entries stay baselined until that lands; the
+usermanager-side key consts/accessor wait on the same contract.
 
 **Structural lint codes** - `excessive-parameter-list` (6), `too-many-methods` (3),
 `cyclomatic-complexity` (1), `halstead` (1), `no-literal-password` (1) need refactors or
