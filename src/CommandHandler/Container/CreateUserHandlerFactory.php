@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler\Container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\UserManager\CommandHandler\CreateUserHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
 final class CreateUserHandlerFactory
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): CreateUserHandler
     {
         return new CreateUserHandler(

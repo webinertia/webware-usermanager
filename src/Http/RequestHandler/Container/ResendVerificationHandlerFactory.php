@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\RequestHandler\Container;
 
+use InvalidArgumentException;
 use Laminas\View\HelperPluginManager;
+use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -17,6 +19,8 @@ final readonly class ResendVerificationHandlerFactory
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws HelperException
+     * @throws InvalidArgumentException
      */
     public function __invoke(ContainerInterface $container): ResendVerificationHandler
     {

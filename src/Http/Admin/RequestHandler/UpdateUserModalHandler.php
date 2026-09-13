@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\Admin\RequestHandler;
 
+use Laminas\Diactoros\Exception\ExceptionInterface as DiactorosException;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
 use Override;
@@ -24,6 +25,9 @@ final class UpdateUserModalHandler implements RequestHandlerInterface
         private readonly MessageBusInterface $messageBus,
     ) {}
 
+    /**
+     * @throws DiactorosException
+     */
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

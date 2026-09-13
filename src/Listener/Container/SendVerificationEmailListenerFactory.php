@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace Webware\UserManager\Listener\Container;
 
 use Laminas\View\HelperPluginManager;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Webware\Mailer\MailerInterface;
 use Webware\UserManager\Listener\SendVerificationEmailListener;
 use Webware\UserManager\View\Helper\UserUrl;
 
 final class SendVerificationEmailListenerFactory
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): SendVerificationEmailListener
     {
         /** @var array{user: array{from_email: string, from_name: string, base_url: string}, MailerInterface::class: array{verification_email_subject: string}} $config */

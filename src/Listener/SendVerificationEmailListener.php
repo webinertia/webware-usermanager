@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Listener;
 
+use InvalidArgumentException;
+use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
 use Webware\Mailer\MailerInterface;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\View\Helper\UserUrl;
@@ -22,6 +24,10 @@ final class SendVerificationEmailListener
         private readonly UserUrl $userUrl,
     ) {}
 
+    /**
+     * @throws HelperException
+     * @throws InvalidArgumentException
+     */
     public function __invoke(SendVerificationEmailEvent $event): void
     {
         $command         = $event->getTarget();

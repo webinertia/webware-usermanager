@@ -122,6 +122,9 @@ class User implements UserInterface, NamedCommandInterface
         },
     ) {}
 
+    /**
+     * @throws RuntimeException
+     */
     public function exchangeArray(array $_data): array
     {
         throw new RuntimeException('User entity does not support exchangeArray()');

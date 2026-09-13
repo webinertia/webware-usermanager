@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Webware\Core\Configuration as Config;
 use Webware\Core\Exception;
 use Webware\Core\UserInterface;
@@ -30,6 +32,11 @@ final readonly class Configuration extends Config
 
     private const string MEZZIO_AUTH_KEY = 'authentication';
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws Exception\ExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public static function getCredentialConfig(
         ContainerInterface $container,
         string $callingFactory,

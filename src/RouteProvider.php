@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Webware\UserManager;
 
+use Mezzio\Exception\ExceptionInterface as MezzioException;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\MiddlewareFactoryInterface;
+use Mezzio\Router\Exception\ExceptionInterface as RouterException;
 use Mezzio\Router\RouteCollectorInterface;
 use Mezzio\Router\RouteProviderInterface;
 use Override;
@@ -38,6 +40,10 @@ final readonly class RouteProvider implements RouteProviderInterface
         private string $adminRouteNamePrefix,
     ) {}
 
+    /**
+     * @throws MezzioException
+     * @throws RouterException
+     */
     #[Override]
     public function registerRoutes(
         RouteCollectorInterface $routeCollector,

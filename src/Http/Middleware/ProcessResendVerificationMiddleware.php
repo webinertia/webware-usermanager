@@ -6,6 +6,8 @@ namespace Webware\UserManager\Http\Middleware;
 
 use DateTimeImmutable;
 use Fig\Http\Message\RequestMethodInterface;
+use InvalidArgumentException;
+use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
 use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,6 +48,10 @@ final readonly class ProcessResendVerificationMiddleware implements MiddlewareIn
         private array $mailConfig,
     ) {}
 
+    /**
+     * @throws HelperException
+     * @throws InvalidArgumentException
+     */
     #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\Middleware;
 
+use Laminas\Diactoros\Exception\ExceptionInterface as DiactorosException;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
 use Override;
@@ -36,6 +37,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
 
     /**
      * @throws InvalidHopsValueException
+     * @throws DiactorosException
      */
     #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
