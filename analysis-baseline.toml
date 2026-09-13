@@ -243,13 +243,13 @@ count = 1
 [[issues]]
 file = "src/Entity/User.php"
 code = "imprecise-type"
-message = "Type `array` in parameter `$createdAt` is imprecise, equivalent to `array<array-key, mixed>`."
+message = "Type `array` in parameter `$_data` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
 code = "imprecise-type"
-message = "Type `array` in parameter `$data` is imprecise, equivalent to `array<array-key, mixed>`."
+message = "Type `array` in parameter `$createdAt` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
 [[issues]]
@@ -413,12 +413,6 @@ file = "src/Entity/User.php"
 code = "unsafe-instantiation"
 message = 'Unsafe `new static()`: constructor of `Webware\UserManager\Entity\User` is not final and its signature might change in child classes, potentially leading to runtime errors.'
 count = 10
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "unused-parameter"
-message = "Parameter `$data` is never used."
-count = 1
 
 [[issues]]
 file = "src/Event/SendVerificationEmailEvent.php"

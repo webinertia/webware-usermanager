@@ -20,7 +20,6 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 
-use function array_merge;
 use function is_array;
 use function json_encode;
 

@@ -17,7 +17,6 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 
-use function array_merge;
 use function is_array;
 
 final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface

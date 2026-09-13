@@ -16,7 +16,6 @@ use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
 
-use function array_merge;
 use function array_values;
 use function is_array;
 use function is_string;
@@ -123,7 +122,7 @@ class User implements UserInterface, NamedCommandInterface
         },
     ) {}
 
-    public function exchangeArray(array $data): array
+    public function exchangeArray(array $_data): array
     {
         throw new RuntimeException('User entity does not support exchangeArray()');
     }
