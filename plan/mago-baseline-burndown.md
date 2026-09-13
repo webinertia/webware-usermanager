@@ -26,10 +26,10 @@ New findings only appear from changed code or a mago/`webware-tools` bump. The w
 therefore purely "fix the 373 known findings", which is why it is split into tranches
 with one PR each.
 
-**Current state (2026-09-13, `chore/mago-burndown-2-mechanical` at `f16578c`):** lint
-suppresses **43** findings across 27 entries (was 123) and analysis **229** across 200
+**Current state (2026-09-13, `chore/mago-burndown-2-mechanical` at `78e60a6`):** lint
+suppresses **43** findings across 27 entries (was 123) and analysis **157** across 128
 entries (was 250); `mago analyze --verify-baseline` reports the baseline in sync. Tranche
-1 landed as PR #22; tranche 2 is partially applied on its branch.
+1 landed as PR #22; tranche 2 is partially applied on its branch; tranche 5 is complete.
 
 The unapproved Psl `unchecked-exceptions` exemption in `mago.toml` is gone: reverted in
 PR #23, merged to `0.1.x` as `8edf30b`, then merged into this branch. Nothing suppresses
@@ -183,7 +183,7 @@ Integration tests need MySQL and run in the tooling container
 | 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | — | 12 fixed; `prefer-array-spread` (4) and `assert-description` (3) retired; 3 retired by the `with*` null-merge fix; `unused-parameter` (1) fixed by hand in `f16578c`; remainder awaiting decisions |
 | 3 | Type precision at the source: `imprecise-type`, `mixed-*`, `unsafe-instantiation`, `less-specific-argument`, docblock narrowing | 82 | — | — | Not started |
 | 4 | Error-level correctness: `possibly-*`, `non-existent-property`, `uninitialized-property`, `invalid-*`, `unreachable-else-clause`, plus the remaining lint errors | 38 | — | — | Not started |
-| 5 | `unhandled-thrown-type` — document `@throws` using the interface the concrete exception implements | 72 | — | — | Not started |
+| 5 | `unhandled-thrown-type` — document `@throws` using the interface the concrete exception implements | 72 | `chore/mago-burndown-2-mechanical` | — | **Done** (`78e60a6`): all 72 fixed. Declaring an exception makes it part of the callee's contract, so a further 36 findings surfaced at callers and were fixed in the same branch until the analysis converged |
 
 Tranche 3 and 4 will move as findings resolve each other: fixing a type at its source
 (retiring `imprecise-type` or a `mixed-*` root) typically retires downstream findings in
@@ -261,6 +261,21 @@ design decisions (splitting a parameter list changes call sites; splitting a cla
 the public surface), so they belong with tranche 4 rather than a mechanical pass.
 
 ## Findings discovered during the burndown
+
+**`@throws` placement and global-class resolution** (2026-09-13, `78e60a6`). Two rules
+that made an apparently-correct pass fail silently:
+
+- A docblock must precede a method's **attributes**. Inserting it between `#[Override]`
+  and the method leaves the tag unattached and the finding stays open; this failed 22 of
+  29 sites while every file still looked right at a glance.
+- A tag naming a **global** class only resolves when that class is imported. In
+  `View\Helper\UserUrl`, `@throws InvalidArgumentException` resolves against the current
+  namespace and matches nothing; the fix is a `use InvalidArgumentException;` import (an
+  FQN `\InvalidArgumentException` would trip `no-fully-qualified-global-class-like`).
+
+Declaring an exception is contagious: `@throws` on a callee makes the analyser report the
+same type at every call site, so tranche 5 took three passes (72 -> 22 -> 14 -> 0) rather
+than one.
 
 **Fatal in `User::withRoleId()`, false positive in `User::withDetail()`**
 (`src/Entity/User.php`). Both call `array_merge()` on a property declared
