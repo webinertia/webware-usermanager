@@ -26,9 +26,10 @@ New findings only appear from changed code or a mago/`webware-tools` bump. The w
 therefore purely "fix the 373 known findings", which is why it is split into tranches
 with one PR each.
 
-**Current state (2026-09-11, `chore/mago-burndown-2-mechanical` at `5cd36c1`):** lint
-suppresses **43** (was 123) and analysis **230** (was 250). Tranche 1 landed as PR #22;
-tranche 2 is partially applied on its branch.
+**Current state (2026-09-13, `chore/mago-burndown-2-mechanical` at `f16578c`):** lint
+suppresses **43** findings across 27 entries (was 123) and analysis **229** across 200
+entries (was 250); `mago analyze --verify-baseline` reports the baseline in sync. Tranche
+1 landed as PR #22; tranche 2 is partially applied on its branch.
 
 The unapproved Psl `unchecked-exceptions` exemption in `mago.toml` is gone: reverted in
 PR #23, merged to `0.1.x` as `8edf30b`, then merged into this branch. Nothing suppresses
@@ -54,9 +55,27 @@ outstanding work for tranche 5, and any new throw site must be documented at the
 
 ## Verification gate (every batch)
 
+Read both the exit code and the summary line of every check. **Never gate on a `grep` of
+the output.** mago phrases its summaries inconsistently (`found 3 issues` vs `No issues
+found`), and `INFO`/`WARN` lines go to stderr, so a grep for one wording can silently
+match nothing and a broken batch passes. That is exactly how three `no-redundant-use`
+findings (a non-zero `mago lint` exit) slipped through the tranche 2 gate.
+
+Count findings with mago's own report limiting, never by grepping rendered output:
+
+| Need | Command |
+|---|---|
+| One code only | `mago analyze --retain-code <CODE> --reporting-format=short` (repeatable; lint takes the same flag, or `--only <CODE>` to skip other rules) |
+| Per-code counts | `mago analyze --stats` (= `--reporting-format code-count`, highest first) |
+| Counts from the baseline | `mago inspect-baseline analysis-baseline.toml --group code` |
+| Totals only | `--reporting-format=count` |
+
 - `mago format --check` — clean
-- `mago lint` / `mago analyze` — clean with baseline, and the ignored-issue count must
-  drop by exactly the number of findings fixed
+- `mago lint` / `mago analyze` — exit 0, `No issues found`, and the filtered count must
+  match the baseline total
+- `mago analyze --verify-baseline` — `Baseline is up to date`. This is the check that
+  catches baseline drift a grep cannot see; `--fail-on-out-of-sync-baseline` makes a run
+  fail on it
 - `mago guard` — clean
 - `php -d zend.assertions=1 vendor/bin/phpunit --testsuite "unit test"` — green
 - Coverage — 100% classes / methods / lines (`XDEBUG_MODE=coverage`, `--cache-directory /tmp/phpunit-cache-um`)
@@ -161,7 +180,7 @@ Integration tests need MySQL and run in the tooling container
 | # | Scope | Findings | Branch | PR | Status |
 |---|---|---|---|---|---|
 | 1 | Mechanical lint: autofixable style codes | 93 | `chore/mago-burndown-1-lint-mechanical` | #22 merged | 72 fixed; 21 `no-else-clause` deferred (baselined) |
-| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | — | 11 fixed; `prefer-array-spread` (4) and `assert-description` (3) retired; 3 retired by the `with*` null-merge fix; remainder awaiting decisions |
+| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | — | 12 fixed; `prefer-array-spread` (4) and `assert-description` (3) retired; 3 retired by the `with*` null-merge fix; `unused-parameter` (1) fixed by hand in `f16578c`; remainder awaiting decisions |
 | 3 | Type precision at the source: `imprecise-type`, `mixed-*`, `unsafe-instantiation`, `less-specific-argument`, docblock narrowing | 82 | — | — | Not started |
 | 4 | Error-level correctness: `possibly-*`, `non-existent-property`, `uninitialized-property`, `invalid-*`, `unreachable-else-clause`, plus the remaining lint errors | 38 | — | — | Not started |
 | 5 | `unhandled-thrown-type` — document `@throws` using the interface the concrete exception implements | 72 | — | — | Not started |
@@ -198,7 +217,15 @@ unchanged at every site. Mago ships no autofix for this rule.
 
 **Potentially-unsafe set** - mago classifies these as `--potentially-unsafe`, and owner
 policy forbids that flag: `redundant-logical-operation` (2), `unused-parameter` (1).
-`unused-parameter` removal alters a signature. Each site needs a manual decision.
+`unused-parameter` was **resolved by hand** (2026-09-13, `f16578c`): the parameter belongs
+to `User::exchangeArray()`, which `RowPrototypeInterface` requires and which always
+throws, so it is never read. Renaming it to `$_data` retires the finding without removing
+a signature parameter or changing the contract. The rename re-keyed one
+`imprecise-type` entry, whose message quoted the old parameter name, so
+`analysis-baseline.toml` was regenerated by mago for that entry to match again; the
+finding stays baselined with the rest of the `imprecise-type` family (29) for tranche 3
+rather than being fixed in isolation. Net baseline 230 -> 229.
+`redundant-logical-operation` (2) still needs a per-site decision.
 The six `redundant-null-coalesce` findings previously listed here were not a local
 problem at all — see the config-contract entry below.
 
