@@ -23,7 +23,6 @@ final class SendVerificationEmailListenerFactory
      */
     public function __invoke(ContainerInterface $container): SendVerificationEmailListener
     {
-        /** @var HelperPluginManager $helperManager */
         $helperManager = $container->get(HelperPluginManager::class);
         $userUrl       = $helperManager->get(UserUrl::class);
 
