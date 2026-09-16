@@ -159,12 +159,6 @@ count = 1
 [[issues]]
 file = "src/Entity/User.php"
 code = "imprecise-type"
-message = "Type `array` in parameter `$_data` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
 message = "Type `array` in parameter `$createdAt` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
@@ -178,12 +172,6 @@ count = 1
 file = "src/Entity/User.php"
 code = "imprecise-type"
 message = "Type `array` in parameter `$tokenCreatedAt` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `exchangeArray` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
 [[issues]]
@@ -434,33 +422,9 @@ count = 1
 
 [[issues]]
 file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "impossible-nonnull-entry-check"
-message = '''Impossible `isset` check on key `'Webware\Mailer\MailerInterface'` accessed on `array{'user': array{'base_url': string, 'from_email': string, 'from_name': string}, Webware\Mailer\MailerInterface::class: array{'verification_email_subject': string}}`.'''
-count = 1
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "redundant-cast"
-message = "Redundant cast to `(string)`: the expression already has this type."
-count = 4
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
 code = "redundant-docblock-type"
 message = "Redundant docblock type for variable `$helperManager`."
 count = 1
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "redundant-null-coalesce"
-message = "Redundant null coalesce: left-hand side can never be `null` or undefined."
-count = 4
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "redundant-null-coalesce"
-message = "Redundant null coalesce: left-hand side is always `null`."
-count = 2
 
 [[issues]]
 file = "src/Listener/SendVerificationEmailListener.php"

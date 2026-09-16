@@ -10,7 +10,8 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Webware\Mailer\MailerInterface;
+use Webware\Core\UserInterface;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Listener\Container\SendVerificationEmailListenerFactory;
 use Webware\UserManager\Listener\SendVerificationEmailListener;
 use WebwareTest\UserManager\Support\ViewHelperManagerTrait;
@@ -25,20 +26,19 @@ final class SendVerificationEmailListenerFactoryTest extends TestCase
     public function invokeBuildsListener(): void
     {
         $container = $this->createStub(ContainerInterface::class);
+        $container->method('has')->willReturn(true);
         $container->method('get')
             ->willReturnMap([
                 [
                     'config',
                     [
-                        'user'                 => [
-                            'from_email' => 'noreply@example.com',
-                            'from_name'  => 'Example',
-                            'base_url'   => 'http://localhost',
+                        UserInterface::class => [
+                            'base_url'                   => 'https://example.com',
+                            'verification_email_subject' => 'Verify your email',
                         ],
-                        MailerInterface::class => ['verification_email_subject' => 'Verify'],
                     ],
                 ],
-                [MailerInterface::class, $this->createStub(MailerInterface::class)],
+                [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [HelperPluginManager::class, $this->userUrlHelperManager()],
             ]);
 

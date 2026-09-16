@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\Container\ContainerInterface;
 use Webware\UserManager\Http\Admin\RequestHandler\Container\UpdateUserHandlerFactory;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
@@ -29,5 +30,21 @@ final class UpdateUserHandlerFactoryTest extends TestCase
             ]);
 
         self::assertInstanceOf(UpdateUserHandler::class, (new UpdateUserHandlerFactory())($container));
+    }
+
+    /**
+     * The factory asserts the resolved service really is a template renderer
+     * before handing it to the handler, so a wrong service is reported as a
+     * assertion failure rather than surfacing later as a TypeError.
+     */
+    #[Test]
+    public function invokeThrowsWhenTheResolvedServiceIsNotATemplateRenderer(): void
+    {
+        $container = $this->createStub(ContainerInterface::class);
+        $container->method('get')->willReturn('not-a-renderer');
+
+        $this->expectException(PslTypeException::class);
+
+        (new UpdateUserHandlerFactory())($container);
     }
 }

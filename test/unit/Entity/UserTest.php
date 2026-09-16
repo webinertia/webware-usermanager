@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Webware\UserManager\Entity\User;
 
 use function bin2hex;
@@ -17,7 +16,6 @@ use function random_bytes;
 
 #[CoversClass(User::class)]
 #[CoversMethod(User::class, '__construct')]
-#[CoversMethod(User::class, 'exchangeArray')]
 #[CoversMethod(User::class, 'getDetail')]
 #[CoversMethod(User::class, 'getDetails')]
 #[CoversMethod(User::class, 'getIdentity')]
@@ -74,14 +72,6 @@ final class UserTest extends TestCase
     public function constructorWrapsNonJsonRoleIdString(): void
     {
         static::assertSame(['member'], new User(roleId: 'member')->roleId);
-    }
-
-    #[Test]
-    public function exchangeArrayThrowsRuntimeException(): void
-    {
-        $this->expectException(RuntimeException::class);
-
-        new User()->exchangeArray([]);
     }
 
     #[Test]

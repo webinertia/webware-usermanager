@@ -127,18 +127,6 @@ message = "Avoid `else` clauses."
 count = 2
 
 [[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "ambiguous-constant-access"
-message = "Ambiguous constant access detected."
-count = 2
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
-count = 1
-
-[[issues]]
 file = "src/Repository/UserRepository.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."

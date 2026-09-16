@@ -130,6 +130,8 @@ final class ConfigProvider
             Command\ActivateUserCommand::class                => CommandHandler\ActivateUserHandler::class,
             Command\CreateUserCommand::class                  => CommandHandler\CreateUserHandler::class,
             Command\RegenerateVerificationTokenCommand::class => CommandHandler\RegenerateVerificationTokenHandler::class,
+            Command\ResendVerificationEmailCommand::class     => CommandHandler\ResendVerificationEmailHandler::class,
+            Command\SendVerificationEmailCommand::class       => CommandHandler\SendVerificationEmailHandler::class,
             Command\ToggleUserActiveCommand::class            => CommandHandler\ToggleUserActiveHandler::class,
             Command\UpdateUserCommand::class                  => CommandHandler\UpdateUserHandler::class,
         ];
@@ -167,6 +169,8 @@ final class ConfigProvider
                 CommandHandler\UpdateUserHandler::class                        => CommandHandler\Container\UpdateUserHandlerFactory::class,
                 CommandHandler\ActivateUserHandler::class                      => CommandHandler\Container\ActivateUserHandlerFactory::class,
                 CommandHandler\RegenerateVerificationTokenHandler::class       => CommandHandler\Container\RegenerateVerificationTokenHandlerFactory::class,
+                CommandHandler\ResendVerificationEmailHandler::class           => CommandHandler\Container\ResendVerificationEmailHandlerFactory::class,
+                CommandHandler\SendVerificationEmailHandler::class             => CommandHandler\Container\SendVerificationEmailHandlerFactory::class,
                 QueryHandler\AuthenticateUserHandler::class                    => QueryHandler\Container\AuthenticateUserHandlerFactory::class,
                 QueryHandler\CheckUserActiveHandler::class                     => QueryHandler\Container\CheckUserActiveHandlerFactory::class,
                 QueryHandler\FetchUserByEmailHandler::class                    => QueryHandler\Container\FetchUserByEmailHandlerFactory::class,

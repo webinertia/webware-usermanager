@@ -91,6 +91,11 @@ services:
       MYSQL_DATABASE: webware
       MYSQL_USER: webware
       MYSQL_PASSWORD: webware
+    ports:
+      # Publish so DB-backed tests can reach MySQL from the WSL host at
+      # 127.0.0.1:3306 (matches CI's db-port and the TESTS_ADAPTER_MYSQL_HOSTNAME
+      # connection convention).
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s

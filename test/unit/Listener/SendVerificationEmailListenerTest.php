@@ -9,9 +9,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Webware\Mailer\Adapter\AdapterInterface;
-use Webware\Mailer\MailerInterface;
+use Webware\MessageBus\Command\CommandResultInterface;
+use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Command\CreateUserCommand;
+use Webware\UserManager\Command\SendVerificationEmailCommand;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\Listener\SendVerificationEmailListener;
 use Webware\UserManager\View\Helper\UserUrl;
@@ -25,35 +26,32 @@ use function random_bytes;
 final class SendVerificationEmailListenerTest extends TestCase
 {
     #[Test]
-    public function buildsAndSendsVerificationEmail(): void
+    public function dispatchesSendVerificationEmailCommand(): void
     {
-        $adapter = $this->createStub(AdapterInterface::class);
-        $adapter->method('from')->willReturnSelf();
-        $adapter->method('to')->willReturnSelf();
-        $adapter->method('subject')->willReturnSelf();
-        $adapter->method('isHtml')->willReturnSelf();
-        $adapter->method('body')->willReturnSelf();
-        $adapter->method('altBody')->willReturnSelf();
+        $dispatched = null;
+        $result     = $this->createStub(CommandResultInterface::class);
 
-        $mailer = $this->createMock(MailerInterface::class);
-        $mailer->expects($this->once())->method('getAdapter')->willReturn($adapter);
-        $mailer->expects($this->once())->method('send')->willReturn(true);
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(static function (object $message) use (&$dispatched, $result): CommandResultInterface {
+                $dispatched = $message;
 
-        $listener = $this->listener(mailer: $mailer);
+                return $result;
+            });
+
+        $listener = $this->listener(messageBus: $messageBus);
 
         $listener($this->event());
-    }
 
-    #[Test]
-    public function doesNothingWhenMailerHasNoAdapter(): void
-    {
-        $mailer = $this->createMock(MailerInterface::class);
-        $mailer->expects($this->once())->method('getAdapter')->willReturn(null);
-        $mailer->expects($this->never())->method('send');
+        if (! $dispatched instanceof SendVerificationEmailCommand) {
+            static::fail('Expected a SendVerificationEmailCommand to be dispatched.');
+        }
 
-        $listener = $this->listener(mailer: $mailer);
-
-        $listener($this->event());
+        static::assertSame('jane@example.com', $dispatched->to);
+        static::assertSame('Jane', $dispatched->firstName);
+        static::assertSame('https://example.com/user/verify-email', $dispatched->verificationUrl);
+        static::assertSame('Verify your email', $dispatched->subject);
     }
 
     private function event(): SendVerificationEmailEvent
@@ -70,17 +68,15 @@ final class SendVerificationEmailListenerTest extends TestCase
         return new SendVerificationEmailEvent($command);
     }
 
-    private function listener(?MailerInterface $mailer = null): SendVerificationEmailListener
+    private function listener(?MessageBusInterface $messageBus = null): SendVerificationEmailListener
     {
-        $mailer ??= $this->createStub(MailerInterface::class);
+        $messageBus ??= $this->createStub(MessageBusInterface::class);
 
         $urlHelper = $this->createStub(UrlHelper::class);
         $urlHelper->method('__invoke')->willReturn('/user/verify-email');
 
         return new SendVerificationEmailListener(
-            mailer             : $mailer,
-            fromEmail          : 'noreply@example.com',
-            fromName           : 'Webware',
+            messageBus         : $messageBus,
             baseUrl            : 'https://example.com',
             verificationSubject: 'Verify your email',
             userUrl            : new UserUrl($urlHelper, 'user.manager.'),
