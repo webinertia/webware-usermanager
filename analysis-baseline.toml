@@ -67,66 +67,6 @@ message = 'Possible argument type mismatch for argument #1 of `Webware\UserManag
 count = 1
 
 [[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `__invoke` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getAclConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getAuthenticationConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getDefaultConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getDependencies` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getInputFilterConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getListeners` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getRouteProviders` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getTemplates` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getViewHelpers` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
 file = "src/Container/Configuration.php"
 code = "imprecise-type"
 message = "Type `array` in return type of `getCredentialConfig` is imprecise, equivalent to `array<array-key, mixed>`."
