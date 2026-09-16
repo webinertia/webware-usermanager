@@ -34,6 +34,7 @@ final class ToggleUserActiveHandler implements RequestHandlerInterface
             return new HtmlResponse('', 422);
         }
 
+        /** @var UserInterface|null $user */
         $user = $result->getResult();
 
         if (! $user instanceof UserInterface) {

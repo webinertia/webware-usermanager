@@ -12,8 +12,6 @@ use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
-use Webware\MessageBus\Command\NamedCommandInterface;
-use Webware\MessageBus\Command\NamedCommandTrait;
 
 use function array_values;
 use function is_array;
@@ -26,10 +24,11 @@ use function strtolower;
 
 use const PASSWORD_DEFAULT;
 
-class User implements UserInterface, NamedCommandInterface
+// @mago-expect lint:cyclomatic-complexity,too-many-methods - accepted: the property hooks and builders are deliberately kept on one entity.
+// @mago-expect analysis:class-must-be-final,unsafe-instantiation - accepted: User is non-final by design so consumers can extend it, and the with*() builders and populate() must construct `static`.
+class User implements UserInterface
 {
-    use NamedCommandTrait;
-
+    // @mago-expect lint:excessive-parameter-list,halstead - accepted: the promoted properties are the row shape, and each carries its normalising hook.
     public function __construct(
         public private(set) int|string|null $id = null {
             get => $this->id ?? null;
@@ -41,6 +40,7 @@ class User implements UserInterface, NamedCommandInterface
                 }
             }
         },
+        /** @var array<array-key, mixed>|string|null */
         public private(set) array|string|null $roleId = null {
             get => $this->roleId ?? null;
             set(array|string|null $value) {
@@ -71,6 +71,7 @@ class User implements UserInterface, NamedCommandInterface
                 $this->active = (bool) $value;
             }
         },
+        /** @var DateTimeImmutable|array<array-key, mixed>|string|null */
         public private(set) DateTimeImmutable|array|string|null $createdAt = null {
             get => $this->createdAt ?? new DateTimeImmutable();
             set(DateTimeImmutable|array|string|null $value) {
@@ -85,6 +86,7 @@ class User implements UserInterface, NamedCommandInterface
         },
         #[SensitiveParameter] public private(set) ?string $verificationToken = null,
 
+        /** @var DateTimeImmutable|array<array-key, mixed>|string|null */
         public private(set) DateTimeImmutable|array|string|null $tokenCreatedAt = null {
             get => $this->tokenCreatedAt ?? new DateTimeImmutable();
             set(DateTimeImmutable|array|string|null $value) {
@@ -182,6 +184,9 @@ class User implements UserInterface, NamedCommandInterface
         return new static(...$data);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     #[Override]
     public function toArray(): array
     {

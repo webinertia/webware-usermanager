@@ -15,6 +15,7 @@ use Webware\UserManager\Container\Configuration;
 
 #[CoversClass(Configuration::class)]
 #[CoversMethod(Configuration::class, 'getBaseUrl')]
+#[CoversMethod(Configuration::class, 'getPostLoginRedirect')]
 #[CoversMethod(Configuration::class, 'getVerificationEmailSubject')]
 #[CoversMethod(Configuration::class, 'getVerificationTokenTtl')]
 final class ConfigurationTest extends TestCase
@@ -25,6 +26,42 @@ final class ConfigurationTest extends TestCase
         self::assertSame(UserInterface::class, Configuration::CONFIG_KEY);
         self::assertSame('user.manager', Configuration::ROUTE_SEGMENT_VALUE);
         self::assertSame('user.manager.', Configuration::ROUTE_NAME_PREFIX_VALUE);
+    }
+
+    #[Test]
+    public function fallsBackToDefaultWhenPostLoginRedirectIsEmpty(): void
+    {
+        self::assertSame(
+            Configuration::POST_LOGIN_REDIRECT_VALUE,
+            Configuration::getPostLoginRedirect(
+                $this->containerWith(['authentication' => ['post_login_redirect' => '']]),
+                'TestFactory',
+            ),
+        );
+    }
+
+    #[Test]
+    public function fallsBackToDefaultWhenPostLoginRedirectIsMissing(): void
+    {
+        self::assertSame(
+            Configuration::POST_LOGIN_REDIRECT_VALUE,
+            Configuration::getPostLoginRedirect(
+                $this->containerWith(['authentication' => ['username' => 'email']]),
+                'TestFactory',
+            ),
+        );
+    }
+
+    #[Test]
+    public function fallsBackToDefaultWhenPostLoginRedirectIsNotAString(): void
+    {
+        self::assertSame(
+            Configuration::POST_LOGIN_REDIRECT_VALUE,
+            Configuration::getPostLoginRedirect(
+                $this->containerWith(['authentication' => ['post_login_redirect' => 42]]),
+                'TestFactory',
+            ),
+        );
     }
 
     #[Test]
@@ -45,6 +82,18 @@ final class ConfigurationTest extends TestCase
             'https://example.com',
             Configuration::getBaseUrl(
                 $this->containerWith([UserInterface::class => ['base_url' => 'https://example.com']]),
+                'TestFactory',
+            ),
+        );
+    }
+
+    #[Test]
+    public function returnsPostLoginRedirectWhenPresent(): void
+    {
+        self::assertSame(
+            '/dashboard',
+            Configuration::getPostLoginRedirect(
+                $this->containerWith(['authentication' => ['post_login_redirect' => '/dashboard']]),
                 'TestFactory',
             ),
         );

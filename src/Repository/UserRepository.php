@@ -27,6 +27,7 @@ use Webware\UserManager\Auth\AuthenticationStatus;
 
 use function password_verify;
 
+// @mago-expect lint:too-many-methods - accepted: the repository's public surface mirrors UserRepositoryInterface.
 final class UserRepository implements UserRepositoryInterface
 {
     public function __construct(
@@ -89,15 +90,20 @@ final class UserRepository implements UserRepositoryInterface
         $sql    = $this->gateway->getSql();
         $select = $sql->select()->columns(['active'])->where(['user.id' => $id])->limit(1);
 
+        /** @var array<string, mixed>|null $row */
         $row = $sql->prepareStatementForSqlObject($select)->execute()->current();
         return (bool) ($row['active'] ?? false);
     }
 
     /**
+     * @param list<string> $selectColumns
+     * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
+     * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      * @throws PslTypeException
      * @throws SqlException
      */
     #[Override]
+    // @mago-expect lint:excessive-parameter-list - accepted: the parameter list mirrors the SQL select this method builds.
     public function findAll(
         array $selectColumns = [Sql\Select::SQL_STAR],
         PredicateInterface|array|string|Closure|null $where = null,

@@ -46,9 +46,9 @@ final class CreateUserCommandTest extends TestCase
     }
 
     #[Test]
-    public function getNameReturnsFullyQualifiedClassName(): void
+    public function getCommandNameReturnsFullyQualifiedClassName(): void
     {
-        static::assertSame(CreateUserCommand::class, $this->command()->getName());
+        static::assertSame(CreateUserCommand::class, $this->command()->getCommandName());
     }
 
     #[Test]

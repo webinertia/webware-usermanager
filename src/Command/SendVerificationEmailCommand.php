@@ -20,7 +20,5 @@ final class SendVerificationEmailCommand implements NamedCommandInterface
         public private(set) string $firstName,
         public private(set) string $verificationUrl,
         public private(set) string $subject,
-    ) {
-        $this->name = self::class;
-    }
+    ) {}
 }

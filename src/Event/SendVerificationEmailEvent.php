@@ -7,12 +7,11 @@ namespace Webware\UserManager\Event;
 use Override;
 use Webware\Event\Event;
 use Webware\UserManager\Command\CreateUserCommand;
-use Webware\UserManager\Command\UpdateUserCommand;
 
 final class SendVerificationEmailEvent extends Event
 {
     public function __construct(
-        public readonly CreateUserCommand|UpdateUserCommand $target,
+        public readonly CreateUserCommand $target,
     ) {}
 
     public function getEmail(): string
@@ -21,7 +20,7 @@ final class SendVerificationEmailEvent extends Event
     }
 
     #[Override]
-    public function getTarget(): CreateUserCommand|UpdateUserCommand
+    public function getTarget(): CreateUserCommand
     {
         return $this->target;
     }

@@ -8,6 +8,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
+use Webware\Core\Exception;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Http\Middleware\LoginMiddleware;
@@ -16,17 +17,15 @@ final class LoginMiddlewareFactory
 {
     /**
      * @throws ContainerExceptionInterface
+     * @throws Exception\ExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container): LoginMiddleware
     {
-        $config      = $container->get('config')['authentication'] ?? [];
-        $redirectUrl = $config[Configuration::POST_LOGIN_REDIRECT_KEY] ?? Configuration::POST_LOGIN_REDIRECT_VALUE;
-
         return new LoginMiddleware(
             messageBus : $container->get(MessageBusInterface::class),
             logger     : $container->get(LoggerInterface::class),
-            redirectUrl: $redirectUrl,
+            redirectUrl: Configuration::getPostLoginRedirect($container, self::class),
         );
     }
 }

@@ -39,7 +39,7 @@
         "psr/log": "^3.0",
         "ramsey/uuid": "^4.7",
         "webmozart/assert": "^2.4.1",
-        "webware/message-bus": "^2.0.0-beta.1",
+        "webware/message-bus": "^2.0.0-beta.3",
         "webware/webware-admin": "0.1.x-dev",
         "webware/webware-core": "0.1.x-dev",
         "webware/webware-event": "^0.1",

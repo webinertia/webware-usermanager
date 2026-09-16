@@ -11,16 +11,14 @@ use Webware\MessageBus\Command\NamedCommandTrait;
 /**
  * Regenerate a user's verification token.
  */
-final readonly class RegenerateVerificationTokenCommand implements NamedCommandInterface
+final class RegenerateVerificationTokenCommand implements NamedCommandInterface
 {
     use NamedCommandTrait;
 
     public function __construct(
-        public int $id,
+        public readonly int $id,
         #[SensitiveParameter]
-        public string $token,
-        public string $tokenCreatedAt,
-    ) {
-        $this->name = self::class;
-    }
+        public readonly string $token,
+        public readonly string $tokenCreatedAt,
+    ) {}
 }

@@ -14,12 +14,6 @@ count = 1
 
 [[issues]]
 file = "src/Command/CreateUserCommand.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/Command/CreateUserCommand.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
 count = 4
@@ -29,12 +23,6 @@ file = "src/Command/CreateUserCommand.php"
 code = "no-else-clause"
 message = "Avoid `elseif` clauses."
 count = 3
-
-[[issues]]
-file = "src/Command/UpdateUserCommand.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
-count = 1
 
 [[issues]]
 file = "src/CommandHandler/CreateUserHandler.php"
@@ -49,33 +37,9 @@ message = "Literal passwords or sensitive data should not be stored in code."
 count = 1
 
 [[issues]]
-file = "src/ConfigProvider.php"
-code = "too-many-methods"
-message = "Class has too many methods."
-count = 1
-
-[[issues]]
 file = "src/Container/Configuration.php"
 code = "no-isset"
 message = "Use of the `isset` construct."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "cyclomatic-complexity"
-message = "Class has high complexity."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "halstead"
-message = "Method has a high halstead difficulty and effort"
 count = 1
 
 [[issues]]
@@ -103,12 +67,6 @@ message = "Negated ternary condition."
 count = 1
 
 [[issues]]
-file = "src/Entity/User.php"
-code = "too-many-methods"
-message = "Class has too many methods."
-count = 1
-
-[[issues]]
 file = "src/Http/Admin/Middleware/ProcessUpdateUserMiddleware.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
@@ -128,24 +86,6 @@ count = 2
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
 code = "no-isset"
 message = "Use of the `isset` construct."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "too-many-methods"
-message = "Class has too many methods."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryInterface.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
 count = 1

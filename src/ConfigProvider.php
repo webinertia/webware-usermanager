@@ -24,8 +24,52 @@ use Webware\UserManager\View\Helper\UserUrlFactory;
 
 use function rtrim;
 
+/**
+ * @type AclConfig = array{
+ *     roles: array<string, list<string>>,
+ *     resources: array<string, bool>,
+ *     allow: array<string, array<string, list<mixed>>>,
+ *     deny: array<string, array<string, list<mixed>>>
+ * }
+ * @type AuthenticationConfig = array<string, non-empty-string>
+ * @type DefaultConfig = array<string, non-empty-string>
+ * @type Dependencies = array{
+ *     aliases: array<interface-string, class-string>,
+ *     factories: array<class-string, class-string>,
+ *     invokables: array<class-string, class-string>
+ * }
+ * @type InputFilterConfig = array{factories: array<class-string, class-string>}
+ * @type ListenerConfig = array<class-string, list<array{listener: class-string, priority: int}>>
+ * @type RouteProviderConfig = array{route-providers: list<class-string>}
+ * @type TemplateConfig = array{paths: array<string, list<string>>}
+ * @type ViewHelperConfig = array{
+ *     aliases: array<string, class-string>,
+ *     factories: array<class-string, class-string>
+ * }
+ * @type MessageBusConfig = array{
+ *     command_map: array<class-string, class-string>,
+ *     query_map: array<class-string, class-string>
+ * }
+ * @type ProviderConfig = array{
+ *     dependencies: Dependencies,
+ *     input_filters: InputFilterConfig,
+ *     router: RouteProviderConfig,
+ *     templates: TemplateConfig,
+ *     view_helpers: ViewHelperConfig,
+ *     authentication: AuthenticationConfig,
+ *     Webware\MessageBus\MessageBusInterface: MessageBusConfig,
+ *     listeners: ListenerConfig,
+ *     Webware\Core\UserInterface: DefaultConfig,
+ *     Webware\Core\AclInterface: AclConfig,
+ *     Webware\Console\ConsoleInterface: array{commands: array<string, class-string>}
+ * }
+ */
+// @mago-expect lint:too-many-methods - accepted: one getter per config section, which keeps each section independently testable.
 final class ConfigProvider
 {
+    /**
+     * @return AclConfig
+     */
     public function getAclConfig(): array
     {
         return [
@@ -111,6 +155,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return AuthenticationConfig
+     */
     public function getAuthenticationConfig(): array
     {
         return [
@@ -137,6 +184,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return DefaultConfig
+     */
     public function getDefaultConfig(): array
     {
         return [
@@ -150,6 +200,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return Dependencies
+     */
     public function getDependencies(): array
     {
         return [
@@ -202,6 +255,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return InputFilterConfig
+     */
     public function getInputFilterConfig(): array
     {
         return [
@@ -212,6 +268,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return ListenerConfig
+     */
     public function getListeners(): array
     {
         return [
@@ -234,6 +293,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return RouteProviderConfig
+     */
     public function getRouteProviders(): array
     {
         return [
@@ -243,6 +305,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return TemplateConfig
+     */
     public function getTemplates(): array
     {
         return [
@@ -252,6 +317,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return ViewHelperConfig
+     */
     public function getViewHelpers(): array
     {
         return [
@@ -266,6 +334,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return ProviderConfig
+     */
     public function __invoke(): array
     {
         return [

@@ -23,10 +23,10 @@ final class ToggleUserActiveCommandTest extends TestCase
     }
 
     #[Test]
-    public function getNameReturnsFullyQualifiedClassName(): void
+    public function getCommandNameReturnsFullyQualifiedClassName(): void
     {
         $command = new ToggleUserActiveCommand(id: 1);
 
-        static::assertSame(ToggleUserActiveCommand::class, $command->getName());
+        static::assertSame(ToggleUserActiveCommand::class, $command->getCommandName());
     }
 }

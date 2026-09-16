@@ -2,12 +2,6 @@ variant = "loose"
 
 [[issues]]
 file = "src/Command/CreateUserCommand.php"
-code = "class-must-be-final"
-message = 'Class `Webware\UserManager\Command\CreateUserCommand` should be declared `final`.'
-count = 1
-
-[[issues]]
-file = "src/Command/CreateUserCommand.php"
 code = "impossible-condition"
 message = "This condition (type `false`) will always evaluate to false."
 count = 1
@@ -43,12 +37,6 @@ message = "Unreachable else clause"
 count = 2
 
 [[issues]]
-file = "src/Command/UpdateUserCommand.php"
-code = "class-must-be-final"
-message = 'Class `Webware\UserManager\Command\UpdateUserCommand` should be declared `final`.'
-count = 1
-
-[[issues]]
 file = "src/CommandHandler/ToggleUserActiveHandler.php"
 code = "non-existent-property"
 message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
@@ -67,84 +55,6 @@ message = 'Possible argument type mismatch for argument #1 of `Webware\UserManag
 count = 1
 
 [[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `__invoke` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getAclConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getAuthenticationConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getDefaultConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getDependencies` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getInputFilterConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getListeners` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getRouteProviders` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getTemplates` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/ConfigProvider.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getViewHelpers` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Container/Configuration.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getCredentialConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Container/Configuration.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "class-must-be-final"
-message = 'Class `Webware\UserManager\Entity\User` should be declared `final`.'
-count = 1
-
-[[issues]]
 file = "src/Entity/User.php"
 code = "docblock-parameter-narrowing"
 message = "Docblock type `array<string, mixed>|null` for parameter `$details` drops part of native type `array<array-key, mixed>|null|string`."
@@ -154,30 +64,6 @@ count = 1
 file = "src/Entity/User.php"
 code = "impossible-condition"
 message = "This condition (type `false`) will always evaluate to false."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$createdAt` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$roleId` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$tokenCreatedAt` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `toArray` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
 [[issues]]
@@ -307,46 +193,10 @@ message = "Redundant `||` operation: left operand is evaluated and right operand
 count = 1
 
 [[issues]]
-file = "src/Entity/User.php"
-code = "unsafe-instantiation"
-message = 'Unsafe `new static()`: constructor of `Webware\UserManager\Entity\User` is not final and its signature might change in child classes, potentially leading to runtime errors.'
-count = 10
-
-[[issues]]
-file = "src/Event/SendVerificationEmailEvent.php"
-code = "mixed-return-statement"
-message = 'Could not infer a precise return type for function `Webware\UserManager\Event\SendVerificationEmailEvent::getToken`. Saw type `mixed`.'
-count = 1
-
-[[issues]]
-file = "src/Event/SendVerificationEmailEvent.php"
-code = "non-existent-property"
-message = 'Property `$verificationToken` does not exist on class `Webware\UserManager\Command\UpdateUserCommand`.'
-count = 1
-
-[[issues]]
 file = "src/Http/Admin/Middleware/ProcessToggleUserActiveMiddleware.php"
 code = "possibly-false-argument"
 message = 'Argument #1 of method `Webware\UserManager\Command\ToggleUserActiveCommand::__construct` is possibly `false`, but parameter type `int` does not accept it.'
 count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/ToggleUserActiveHandler.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/LoginMiddlewareFactory.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #3 of `Webware\UserManager\Http\Middleware\LoginMiddleware::__construct`: expected `string`, but found `nonnull`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/LoginMiddlewareFactory.php"
-code = "mixed-assignment"
-message = "Assigning `nonnull` type to a variable may lead to unexpected behavior."
-count = 2
 
 [[issues]]
 file = "src/Http/Middleware/IdentityMiddleware.php"
@@ -358,12 +208,6 @@ count = 1
 file = "src/Http/Middleware/LoginMiddleware.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 3
-
-[[issues]]
-file = "src/Http/Middleware/LoginMiddleware.php"
-code = "mixed-method-access"
-message = "Attempting to access a method on a non-object type (`mixed`)."
 count = 2
 
 [[issues]]
@@ -385,18 +229,6 @@ message = "Redundant docblock type for variable `$helperManager`."
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/LoginHandler.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/LoginHandler.php"
-code = "mixed-method-access"
-message = "Attempting to access a method on a non-object type (`mixed`)."
-count = 1
-
-[[issues]]
 file = "src/Http/RequestHandler/RegistrationHandler.php"
 code = "redundant-comparison"
 message = "Redundant `!==` comparison: left-hand side is always not identical to right-hand side."
@@ -410,12 +242,6 @@ count = 1
 
 [[issues]]
 file = "src/Http/RequestHandler/UserListHandler.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/UserListHandler.php"
 code = "possibly-false-argument"
 message = 'Argument #2 of method `Laminas\Diactoros\MessageTrait::withHeader` is possibly `false`, but parameter type `array<array-key, string>|string` does not accept it.'
 count = 1
@@ -424,36 +250,6 @@ count = 1
 file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
 code = "redundant-docblock-type"
 message = "Redundant docblock type for variable `$helperManager`."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "non-existent-property"
-message = 'Property `$verificationToken` does not exist on class `Webware\UserManager\Command\UpdateUserCommand`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$joins` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$selectColumns` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$where` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
 [[issues]]
@@ -471,44 +267,8 @@ count = 1
 [[issues]]
 file = "src/Repository/UserRepository.php"
 code = "mixed-argument"
-message = 'Invalid argument type for argument #1 of `PhpDb\Sql\Select::join`: expected `PhpDb\Sql\TableIdentifier|array<array-key, mixed>|string`, but found `mixed`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #2 of `PhpDb\Sql\Select::join`: expected `PhpDb\Sql\Predicate\PredicateInterface|string`, but found `mixed`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-argument"
 message = "Invalid argument type for argument #2 of `password_verify`: expected `string`, but found `mixed`."
 count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #3 of `PhpDb\Sql\Select::join`: expected `array<array-key, mixed>|string`, but found `nonnull`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #4 of `PhpDb\Sql\Select::join`: expected `string`, but found `nonnull`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-array-access"
-message = "Unsafe array access on type `mixed`."
-count = 2
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 2
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
@@ -591,25 +351,7 @@ count = 1
 [[issues]]
 file = "src/Repository/UserRepositoryFactory.php"
 code = "possibly-undefined-string-array-index"
-message = "Possibly undefined array key `string('username')` accessed on `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryInterface.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$joins` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryInterface.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$selectColumns` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepositoryInterface.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$where` is imprecise, equivalent to `array<array-key, mixed>`."
+message = "Possibly undefined array key `string('username')` accessed on `non-empty-array<array-key, mixed>`."
 count = 1
 
 [[issues]]
@@ -626,78 +368,6 @@ count = 1
 
 [[issues]]
 file = "src/View/Helper/UserAdminUrl.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$options` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$queryParams` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$routeParams` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "less-specific-argument"
-message = 'Argument type mismatch for argument #2 of `Mezzio\Helper\UrlHelper::__invoke`: expected `array<string, mixed>`, but provided type `array<array-key, mixed>` is less specific.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "less-specific-argument"
-message = 'Argument type mismatch for argument #3 of `Mezzio\Helper\UrlHelper::__invoke`: expected `array<string, mixed>`, but provided type `array<array-key, mixed>` is less specific.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "possibly-invalid-argument"
-message = 'Possible argument type mismatch for argument #1 of `Mezzio\Helper\UrlHelper::__invoke`: expected `non-empty-string|null`, but possibly received `string`.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "possibly-invalid-argument"
-message = '''Possible argument type mismatch for argument #5 of `Mezzio\Helper\UrlHelper::__invoke`: expected `array{'reuse_query_params'?: bool, 'reuse_result_params'?: bool, 'router'?: array<array-key, mixed>}`, but possibly received `array<array-key, mixed>`.'''
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$options` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$queryParams` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$routeParams` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
-code = "less-specific-argument"
-message = 'Argument type mismatch for argument #2 of `Mezzio\Helper\UrlHelper::__invoke`: expected `array<string, mixed>`, but provided type `array<array-key, mixed>` is less specific.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
-code = "less-specific-argument"
-message = 'Argument type mismatch for argument #3 of `Mezzio\Helper\UrlHelper::__invoke`: expected `array<string, mixed>`, but provided type `array<array-key, mixed>` is less specific.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
 code = "possibly-invalid-argument"
 message = 'Possible argument type mismatch for argument #1 of `Mezzio\Helper\UrlHelper::__invoke`: expected `non-empty-string|null`, but possibly received `string`.'
 count = 1
@@ -705,29 +375,5 @@ count = 1
 [[issues]]
 file = "src/View/Helper/UserUrl.php"
 code = "possibly-invalid-argument"
-message = '''Possible argument type mismatch for argument #5 of `Mezzio\Helper\UrlHelper::__invoke`: expected `array{'reuse_query_params'?: bool, 'reuse_result_params'?: bool, 'router'?: array<array-key, mixed>}`, but possibly received `array<array-key, mixed>`.'''
-count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Command\CreateUserCommand`.'
-count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Command\ToggleUserActiveCommand`.'
-count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Command\UpdateUserCommand`.'
-count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Entity\User`.'
+message = 'Possible argument type mismatch for argument #1 of `Mezzio\Helper\UrlHelper::__invoke`: expected `non-empty-string|null`, but possibly received `string`.'
 count = 1

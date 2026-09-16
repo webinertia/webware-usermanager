@@ -31,7 +31,7 @@ final class SendVerificationEmailCommandTest extends TestCase
     }
 
     #[Test]
-    public function getNameReturnsFullyQualifiedClassName(): void
+    public function getCommandNameReturnsFullyQualifiedClassName(): void
     {
         $command = new SendVerificationEmailCommand(
             to             : 'jane@example.com',
@@ -40,6 +40,6 @@ final class SendVerificationEmailCommandTest extends TestCase
             subject        : 'Verify your email',
         );
 
-        static::assertSame(SendVerificationEmailCommand::class, $command->getName());
+        static::assertSame(SendVerificationEmailCommand::class, $command->getCommandName());
     }
 }
