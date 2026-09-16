@@ -68,12 +68,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "class-must-be-final"
-message = 'Class `Webware\UserManager\Entity\User` should be declared `final`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "docblock-parameter-narrowing"
 message = "Docblock type `array<string, mixed>|null` for parameter `$details` drops part of native type `array<array-key, mixed>|null|string`."
 count = 1
@@ -209,12 +203,6 @@ file = "src/Entity/User.php"
 code = "redundant-logical-operation"
 message = "Redundant `||` operation: left operand is evaluated and right operand is always truthy."
 count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "unsafe-instantiation"
-message = 'Unsafe `new static()`: constructor of `Webware\UserManager\Entity\User` is not final and its signature might change in child classes, potentially leading to runtime errors.'
-count = 10
 
 [[issues]]
 file = "src/Event/SendVerificationEmailEvent.php"

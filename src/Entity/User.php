@@ -26,6 +26,8 @@ use function strtolower;
 
 use const PASSWORD_DEFAULT;
 
+// @mago-expect analysis:class-must-be-final - accepted: User is non-final by design so consumers can extend it.
+// @mago-expect analysis:unsafe-instantiation - accepted: the with*() builders and populate() must construct `static` to preserve the subclass.
 class User implements UserInterface, NamedCommandInterface
 {
     use NamedCommandTrait;
