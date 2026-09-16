@@ -114,9 +114,7 @@ final class UserRepository implements UserRepositoryInterface
     ): ResultSetInterface&RowPrototypeResultSetInterface {
         $sql    = $this->gateway->getSql();
         $select = $sql->select();
-        if (null !== $selectColumns) {
-            $select->columns($selectColumns);
-        }
+        $select->columns($selectColumns);
         if (null !== $where) {
             $select->where($where);
         }
