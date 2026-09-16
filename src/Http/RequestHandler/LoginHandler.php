@@ -37,6 +37,7 @@ final class LoginHandler implements RequestHandlerInterface
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        /** @var UserInterface $user */
         $user = $request->getAttribute(UserInterface::class);
 
         if (null !== $user->getIdentity()) {

@@ -67,12 +67,6 @@ message = 'Possible argument type mismatch for argument #1 of `Webware\UserManag
 count = 1
 
 [[issues]]
-file = "src/Container/Configuration.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
 file = "src/Entity/User.php"
 code = "class-must-be-final"
 message = 'Class `Webware\UserManager\Entity\User` should be declared `final`.'
@@ -241,24 +235,6 @@ message = 'Argument #1 of method `Webware\UserManager\Command\ToggleUserActiveCo
 count = 1
 
 [[issues]]
-file = "src/Http/Admin/RequestHandler/ToggleUserActiveHandler.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/LoginMiddlewareFactory.php"
-code = "mixed-argument"
-message = 'Invalid argument type for argument #3 of `Webware\UserManager\Http\Middleware\LoginMiddleware::__construct`: expected `string`, but found `nonnull`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/LoginMiddlewareFactory.php"
-code = "mixed-assignment"
-message = "Assigning `nonnull` type to a variable may lead to unexpected behavior."
-count = 2
-
-[[issues]]
 file = "src/Http/Middleware/IdentityMiddleware.php"
 code = "missing-property-type"
 message = "Property `$userFactory` is missing a type hint."
@@ -268,12 +244,6 @@ count = 1
 file = "src/Http/Middleware/LoginMiddleware.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 3
-
-[[issues]]
-file = "src/Http/Middleware/LoginMiddleware.php"
-code = "mixed-method-access"
-message = "Attempting to access a method on a non-object type (`mixed`)."
 count = 2
 
 [[issues]]
@@ -295,18 +265,6 @@ message = "Redundant docblock type for variable `$helperManager`."
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/LoginHandler.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/LoginHandler.php"
-code = "mixed-method-access"
-message = "Attempting to access a method on a non-object type (`mixed`)."
-count = 1
-
-[[issues]]
 file = "src/Http/RequestHandler/RegistrationHandler.php"
 code = "redundant-comparison"
 message = "Redundant `!==` comparison: left-hand side is always not identical to right-hand side."
@@ -316,12 +274,6 @@ count = 1
 file = "src/Http/RequestHandler/RegistrationHandler.php"
 code = "redundant-logical-operation"
 message = "Redundant `&&` operation: left operand is always truthy and right operand is evaluated."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/UserListHandler.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
 count = 1
 
 [[issues]]
@@ -364,12 +316,6 @@ count = 1
 file = "src/Repository/UserRepository.php"
 code = "mixed-argument"
 message = "Invalid argument type for argument #2 of `password_verify`: expected `string`, but found `mixed`."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
 count = 1
 
 [[issues]]

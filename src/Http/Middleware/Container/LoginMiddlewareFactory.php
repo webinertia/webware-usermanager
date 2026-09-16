@@ -20,7 +20,10 @@ final class LoginMiddlewareFactory
      */
     public function __invoke(ContainerInterface $container): LoginMiddleware
     {
-        $config      = $container->get('config')['authentication'] ?? [];
+        /** @var array<string, mixed> $config */
+        $config = $container->get('config')['authentication'] ?? [];
+
+        /** @var string $redirectUrl */
         $redirectUrl = $config[Configuration::POST_LOGIN_REDIRECT_KEY] ?? Configuration::POST_LOGIN_REDIRECT_VALUE;
 
         return new LoginMiddleware(

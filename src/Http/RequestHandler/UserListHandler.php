@@ -36,6 +36,7 @@ final class UserListHandler implements RequestHandlerInterface
             'users' => $this->messageBus->handle(new FetchUsersQuery())->getResult(),
         ]));
 
+        /** @var CommandResult|null $commandResult */
         $commandResult = $request->getAttribute(CommandResult::class);
         if ($commandResult instanceof CommandResult && $commandResult->getStatus() === MessageStatus::Success) {
             $response = $response->withHeader(Header::Trigger->value, json_encode(['closeModal' => null]));

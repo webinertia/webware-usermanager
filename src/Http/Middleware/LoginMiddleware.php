@@ -15,6 +15,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Webware\Core\UserInterface;
+use Webware\Message\Exception;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
@@ -32,6 +33,7 @@ final class LoginMiddleware implements MiddlewareInterface
     ) {}
 
     /**
+     * @throws Exception\ExceptionInterface
      * @throws SessionException
      */
     #[Override]
@@ -61,6 +63,7 @@ final class LoginMiddleware implements MiddlewareInterface
 
         if (AuthenticationStatus::Success !== $result->status) {
             $this->logger->info('Failed login attempt', ['email' => $email]);
+            /** @var SystemMessengerInterface|null $messenger */
             $messenger = $request->getAttribute(SystemMessengerInterface::class);
             $messenger?->danger('Invalid email or password.');
 

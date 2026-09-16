@@ -60,6 +60,7 @@ final readonly class Configuration extends Config
         ContainerInterface $container,
         string $callingFactory,
     ): array {
+        /** @var array<string, mixed> $config */
         $config = $container->get('config');
 
         if (! isset($config[self::MEZZIO_AUTH_KEY])) {

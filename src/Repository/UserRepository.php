@@ -89,6 +89,7 @@ final class UserRepository implements UserRepositoryInterface
         $sql    = $this->gateway->getSql();
         $select = $sql->select()->columns(['active'])->where(['user.id' => $id])->limit(1);
 
+        /** @var array<string, mixed>|null $row */
         $row = $sql->prepareStatementForSqlObject($select)->execute()->current();
         return (bool) ($row['active'] ?? false);
     }
