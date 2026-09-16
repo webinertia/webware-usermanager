@@ -12,7 +12,6 @@ use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
 
 use function is_array;
-use function is_string;
 use function json_encode;
 use function json_validate;
 use function password_get_info;
@@ -42,6 +41,7 @@ final class CreateUserCommand implements NamedCommandInterface
         public private(set) string $passwordHash {
             get => $this->passwordHash;
             set(string $value) {
+                // @mago-expect analysis:redundant-comparison - accepted: password_get_info()['algo'] is null for a non-hash on PHP 8.4, so this test is what routes plaintext into password_hash(); mago types the element as non-null.
                 if (null === password_get_info($value)['algo']) {
                     $this->passwordHash = password_hash($value, PASSWORD_DEFAULT);
                 } else {
@@ -64,7 +64,7 @@ final class CreateUserCommand implements NamedCommandInterface
                         throw new InvalidArgumentException('roleId could not be encoded to JSON.');
                     }
                     $this->roleId = $encoded;
-                } elseif (is_string($value) && json_validate($value)) {
+                } elseif (json_validate($value)) {
                     $this->roleId = $value;
                 } else {
                     throw new InvalidArgumentException('roleId must be a valid JSON string or an array.');
@@ -89,12 +89,8 @@ final class CreateUserCommand implements NamedCommandInterface
             set(DateTimeImmutable|string $value) {
                 if ($value instanceof DateTimeImmutable) {
                     $this->tokenCreatedAt = $value->format(UserInterface::DATETIME_FORMAT);
-                } elseif (is_string($value)) {
-                    $this->tokenCreatedAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
                 } else {
-                    throw new InvalidArgumentException(
-                        'tokenCreatedAt must be a DateTimeImmutable object or a valid date string.',
-                    );
+                    $this->tokenCreatedAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
                 }
             }
         },
@@ -103,12 +99,8 @@ final class CreateUserCommand implements NamedCommandInterface
             set(DateTimeImmutable|string $value) {
                 if ($value instanceof DateTimeImmutable) {
                     $this->createdAt = $value->format(UserInterface::DATETIME_FORMAT);
-                } elseif (is_string($value)) {
-                    $this->createdAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
                 } else {
-                    throw new InvalidArgumentException(
-                        'createdAt must be a DateTimeImmutable object or a valid date string.',
-                    );
+                    $this->createdAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
                 }
             }
         },

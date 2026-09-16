@@ -28,7 +28,7 @@ final class RegistrationHandler implements RequestHandlerInterface
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var CommandResult $result */
+        /** @var CommandResult|null $result */
         $result = $request->getAttribute(CommandResult::class);
 
         if (null !== $result && $result->getStatus() === MessageStatus::Success) {

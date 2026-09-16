@@ -23,7 +23,6 @@ final class LogoutHandlerFactory
      */
     public function __invoke(ContainerInterface $container): LogoutHandler
     {
-        /** @var HelperPluginManager $helperManager */
         $helperManager = $container->get(HelperPluginManager::class);
         $userUrl       = $helperManager->get(UserUrl::class);
 

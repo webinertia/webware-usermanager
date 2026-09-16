@@ -6,12 +6,12 @@ namespace Webware\UserManager\Entity;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use InvalidArgumentException;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
-use Webware\Core\UserInterface;
+use Webware\UserManager\Exception\UnassignedIdentityException;
+use Webware\UserManager\UserInterface;
 
 use function array_values;
 use function is_array;
@@ -114,10 +114,8 @@ class User implements UserInterface
                     } else {
                         $this->details = [$value];
                     }
-                } elseif (is_array($value) || null === $value) {
-                    $this->details = $value;
                 } else {
-                    throw new InvalidArgumentException('$details must be an array, JSON string, or null');
+                    $this->details = $value;
                 }
             }
         },
@@ -134,13 +132,20 @@ class User implements UserInterface
     #[Override]
     public function getDetails(): array
     {
-        return $this->details;
+        return $this->details ?? [];
     }
 
+    /**
+     * @throws UnassignedIdentityException when the entity was never hydrated with an email.
+     */
     #[Override]
-    public function getIdentity(): ?string
+    public function getIdentity(): string
     {
-        return $this->email;
+        return (
+            $this->email ?? throw new UnassignedIdentityException(
+                'Cannot resolve a user identity: the user row has no email address.',
+            )
+        );
     }
 
     /**
@@ -300,6 +305,7 @@ class User implements UserInterface
 
     public function withPasswordHash(string $passwordHash): static
     {
+        // @mago-expect analysis:redundant-comparison - accepted: password_get_info()['algo'] is null for a non-hash on PHP 8.4, so this test is what routes plaintext into password_hash(); mago types the element as non-null.
         if (null === password_get_info($passwordHash)['algo']) {
             $passwordHash = password_hash($passwordHash, PASSWORD_DEFAULT);
         }

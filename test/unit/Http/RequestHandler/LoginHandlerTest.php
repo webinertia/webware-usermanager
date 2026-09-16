@@ -55,7 +55,10 @@ final class LoginHandlerTest extends TestCase
 
         $handler = new LoginHandler($template);
 
-        $request = new ServerRequest()->withAttribute(UserInterface::class, new User())
+        $request = new ServerRequest()->withAttribute(
+            UserInterface::class,
+            new User(roleId: UserInterface::GUEST_ROLE),
+        )
             ->withAttribute(SystemMessengerInterface::class, $messenger);
 
         $response = $handler->handle($request);

@@ -24,7 +24,6 @@ final class RegistrationHandlerFactory
      */
     public function __invoke(ContainerInterface $container): RegistrationHandler
     {
-        /** @var HelperPluginManager $helperManager */
         $helperManager = $container->get(HelperPluginManager::class);
         $userUrl       = $helperManager->get(UserUrl::class);
 
