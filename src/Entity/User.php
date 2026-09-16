@@ -6,7 +6,6 @@ namespace Webware\UserManager\Entity;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use InvalidArgumentException;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
@@ -114,10 +113,8 @@ class User implements UserInterface
                     } else {
                         $this->details = [$value];
                     }
-                } elseif (is_array($value) || null === $value) {
-                    $this->details = $value;
                 } else {
-                    throw new InvalidArgumentException('$details must be an array, JSON string, or null');
+                    $this->details = $value;
                 }
             }
         },
