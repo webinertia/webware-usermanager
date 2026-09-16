@@ -9,12 +9,14 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\UserManager\Entity\User;
+use Webware\UserManager\Exception\UnassignedIdentityException;
 
 use function bin2hex;
 use function password_verify;
 use function random_bytes;
 
 #[CoversClass(User::class)]
+#[CoversClass(UnassignedIdentityException::class)]
 #[CoversMethod(User::class, '__construct')]
 #[CoversMethod(User::class, 'getDetail')]
 #[CoversMethod(User::class, 'getDetails')]
@@ -131,7 +133,9 @@ final class UserTest extends TestCase
 
         static::assertNotSame($user, $instance);
         static::assertNull($instance->getOwnerId());
-        static::assertNull($instance->getIdentity());
+
+        $this->expectException(UnassignedIdentityException::class);
+        $instance->getIdentity();
     }
 
     #[Test]

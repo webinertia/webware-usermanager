@@ -10,9 +10,9 @@ use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use SensitiveParameter;
-use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
+use Webware\UserManager\UserInterface;
 
 interface UserRepositoryInterface
 {
@@ -72,7 +72,12 @@ interface UserRepositoryInterface
      */
     public function insert(array $data): int;
 
-    public function save(CommandInterface $command): int;
+    /**
+     * Persist a user row, given either a command carrying the row or the row itself.
+     *
+     * @param CommandInterface|array<string, mixed> $commandOrRow
+     */
+    public function save(CommandInterface|array $commandOrRow): int;
 
     /**
      * Update an existing user row.

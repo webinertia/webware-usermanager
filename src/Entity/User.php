@@ -10,7 +10,8 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
-use Webware\Core\UserInterface;
+use Webware\UserManager\Exception\UnassignedIdentityException;
+use Webware\UserManager\UserInterface;
 
 use function array_values;
 use function is_array;
@@ -131,13 +132,20 @@ class User implements UserInterface
     #[Override]
     public function getDetails(): array
     {
-        return $this->details;
+        return $this->details ?? [];
     }
 
+    /**
+     * @throws UnassignedIdentityException when the entity was never hydrated with an email.
+     */
     #[Override]
-    public function getIdentity(): ?string
+    public function getIdentity(): string
     {
-        return $this->email;
+        return (
+            $this->email ?? throw new UnassignedIdentityException(
+                'Cannot resolve a user identity: the user row has no email address.',
+            )
+        );
     }
 
     /**

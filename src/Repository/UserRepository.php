@@ -18,16 +18,19 @@ use Psl\Type;
 use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SensitiveParameter;
-use Webware\Core\UserInterface;
 use Webware\Log\Event\LogEvent;
 use Webware\Log\LogChannel;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
+use Webware\UserManager\Entity\User;
+use Webware\UserManager\UserInterface;
 
+use function is_array;
 use function password_verify;
 
 // @mago-expect lint:too-many-methods - accepted: the repository's public surface mirrors UserRepositoryInterface.
+// @mago-expect lint:cyclomatic-complexity - accepted: every branch is a load-bearing guard (nullable credential hash, optional SQL clauses); splitting the class would only relocate them.
 final class UserRepository implements UserRepositoryInterface
 {
     public function __construct(
@@ -57,15 +60,17 @@ final class UserRepository implements UserRepositoryInterface
 
         if (! $user->active) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                "Failed login attempt for inactive user: {$user->getIdentity()}",
+                "Failed login attempt for inactive user: {$user->email}",
             )
                 ->setContext(['credential' => $credential]));
             return new AuthenticationResult(AuthenticationStatus::NotActive);
         }
 
-        if (! password_verify($password ?? '', $user->passwordHash)) {
+        // The ?? '' keeps a row with no stored hash from type-erroring password_verify();
+        // an empty hash simply never matches, so the result is invalid credentials.
+        if (! password_verify($password ?? '', $user->passwordHash ?? '')) {
             $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                "Failed login attempt for user: {$user->getIdentity()}",
+                "Failed login attempt for user: {$user->email}",
             )
                 ->setContext(['credential' => $credential]));
             return new AuthenticationResult(AuthenticationStatus::InvalidCredentials);
@@ -75,7 +80,7 @@ final class UserRepository implements UserRepositoryInterface
             new LogEvent(LogChannel::Security, Level::Info)->setMessage(
                 "{$user->firstName} {$user->lastName} authenticated successfully.",
             )
-                ->setContext(['identity' => $user->getIdentity()]),
+                ->setContext(['identity' => $user->email]),
         );
 
         return new AuthenticationResult(AuthenticationStatus::Success, $user);
@@ -196,17 +201,24 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param CommandInterface|array<string, mixed> $commandOrRow
      * @throws ExceptionInterface
      */
     #[Override]
-    public function save(CommandInterface $command): int
+    public function save(CommandInterface|array $commandOrRow): int
     {
-        if (! isset($command->id)) {
-            $this->gateway->insert((array) $command);
+        $data = is_array($commandOrRow) ? $commandOrRow : (array) $commandOrRow;
+
+        // NamedCommandTrait exposes a public command name, so the cast carries it into the
+        // row; it is not a column and neither insert() nor update() accepts it.
+        unset($data['commandName']);
+
+        if (! isset($data['id'])) {
+            $this->gateway->insert($data);
 
             return (int) $this->gateway->getLastInsertValue();
         }
-        return $this->gateway->update((array) $command, ['id' => $command->id]);
+        return $this->gateway->update($data, ['id' => $data['id']]);
     }
 
     /**
@@ -226,7 +238,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * @throws SqlException
      */
-    private function findByConfiguredCredential(string $column, string $credential): ?UserInterface
+    private function findByConfiguredCredential(string $column, string $credential): ?User
     {
         $sql    = $this->gateway->getSql();
         $select = $sql->select()->where([$column => $credential])->limit(1);

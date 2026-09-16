@@ -259,6 +259,25 @@ final class UserRepositoryTest extends TestCase
     }
 
     #[Test]
+    public function saveDropsCommandNameFromArrayInput(): void
+    {
+        $adapter = $this->createAdapter([[]], affectedRows: [1], lastGeneratedValue: 99);
+
+        self::assertSame(99, $this->repository($adapter)->save([
+            'firstName'   => 'Jane',
+            'lastName'    => 'Doe',
+            'email'       => 'jane@example.com',
+            'commandName' => 'supplied-by-the-caller',
+        ]));
+
+        // A caller-supplied array can carry the same key, so the unset covers both paths.
+        /** @var array{table: string, columns: list<string>} $state */
+        $state = (array) $this->preparedSqlObjects[0]->getRawState();
+        self::assertContains('firstName', $state['columns']);
+        self::assertNotContains('commandName', $state['columns']);
+    }
+
+    #[Test]
     public function saveInsertsNewCommandAndReturnsGeneratedId(): void
     {
         $adapter = $this->createAdapter([[]], affectedRows: [1], lastGeneratedValue: 99);
@@ -273,6 +292,12 @@ final class UserRepositoryTest extends TestCase
         );
 
         self::assertSame(99, $this->repository($adapter)->save($command));
+
+        // The command's trait exposes a public name; it must not become an insert column.
+        /** @var array{table: string, columns: list<string>} $state */
+        $state = (array) $this->preparedSqlObjects[0]->getRawState();
+        self::assertContains('firstName', $state['columns']);
+        self::assertNotContains('commandName', $state['columns']);
     }
 
     #[Test]
@@ -290,6 +315,12 @@ final class UserRepositoryTest extends TestCase
         );
 
         self::assertSame(1, $this->repository($adapter)->save($command));
+
+        // Same on the update path: the name must not become a SET column.
+        /** @var array{table: string, set: array<string, mixed>} $state */
+        $state = (array) $this->preparedSqlObjects[0]->getRawState();
+        self::assertArrayHasKey('firstName', $state['set']);
+        self::assertArrayNotHasKey('commandName', $state['set']);
     }
 
     #[Test]

@@ -7,12 +7,6 @@ message = "This condition (type `false`) will always evaluate to false."
 count = 1
 
 [[issues]]
-file = "src/CommandHandler/ToggleUserActiveHandler.php"
-code = "non-existent-property"
-message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
 file = "src/CommandHandler/UpdateUserHandler.php"
 code = "possibly-invalid-argument"
 message = 'Possible argument type mismatch for argument #1 of `Webware\UserManager\Repository\UserRepositoryInterface::findById`: expected `int`, but possibly received `int|string`.'
@@ -52,12 +46,6 @@ count = 1
 file = "src/Entity/User.php"
 code = "invalid-property-assignment-value"
 message = "Invalid type for property `$tokenCreatedAt`: expected `DateTimeImmutable|array<array-key, mixed>|null|string`, but got `DateTimeImmutable|false`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "invalid-return-statement"
-message = 'Invalid return type for function `Webware\UserManager\Entity\User::getDetails`: expected `array<string, mixed>`, but found `array<string, mixed>|null`.'
 count = 1
 
 [[issues]]
@@ -117,12 +105,6 @@ count = 2
 [[issues]]
 file = "src/Entity/User.php"
 code = "nullable-return-statement"
-message = 'Function `Webware\UserManager\Entity\User::getDetails` is declared to return `array<string, mixed>` but possibly returns a nullable value (inferred as `array<string, mixed>|null`).'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "nullable-return-statement"
 message = 'Function `Webware\UserManager\Entity\User::getRoleId` is declared to return `string` but possibly returns a nullable value (inferred as `array<array-key, mixed>|null|string`).'
 count = 1
 
@@ -172,18 +154,6 @@ count = 1
 file = "src/Repository/UserRepository.php"
 code = "invalid-type-cast"
 message = 'Object of type `Webware\MessageBus\Command\CommandInterface` cast to `array`. Property visibility (public, protected, private) affects the resulting array.'
-count = 2
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "less-specific-argument"
-message = 'Argument type mismatch for argument #2 of `Webware\UserManager\Auth\AuthenticationResult::__construct`: expected `(Webware\Core\UserInterface&Webware\UserManager\Entity\User)|null`, but provided type `Webware\Core\UserInterface` is less specific.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "mixed-argument"
-message = "Invalid argument type for argument #2 of `password_verify`: expected `string`, but found `mixed`."
 count = 1
 
 [[issues]]
@@ -214,36 +184,6 @@ count = 1
 file = "src/Repository/UserRepository.php"
 code = "mixed-return-statement"
 message = 'Could not infer a precise return type for function `Webware\UserManager\Repository\UserRepository::findByVerificationToken`. Saw type `mixed`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "non-existent-property"
-message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "non-existent-property"
-message = 'Property `$firstName` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "non-existent-property"
-message = 'Property `$id` does not exist on interface `Webware\MessageBus\Command\CommandInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "non-existent-property"
-message = 'Property `$lastName` does not exist on interface `Webware\Core\UserInterface`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "non-existent-property"
-message = 'Property `$passwordHash` does not exist on interface `Webware\Core\UserInterface`.'
 count = 1
 
 [[issues]]
