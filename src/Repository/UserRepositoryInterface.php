@@ -35,6 +35,10 @@ interface UserRepositoryInterface
 
     /**
      * Return all users, optionally filtered to a specific store.
+     *
+     * @param list<string> $selectColumns
+     * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
+     * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      */
     public function findAll(
         array $selectColumns = [Sql\Select::SQL_STAR],

@@ -94,6 +94,9 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param list<string> $selectColumns
+     * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
+     * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      * @throws PslTypeException
      * @throws SqlException
      */
