@@ -17,6 +17,7 @@ use function is_array;
 use function is_int;
 use function is_string;
 
+// @mago-expect lint:cyclomatic-complexity - accepted: this class sits at the complexity threshold of 15, and getPostLoginRedirect() adds the branch that crosses it. The accessor is worth one point over splitting the class.
 final readonly class Configuration extends Config
 {
     public const string CONFIG_KEY = UserInterface::class;
@@ -79,6 +80,28 @@ final readonly class Configuration extends Config
         }
 
         return $config[self::MEZZIO_AUTH_KEY];
+    }
+
+    /**
+     * Resolve the post-login redirect path, falling back to the default when the
+     * configured value is absent or is not a non-empty string.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws Exception\ExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public static function getPostLoginRedirect(ContainerInterface $container, string $callingFactory): string
+    {
+        $config = self::getCredentialConfig($container, $callingFactory);
+
+        /** @var mixed $value */
+        $value = $config[self::POST_LOGIN_REDIRECT_KEY] ?? null;
+
+        if (! is_string($value) || '' === $value) {
+            return self::POST_LOGIN_REDIRECT_VALUE;
+        }
+
+        return $value;
     }
 
     /**
