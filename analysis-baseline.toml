@@ -68,12 +68,6 @@ count = 1
 
 [[issues]]
 file = "src/Container/Configuration.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `getCredentialConfig` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Container/Configuration.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
 count = 1
@@ -459,7 +453,7 @@ count = 1
 [[issues]]
 file = "src/Repository/UserRepositoryFactory.php"
 code = "possibly-undefined-string-array-index"
-message = "Possibly undefined array key `string('username')` accessed on `array<array-key, mixed>`."
+message = "Possibly undefined array key `string('username')` accessed on `non-empty-array<array-key, mixed>`."
 count = 1
 
 [[issues]]

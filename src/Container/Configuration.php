@@ -51,6 +51,7 @@ final readonly class Configuration extends Config
     }
 
     /**
+     * @return non-empty-array<array-key, mixed>
      * @throws ContainerExceptionInterface
      * @throws Exception\ExceptionInterface
      * @throws NotFoundExceptionInterface
