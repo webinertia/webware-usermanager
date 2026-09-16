@@ -23,6 +23,9 @@ final readonly class UserAdminUrl implements StatefulHelperInterface
     public function resetState(): void {}
 
     /**
+     * @param array<string, mixed> $routeParams
+     * @param array<string, mixed> $queryParams
+     * @param array{router?: array<array-key, mixed>, reuse_result_params?: bool, reuse_query_params?: bool} $options
      * @throws HelperException
      * @throws InvalidArgumentException
      */
