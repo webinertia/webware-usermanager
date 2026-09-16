@@ -163,18 +163,6 @@ message = "Attempting to call a method on `null`."
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/RegistrationHandler.php"
-code = "redundant-comparison"
-message = "Redundant `!==` comparison: left-hand side is always not identical to right-hand side."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/RegistrationHandler.php"
-code = "redundant-logical-operation"
-message = "Redundant `&&` operation: left operand is always truthy and right operand is evaluated."
-count = 1
-
-[[issues]]
 file = "src/Http/RequestHandler/UserListHandler.php"
 code = "possibly-false-argument"
 message = 'Argument #2 of method `Laminas\Diactoros\MessageTrait::withHeader` is possibly `false`, but parameter type `array<array-key, string>|string` does not accept it.'
