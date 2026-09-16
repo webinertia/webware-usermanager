@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\Middleware;
 
+use Laminas\Diactoros\Exception\ExceptionInterface as DiactorosException;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
 use Override;
@@ -20,7 +21,6 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 
-use function array_merge;
 use function is_array;
 use function json_encode;
 
@@ -37,19 +37,18 @@ final class RegistrationMiddleware implements MiddlewareInterface
 
     /**
      * @throws InvalidHopsValueException
+     * @throws DiactorosException
      */
     #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $body = $request->getParsedBody();
-        $data = array_merge(
-            is_array($body) ? $body : [],
-            [
-                'verificationToken' => Uuid::uuid7()->toString(),
-                'roleId'            => json_encode(self::DEFAULT_ROLE),
-                'active'            => '0',
-            ],
-        );
+        $data = [
+            ...(is_array($body) ? $body : []),
+            'verificationToken' => Uuid::uuid7()->toString(),
+            'roleId'            => json_encode(self::DEFAULT_ROLE),
+            'active'            => '0',
+        ];
 
         $filterResult = $this->filter->validate($data);
 

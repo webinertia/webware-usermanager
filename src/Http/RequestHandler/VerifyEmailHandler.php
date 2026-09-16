@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\RequestHandler;
 
+use Laminas\Diactoros\Exception\ExceptionInterface as DiactorosException;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Template\TemplateRendererInterface;
@@ -23,6 +24,9 @@ final class VerifyEmailHandler implements RequestHandlerInterface
         private readonly string $loginUrl,
     ) {}
 
+    /**
+     * @throws DiactorosException
+     */
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

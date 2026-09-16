@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed9f32693880923f133e3e7c9174965e",
+    "content-hash": "4bbf3f151299f5cb3e01b3fa0a6a8c6a",
     "packages": [
         {
             "name": "brick/math",
@@ -2761,88 +2761,6 @@
             "time": "2026-05-23T20:26:52+00:00"
         },
         {
-            "name": "phpmailer/phpmailer",
-            "version": "v7.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "1bc1716a507a65e039d4ac9d9adebbbd0d346e15"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/1bc1716a507a65e039d4ac9d9adebbbd0d346e15",
-                "reference": "1bc1716a507a65e039d4ac9d9adebbbd0d346e15",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "ext-filter": "*",
-                "ext-hash": "*",
-                "php": ">=5.5.0"
-            },
-            "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-                "doctrine/annotations": "^1.2.6 || ^1.13.3",
-                "php-parallel-lint/php-console-highlighter": "^1.0.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3.2",
-                "phpcompatibility/php-compatibility": "^10.0.0@dev",
-                "squizlabs/php_codesniffer": "^3.13.5",
-                "yoast/phpunit-polyfills": "^1.0.4"
-            },
-            "suggest": {
-                "decomplexity/SendOauth2": "Adapter for using XOAUTH2 authentication",
-                "directorytree/imapengine": "For uploading sent messages via IMAP, see gmail example",
-                "ext-imap": "Needed to support advanced email address parsing according to RFC822",
-                "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
-                "ext-openssl": "Needed for secure SMTP sending and DKIM signing",
-                "greew/oauth2-azure-provider": "Needed for Microsoft Azure XOAUTH2 authentication",
-                "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
-                "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
-                "psr/log": "For optional PSR-3 debug logging",
-                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
-                "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PHPMailer\\PHPMailer\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1-only"
-            ],
-            "authors": [
-                {
-                    "name": "Marcus Bointon",
-                    "email": "phpmailer@synchromedia.co.uk"
-                },
-                {
-                    "name": "Jim Jagielski",
-                    "email": "jimjag@gmail.com"
-                },
-                {
-                    "name": "Andy Prevost",
-                    "email": "codeworxtech@users.sourceforge.net"
-                },
-                {
-                    "name": "Brent R. Matzelle"
-                }
-            ],
-            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "support": {
-                "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v7.1.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/Synchro",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-05-18T08:06:14+00:00"
-        },
-        {
             "name": "psr/container",
             "version": "2.0.2",
             "source": {
@@ -3963,35 +3881,40 @@
         },
         {
             "name": "webware/webware-mailer",
-            "version": "1.0.0-beta.1",
+            "version": "1.0.0-beta.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-mailer.git",
-                "reference": "40f2cf5813babed0b05b32aeb6cf603187e65274"
+                "reference": "f2837737c7d209aa63a166f7ccbc0ffc657a434f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-mailer/zipball/40f2cf5813babed0b05b32aeb6cf603187e65274",
-                "reference": "40f2cf5813babed0b05b32aeb6cf603187e65274",
+                "url": "https://api.github.com/repos/webinertia/webware-mailer/zipball/f2837737c7d209aa63a166f7ccbc0ffc657a434f",
+                "reference": "f2837737c7d209aa63a166f7ccbc0ffc657a434f",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.1 || ~8.5.0",
-                "phpmailer/phpmailer": "^7.0.0"
+                "php": "~8.4.1 || ~8.5.0"
             },
             "require-dev": {
-                "infection/infection": "^0.34.1",
+                "infection/infection": "^0.35.0",
                 "laminas/laminas-servicemanager": "^4.0.0",
                 "phpbench/phpbench": "^1.7",
+                "phpmailer/phpmailer": "^7.0.0",
                 "phpunit/phpunit": "^13.3.0",
                 "psr/http-message": "^1.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0",
                 "roave/backward-compatibility-check": "^8.21.0",
                 "roave/security-advisories": "dev-master",
+                "symfony/mailer": "^8.1",
                 "webware/message-bus": "2.0.x-dev",
                 "webware/messagebus-event": "^2.0.0-beta.1",
                 "webware/webware-tools": "^0.1.x-dev"
+            },
+            "suggest": {
+                "phpmailer/phpmailer": "Required to use the PHPMailer-backed adapter (Webware\\Mailer\\Adapter\\PhpMailer)",
+                "symfony/mailer": "Required to use the Symfony Mailer-backed adapter (Webware\\Mailer\\Adapter\\SymfonyMailer)"
             },
             "type": "library",
             "extra": {
@@ -4025,9 +3948,9 @@
             "support": {
                 "chat": "https://discord.gg/9TxQ74EPsG",
                 "issues": "https://github.com/webinertia/webware-mailer/issues",
-                "source": "https://github.com/webinertia/webware-mailer/tree/1.0.0-beta.1"
+                "source": "https://github.com/webinertia/webware-mailer/tree/1.0.0-beta.4"
             },
-            "time": "2026-08-17T23:05:18+00:00"
+            "time": "2026-09-14T07:17:05+00:00"
         },
         {
             "name": "webware/webware-message",
@@ -13176,12 +13099,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-tools.git",
-                "reference": "499de5f3d24ba9976c03fd2b62cb2d08ef6fffb3"
+                "reference": "eacae6a30b9d68cca2f1ebed7d71d181198b0b7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/499de5f3d24ba9976c03fd2b62cb2d08ef6fffb3",
-                "reference": "499de5f3d24ba9976c03fd2b62cb2d08ef6fffb3",
+                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/eacae6a30b9d68cca2f1ebed7d71d181198b0b7c",
+                "reference": "eacae6a30b9d68cca2f1ebed7d71d181198b0b7c",
                 "shasum": ""
             },
             "require": {
@@ -13218,7 +13141,7 @@
                 "issues": "https://github.com/webinertia/webware-tools/issues",
                 "source": "https://github.com/webinertia/webware-tools/tree/0.1.x"
             },
-            "time": "2026-09-08T19:23:06+00:00"
+            "time": "2026-09-13T18:34:46+00:00"
         }
     ],
     "aliases": [],

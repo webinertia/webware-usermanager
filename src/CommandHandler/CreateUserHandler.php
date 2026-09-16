@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace Webware\UserManager\CommandHandler;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
-use Webware\MessageBus\Command\CommandResultInterface;
 use Webware\MessageBus\CommandHandlerInterface;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\Repository\UserRepositoryInterface;
-
-use function assert;
 
 final class CreateUserHandler implements CommandHandlerInterface
 {
@@ -23,10 +19,8 @@ final class CreateUserHandler implements CommandHandlerInterface
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
-    public function handle(CommandInterface $command): CommandResultInterface
+    public function handle(CreateUserCommand $command): CommandResult
     {
-        assert($command instanceof CreateUserCommand);
-
         if ($result = $this->users->save($command)) {
             $this->eventDispatcher->dispatch(new SendVerificationEmailEvent($command));
             return new CommandResult($command, MessageStatus::Success, $result);

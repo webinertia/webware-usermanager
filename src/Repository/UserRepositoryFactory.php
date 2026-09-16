@@ -14,6 +14,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Webware\Core\Exception;
 use Webware\Core\SchemaFactory;
 use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Entity\User;
@@ -26,6 +27,7 @@ final class UserRepositoryFactory
      * @throws SqlException
      * @throws TableGatewayException
      * @throws PslTypeException
+     * @throws Exception\ExceptionInterface
      */
     public function __invoke(ContainerInterface $container): UserRepository
     {

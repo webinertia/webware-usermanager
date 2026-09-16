@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory;
 use Webware\UserManager\Http\Middleware\ProcessVerifyEmailMiddleware;
@@ -21,9 +22,10 @@ final class ProcessVerifyEmailMiddlewareFactoryTest extends TestCase
     public function invokeBuildsMiddleware(): void
     {
         $container = $this->createStub(ContainerInterface::class);
+        $container->method('has')->willReturn(true);
         $container->method('get')
             ->willReturnMap([
-                ['config', ['user' => ['verification_token_ttl' => 3600]]],
+                ['config', [UserInterface::class => ['verification_token_ttl' => 3600]]],
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
             ]);
 

@@ -17,7 +17,6 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 
-use function array_merge;
 use function is_array;
 
 final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
@@ -37,10 +36,7 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
         /** @var SystemMessengerInterface|null $messenger */
         $messenger = $request->getAttribute(SystemMessengerInterface::class);
         $body      = $request->getParsedBody();
-        $data      = array_merge(
-            is_array($body) ? $body : [],
-            ['id' => $request->getAttribute('id')],
-        );
+        $data      = [...(is_array($body) ? $body : []), 'id' => $request->getAttribute('id')];
 
         $filterResult = $this->filter->validate($data);
 

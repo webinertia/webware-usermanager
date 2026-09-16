@@ -14,8 +14,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Webware\Mailer\Adapter\AdapterInterface;
-use Webware\Mailer\MailerInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageInterface;
@@ -23,6 +21,7 @@ use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\MessageBus\ResultInterface;
 use Webware\UserManager\Command\RegenerateVerificationTokenCommand;
+use Webware\UserManager\Command\ResendVerificationEmailCommand;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\ProcessResendVerificationMiddleware;
 use Webware\UserManager\Http\RequestHandler\ResendVerificationHandler;
@@ -37,12 +36,58 @@ use function random_bytes;
 #[CoversMethod(ProcessResendVerificationMiddleware::class, 'process')]
 final class ProcessResendVerificationMiddlewareTest extends TestCase
 {
-    private const array MAIL_CONFIG = [
-        'from_email'                 => 'noreply@example.com',
-        'from_name'                  => 'Webware',
-        'base_url'                   => 'https://example.com/',
-        'verification_email_subject' => 'Verify your email',
-    ];
+    #[Test]
+    public function dispatchesResendVerificationEmailCommand(): void
+    {
+        $user = new User(
+            id       : 7,
+            firstName: 'Jane',
+            lastName : 'Doe',
+            active   : false,
+        );
+
+        $commandResult = new CommandResult(
+            new RegenerateVerificationTokenCommand(
+                id            : 7,
+                token         : bin2hex(random_bytes(16)),
+                tokenCreatedAt: '2026-09-08 12:00:00',
+            ),
+            MessageStatus::Success,
+            1,
+        );
+
+        $dispatched = [];
+
+        $bus = $this->createStub(MessageBusInterface::class);
+        $bus->method('handle')
+            ->willReturnCallback(
+                static function (MessageInterface $message) use (&$dispatched, $user, $commandResult): ResultInterface {
+                    $dispatched[] = $message;
+
+                    return $message instanceof FetchUserByEmailQuery
+                        ? new QueryResult($message, MessageStatus::Success, $user)
+                        : $commandResult;
+                },
+            );
+
+        $this->process(
+            bus: $bus,
+            request: new ServerRequest()->withMethod('POST')
+                ->withParsedBody(['email' => 'jane@example.com']),
+        );
+
+        $email = $dispatched[2] ?? null;
+
+        if (! $email instanceof ResendVerificationEmailCommand) {
+            static::fail('Expected a ResendVerificationEmailCommand to be dispatched.');
+        }
+
+        static::assertSame('jane@example.com', $email->to);
+        static::assertSame('Jane Doe', $email->toName);
+        static::assertSame('Jane', $email->firstName);
+        static::assertSame('https://example.com/user/verify-email', $email->verificationUrl);
+        static::assertSame('Verify your email', $email->subject);
+    }
 
     #[Test]
     public function doesNotSendEmailWhenUpdateAffectsZeroRows(): void
@@ -73,13 +118,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
                     : $commandResult,
             );
 
-        $mailer = $this->createMock(MailerInterface::class);
-        $mailer->expects($this->never())->method('getAdapter');
-        $mailer->expects($this->never())->method('send');
-
         $request = $this->process(
-            bus    : $bus,
-            mailer : $mailer,
+            bus: $bus,
             request: new ServerRequest()->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
         );
@@ -141,42 +181,20 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
             1,
         );
 
+        $dispatched = [];
+
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(2))
+        $bus->expects($this->exactly(3))
             ->method('handle')
             ->willReturnCallback(
-                static fn(MessageInterface $message): ResultInterface => $message instanceof FetchUserByEmailQuery
-                    ? new QueryResult($message, MessageStatus::Success, $user)
-                    : $commandResult,
+                static function (MessageInterface $message) use (&$dispatched, $user, $commandResult): ResultInterface {
+                    $dispatched[] = $message;
+
+                    return $message instanceof FetchUserByEmailQuery
+                        ? new QueryResult($message, MessageStatus::Success, $user)
+                        : $commandResult;
+                },
             );
-
-        $adapter = $this->createMock(AdapterInterface::class);
-        $adapter->expects($this->once())->method('from')->with('noreply@example.com', 'Webware')->willReturnSelf();
-        $adapter->expects($this->once())->method('to')->with('jane@example.com', 'Jane Doe')->willReturnSelf();
-        $adapter->expects($this->once())->method('subject')->with('Verify your email')->willReturnSelf();
-        $adapter->expects($this->once())->method('isHtml')->with(true)->willReturnSelf();
-        $adapter->expects($this->once())
-            ->method('body')
-            ->with(
-                '<p>Hello Jane,</p>'
-                    . '<p>You requested a new verification link. Please verify your email address by clicking below.</p>'
-                    . '<p><a href="https://example.com/user/verify-email">Verify my email</a></p>'
-                    . '<p>This link expires in 24 hours.</p>',
-            )
-            ->willReturnSelf();
-        $adapter->expects($this->once())
-            ->method('altBody')
-            ->with(
-                "Hello Jane,\n\n"
-                    . "You requested a new verification link. Please visit:\n"
-                    . "https://example.com/user/verify-email\n\n"
-                    . "This link expires in 24 hours.\n",
-            )
-            ->willReturnSelf();
-
-        $mailer = $this->createMock(MailerInterface::class);
-        $mailer->expects($this->once())->method('getAdapter')->willReturn($adapter);
-        $mailer->expects($this->once())->method('send')->willReturn(true);
 
         $urlHelper = $this->createMock(UrlHelper::class);
         $urlHelper->expects($this->once())
@@ -192,13 +210,22 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
 
         $request = $this->process(
             bus      : $bus,
-            mailer   : $mailer,
             urlHelper: $urlHelper,
             request  : new ServerRequest()->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
         );
 
         static::assertSame(['sent' => true], $request->getAttribute(ResendVerificationHandler::class));
+
+        $email = $dispatched[2] ?? null;
+
+        if (! $email instanceof ResendVerificationEmailCommand) {
+            static::fail('Expected a ResendVerificationEmailCommand to be dispatched.');
+        }
+
+        static::assertSame('jane@example.com', $email->to);
+        static::assertSame('Jane Doe', $email->toName);
+        static::assertSame('https://example.com/user/verify-email', $email->verificationUrl);
     }
 
     #[Test]
@@ -239,11 +266,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
     private function process(
         MessageBusInterface $bus,
         ServerRequestInterface $request,
-        ?MailerInterface $mailer = null,
         ?UrlHelper $urlHelper = null,
     ): ServerRequestInterface {
-        $mailer ??= $this->createStub(MailerInterface::class);
-
         if (null === $urlHelper) {
             $urlHelper = $this->createStub(UrlHelper::class);
             $urlHelper->method('__invoke')->willReturn('/user/verify-email');
@@ -262,10 +286,10 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
             });
 
         new ProcessResendVerificationMiddleware(
-            messageBus: $bus,
-            mailer    : $mailer,
-            userUrl   : new UserUrl($urlHelper, 'user.manager.'),
-            mailConfig: self::MAIL_CONFIG,
+            messageBus         : $bus,
+            userUrl            : new UserUrl($urlHelper, 'user.manager.'),
+            baseUrl            : 'https://example.com/',
+            verificationSubject: 'Verify your email',
         )->process($request, $handler);
 
         return $capturedRequest;

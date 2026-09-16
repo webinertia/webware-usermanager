@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\RequestHandler;
 
+use Laminas\Diactoros\Exception\ExceptionInterface as DiactorosException;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Template\TemplateRendererInterface;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -29,6 +31,10 @@ final class LoginHandler implements RequestHandlerInterface
         private readonly TemplateRendererInterface $template,
     ) {}
 
+    /**
+     * @throws DiactorosException
+     */
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(UserInterface::class);

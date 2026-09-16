@@ -6,7 +6,9 @@ namespace Webware\UserManager\Container;
 
 use Psl\Type;
 use Psl\Type\Exception\ExceptionInterface as PslTypeException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Webware\Core\UserInterface;
 use Webware\UserManager\Entity\User;
 
@@ -18,6 +20,10 @@ use Webware\UserManager\Entity\User;
  */
 final class UserFactory
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): callable
     {
         $prototype = $container->get(User::class);

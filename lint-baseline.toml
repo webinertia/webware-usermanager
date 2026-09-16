@@ -38,26 +38,8 @@ count = 1
 
 [[issues]]
 file = "src/CommandHandler/CreateUserHandler.php"
-code = "assert-description"
-message = "Missing description in assert function."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/CreateUserHandler.php"
 code = "no-assign-in-condition"
 message = "Avoid assignments in conditions."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/ToggleUserActiveHandler.php"
-code = "assert-description"
-message = "Missing description in assert function."
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/UpdateUserHandler.php"
-code = "assert-description"
-message = "Missing description in assert function."
 count = 1
 
 [[issues]]
@@ -122,12 +104,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "prefer-array-spread"
-message = "Use the array spread operator instead of `array_merge()`."
-count = 2
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "too-many-methods"
 message = "Class has too many methods."
 count = 1
@@ -136,12 +112,6 @@ count = 1
 file = "src/Http/Admin/Middleware/ProcessUpdateUserMiddleware.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/Middleware/ProcessUpdateUserMiddleware.php"
-code = "prefer-array-spread"
-message = "Use the array spread operator instead of `array_merge()`."
 count = 1
 
 [[issues]]
@@ -157,33 +127,9 @@ message = "Avoid `else` clauses."
 count = 2
 
 [[issues]]
-file = "src/Http/Middleware/RegistrationMiddleware.php"
-code = "prefer-array-spread"
-message = "Use the array spread operator instead of `array_merge()`."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "ambiguous-constant-access"
-message = "Ambiguous constant access detected."
-count = 2
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "excessive-parameter-list"
-message = "Parameter list is too long."
-count = 1
-
-[[issues]]
 file = "src/Repository/UserRepository.php"
 code = "excessive-parameter-list"
 message = "Parameter list is too long."
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "inline-variable-return"
-message = "Variable assignment can be inlined into the return statement."
 count = 1
 
 [[issues]]

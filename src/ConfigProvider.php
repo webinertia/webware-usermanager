@@ -16,24 +16,6 @@ use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Console\Container\InitDbCommandFactory;
 use Webware\UserManager\Console\InitDbCommand;
-use Webware\UserManager\Query\AuthenticateUserQuery;
-use Webware\UserManager\Query\CheckUserActiveQuery;
-use Webware\UserManager\Query\FetchUserByEmailQuery;
-use Webware\UserManager\Query\FetchUserByIdQuery;
-use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
-use Webware\UserManager\Query\FetchUsersQuery;
-use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
-use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
-use Webware\UserManager\QueryHandler\Container\AuthenticateUserHandlerFactory;
-use Webware\UserManager\QueryHandler\Container\CheckUserActiveHandlerFactory;
-use Webware\UserManager\QueryHandler\Container\FetchUserByEmailHandlerFactory;
-use Webware\UserManager\QueryHandler\Container\FetchUserByIdHandlerFactory;
-use Webware\UserManager\QueryHandler\Container\FetchUserByVerificationTokenHandlerFactory;
-use Webware\UserManager\QueryHandler\Container\FetchUsersHandlerFactory;
-use Webware\UserManager\QueryHandler\FetchUserByEmailHandler;
-use Webware\UserManager\QueryHandler\FetchUserByIdHandler;
-use Webware\UserManager\QueryHandler\FetchUserByVerificationTokenHandler;
-use Webware\UserManager\QueryHandler\FetchUsersHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\View\Helper\UserAdminUrl;
 use Webware\UserManager\View\Helper\UserAdminUrlFactory;
@@ -148,6 +130,8 @@ final class ConfigProvider
             Command\ActivateUserCommand::class                => CommandHandler\ActivateUserHandler::class,
             Command\CreateUserCommand::class                  => CommandHandler\CreateUserHandler::class,
             Command\RegenerateVerificationTokenCommand::class => CommandHandler\RegenerateVerificationTokenHandler::class,
+            Command\ResendVerificationEmailCommand::class     => CommandHandler\ResendVerificationEmailHandler::class,
+            Command\SendVerificationEmailCommand::class       => CommandHandler\SendVerificationEmailHandler::class,
             Command\ToggleUserActiveCommand::class            => CommandHandler\ToggleUserActiveHandler::class,
             Command\UpdateUserCommand::class                  => CommandHandler\UpdateUserHandler::class,
         ];
@@ -185,6 +169,8 @@ final class ConfigProvider
                 CommandHandler\UpdateUserHandler::class                        => CommandHandler\Container\UpdateUserHandlerFactory::class,
                 CommandHandler\ActivateUserHandler::class                      => CommandHandler\Container\ActivateUserHandlerFactory::class,
                 CommandHandler\RegenerateVerificationTokenHandler::class       => CommandHandler\Container\RegenerateVerificationTokenHandlerFactory::class,
+                CommandHandler\ResendVerificationEmailHandler::class           => CommandHandler\Container\ResendVerificationEmailHandlerFactory::class,
+                CommandHandler\SendVerificationEmailHandler::class             => CommandHandler\Container\SendVerificationEmailHandlerFactory::class,
                 QueryHandler\AuthenticateUserHandler::class                    => QueryHandler\Container\AuthenticateUserHandlerFactory::class,
                 QueryHandler\CheckUserActiveHandler::class                     => QueryHandler\Container\CheckUserActiveHandlerFactory::class,
                 QueryHandler\FetchUserByEmailHandler::class                    => QueryHandler\Container\FetchUserByEmailHandlerFactory::class,

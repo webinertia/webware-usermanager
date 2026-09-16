@@ -10,13 +10,11 @@ use InvalidArgumentException;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
-use RuntimeException;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
 
-use function array_merge;
 use function array_values;
 use function is_array;
 use function is_string;
@@ -123,11 +121,6 @@ class User implements UserInterface, NamedCommandInterface
         },
     ) {}
 
-    public function exchangeArray(array $data): array
-    {
-        throw new RuntimeException('User entity does not support exchangeArray()');
-    }
-
     /** @param mixed $default */
     #[Override]
     public function getDetail(string $name, $default = null): mixed
@@ -189,6 +182,7 @@ class User implements UserInterface, NamedCommandInterface
         return new static(...$data);
     }
 
+    #[Override]
     public function toArray(): array
     {
         return (array) $this;
@@ -213,6 +207,8 @@ class User implements UserInterface, NamedCommandInterface
 
     public function withDetail(string $name, mixed $value): static
     {
+        $details = is_array($this->details) ? $this->details : [];
+
         return new static(
             id               : $this->id,
             roleId           : $this->roleId,
@@ -224,7 +220,7 @@ class User implements UserInterface, NamedCommandInterface
             createdAt        : $this->createdAt,
             verificationToken: $this->verificationToken,
             tokenCreatedAt   : $this->tokenCreatedAt,
-            details          : array_merge($this->details, [$name => $value]),
+            details          : [...$details, $name => $value],
         );
     }
 
@@ -262,6 +258,7 @@ class User implements UserInterface, NamedCommandInterface
         );
     }
 
+    #[Override]
     public function withId(int|string|null $id): static
     {
         return new static(
@@ -324,9 +321,11 @@ class User implements UserInterface, NamedCommandInterface
             $roleId = [$roleId];
         }
 
+        $roles = is_array($this->roleId) ? $this->roleId : [];
+
         return new static(
             id               : $this->id,
-            roleId           : array_merge($this->roleId, array_values($roleId)),
+            roleId           : [...$roles, ...array_values($roleId)],
             firstName        : $this->firstName,
             lastName         : $this->lastName,
             email            : $this->email,

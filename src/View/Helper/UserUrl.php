@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\View\Helper;
 
+use InvalidArgumentException;
 use Laminas\View\Helper\StatefulHelperInterface;
+use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
 use Mezzio\Helper\UrlHelper;
 use Override;
 
@@ -18,6 +20,10 @@ final readonly class UserUrl implements StatefulHelperInterface
     #[Override]
     public function resetState(): void {}
 
+    /**
+     * @throws HelperException
+     * @throws InvalidArgumentException
+     */
     public function __invoke(
         string $routeName,
         array $routeParams = [],

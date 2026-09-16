@@ -11,6 +11,7 @@ use PhpDb\Exception\ExceptionInterface;
 use PhpDb\ResultSet\ResultSetInterface;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
+use PhpDb\Sql\Exception\ExceptionInterface as SqlException;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use PhpDb\TableGateway\TableGateway;
 use Psl\Type;
@@ -34,6 +35,9 @@ final class UserRepository implements UserRepositoryInterface
         private readonly string $credentialColumn,
     ) {}
 
+    /**
+     * @throws SqlException
+     */
     #[Override]
     public function authenticate(
         string $credential,
@@ -76,6 +80,9 @@ final class UserRepository implements UserRepositoryInterface
         return new AuthenticationResult(AuthenticationStatus::Success, $user);
     }
 
+    /**
+     * @throws SqlException
+     */
     #[Override]
     public function checkStatus(int $id): bool
     {
@@ -88,6 +95,7 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * @throws PslTypeException
+     * @throws SqlException
      */
     #[Override]
     public function findAll(
@@ -133,15 +141,20 @@ final class UserRepository implements UserRepositoryInterface
         return $resultSet;
     }
 
+    /**
+     * @throws SqlException
+     */
     #[Override]
     public function findByEmail(string $email): ?UserInterface
     {
         $sql    = $this->gateway->getSql();
         $select = $sql->select()->where(['user.email' => $email])->limit(1);
-        $row    = $this->gateway->selectWith($select)->current();
-        return $row;
+        return $this->gateway->selectWith($select)->current();
     }
 
+    /**
+     * @throws SqlException
+     */
     #[Override]
     public function findById(int $id): ?UserInterface
     {
@@ -151,6 +164,9 @@ final class UserRepository implements UserRepositoryInterface
         return $this->gateway->selectWith($select)->current();
     }
 
+    /**
+     * @throws SqlException
+     */
     #[Override]
     public function findByVerificationToken(#[SensitiveParameter] string $token): ?UserInterface
     {
@@ -160,7 +176,10 @@ final class UserRepository implements UserRepositoryInterface
         return $this->gateway->selectWith($select)->current();
     }
 
-    /** @param array<string, mixed> $data */
+    /**
+     * @param array<string, mixed> $data
+     * @throws SqlException
+     */
     #[Override]
     public function insert(array $data): int
     {
@@ -186,7 +205,10 @@ final class UserRepository implements UserRepositoryInterface
         return $this->gateway->update((array) $command, ['id' => $command->id]);
     }
 
-    /** @param array<string, mixed> $data */
+    /**
+     * @param array<string, mixed> $data
+     * @throws SqlException
+     */
     #[Override]
     public function update(int $id, array $data): int
     {
@@ -197,6 +219,9 @@ final class UserRepository implements UserRepositoryInterface
         return $this->gateway->updateWith($update);
     }
 
+    /**
+     * @throws SqlException
+     */
     private function findByConfiguredCredential(string $column, string $credential): ?UserInterface
     {
         $sql    = $this->gateway->getSql();

@@ -6,6 +6,7 @@ namespace Webware\UserManager\Http\Middleware;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Session\Exception\ExceptionInterface as SessionException;
 use Mezzio\Session\RetrieveSession;
 use Override;
 use Psr\Http\Message\ResponseInterface;
@@ -30,6 +31,9 @@ final class LoginMiddleware implements MiddlewareInterface
         private readonly string $redirectUrl,
     ) {}
 
+    /**
+     * @throws SessionException
+     */
     #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

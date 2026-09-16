@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\Middleware;
 
+use Mezzio\Session\Exception\ExceptionInterface as SessionException;
 use Mezzio\Session\RetrieveSession;
 use Override;
 use Psr\Http\Message\ResponseInterface;
@@ -40,13 +41,16 @@ final class IdentityMiddleware implements MiddlewareInterface
         $this->userFactory = $userFactory;
     }
 
+    /**
+     * @throws SessionException
+     */
     #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $session = RetrieveSession::fromRequestOrNull($request);
+        $session = RetrieveSession::fromRequest($request);
 
         /** @var array<string, mixed>|null $userInfo */
-        $userInfo = $session?->get(UserInterface::class);
+        $userInfo = $session->get(UserInterface::class);
 
         if (null === $userInfo) {
             $user = ($this->userFactory)(['roleId' => UserInterface::GUEST_ROLE]);
@@ -57,7 +61,7 @@ final class IdentityMiddleware implements MiddlewareInterface
             if ($check) {
                 $user = ($this->userFactory)($userInfo);
             } else {
-                $session?->clear();
+                $session->clear();
                 $user = ($this->userFactory)(['roleId' => UserInterface::GUEST_ROLE]);
             }
         }

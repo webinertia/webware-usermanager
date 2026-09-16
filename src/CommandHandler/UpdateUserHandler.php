@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace Webware\UserManager\CommandHandler;
 
 use Throwable;
-use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
-use Webware\MessageBus\Command\CommandResultInterface;
 use Webware\MessageBus\CommandHandlerInterface;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
-use function assert;
 use function json_encode;
 
 final class UpdateUserHandler implements CommandHandlerInterface
@@ -22,10 +19,8 @@ final class UpdateUserHandler implements CommandHandlerInterface
         private readonly UserRepositoryInterface $users,
     ) {}
 
-    public function handle(CommandInterface $command): CommandResultInterface
+    public function handle(UpdateUserCommand $command): CommandResult
     {
-        assert($command instanceof UpdateUserCommand);
-
         $user = $this->users->findById($command->id);
 
         if (null === $user) {

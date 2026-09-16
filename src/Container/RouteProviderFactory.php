@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Container;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Webware\Admin\Container\Configuration as AdminConfiguration;
 use Webware\UserManager\RouteProvider;
 
 final readonly class RouteProviderFactory
 {
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): RouteProvider
     {
         $routeSegment    = Configuration::getRouteSegment($container, self::class);

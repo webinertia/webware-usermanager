@@ -6,6 +6,7 @@ namespace Webware\UserManager\Http\RequestHandler;
 
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Session\RetrieveSession;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -16,6 +17,7 @@ final class LogoutHandler implements RequestHandlerInterface
         private readonly string $loginUrl,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $session = RetrieveSession::fromRequestOrNull($request);

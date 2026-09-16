@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler;
 
-use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
-use Webware\MessageBus\Command\CommandResultInterface;
 use Webware\MessageBus\CommandHandlerInterface;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\ToggleUserActiveCommand;
 use Webware\UserManager\Repository\UserRepositoryInterface;
-
-use function assert;
 
 final class ToggleUserActiveHandler implements CommandHandlerInterface
 {
@@ -20,10 +16,8 @@ final class ToggleUserActiveHandler implements CommandHandlerInterface
         private readonly UserRepositoryInterface $users,
     ) {}
 
-    public function handle(CommandInterface $command): CommandResultInterface
+    public function handle(ToggleUserActiveCommand $command): CommandResult
     {
-        assert($command instanceof ToggleUserActiveCommand);
-
         $user = $this->users->findById($command->id);
 
         if (null === $user) {

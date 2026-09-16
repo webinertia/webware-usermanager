@@ -1,18 +1,6 @@
 variant = "loose"
 
 [[issues]]
-file = "src/Admin/Dashboard/Container/RegisterWidgetListenerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Admin/Dashboard/Container/RegisterWidgetListenerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory::__invoke`.'
-count = 1
-
-[[issues]]
 file = "src/Command/CreateUserCommand.php"
 code = "class-must-be-final"
 message = 'Class `Webware\UserManager\Command\CreateUserCommand` should be declared `final`.'
@@ -58,42 +46,6 @@ count = 2
 file = "src/Command/UpdateUserCommand.php"
 code = "class-must-be-final"
 message = 'Class `Webware\UserManager\Command\UpdateUserCommand` should be declared `final`.'
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/Container/CreateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\CommandHandler\Container\CreateUserHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/Container/CreateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\CommandHandler\Container\CreateUserHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/Container/ToggleUserActiveHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\CommandHandler\Container\ToggleUserActiveHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/Container/ToggleUserActiveHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\CommandHandler\Container\ToggleUserActiveHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/Container/UpdateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\CommandHandler\Container\UpdateUserHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/CommandHandler/Container/UpdateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\CommandHandler\Container\UpdateUserHandlerFactory::__invoke`.'
 count = 1
 
 [[issues]]
@@ -187,42 +139,6 @@ message = "Assigning `mixed` type to a variable may lead to unexpected behavior.
 count = 1
 
 [[issues]]
-file = "src/Container/Configuration.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Container\Configuration::getCredentialConfig`.'
-count = 1
-
-[[issues]]
-file = "src/Container/Configuration.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Container\Configuration::getCredentialConfig`.'
-count = 1
-
-[[issues]]
-file = "src/Container/Configuration.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Webware\Core\Exception\ContainerException` in `Webware\UserManager\Container\Configuration::getCredentialConfig`.'
-count = 1
-
-[[issues]]
-file = "src/Container/RouteProviderFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Container\RouteProviderFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Container/UserFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Container\UserFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Container/UserFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Container\UserFactory::__invoke`.'
-count = 1
-
-[[issues]]
 file = "src/Entity/User.php"
 code = "class-must-be-final"
 message = 'Class `Webware\UserManager\Entity\User` should be declared `final`.'
@@ -249,12 +165,6 @@ count = 1
 [[issues]]
 file = "src/Entity/User.php"
 code = "imprecise-type"
-message = "Type `array` in parameter `$data` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
 message = "Type `array` in parameter `$roleId` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
@@ -262,12 +172,6 @@ count = 1
 file = "src/Entity/User.php"
 code = "imprecise-type"
 message = "Type `array` in parameter `$tokenCreatedAt` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `exchangeArray` is imprecise, equivalent to `array<array-key, mixed>`."
 count = 1
 
 [[issues]]
@@ -326,18 +230,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Entity\User::toArray`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Entity\User::withId`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "mixed-argument"
 message = "Invalid argument type for argument #1 of `DateTimeImmutable::__construct`: expected `string`, but found `nonnull`."
 count = 1
@@ -380,24 +272,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "possibly-invalid-argument"
-message = "Possible argument type mismatch for argument #1 of `array_merge`: expected `array<array-key, mixed>`, but possibly received `array<array-key, mixed>|null|string`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "possibly-null-argument"
-message = "Argument #1 of function `array_merge` is possibly `null`, but parameter type `array<array-key, mixed>` does not accept it."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "possibly-null-argument"
-message = "Argument #1 of function `array_merge` is possibly `null`, but parameter type `array<string, mixed>` does not accept it."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "property-type-coercion"
 message = "A value of a less specific type `array<array-key, mixed>` is being assigned to property `$details` (array<string, mixed>|null)."
 count = 1
@@ -434,27 +308,9 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `RuntimeException` in `Webware\UserManager\Entity\User::exchangeArray`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "unsafe-instantiation"
 message = 'Unsafe `new static()`: constructor of `Webware\UserManager\Entity\User` is not final and its signature might change in child classes, potentially leading to runtime errors.'
 count = 10
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "unused-parameter"
-message = "Parameter `$data` is never used."
-count = 1
-
-[[issues]]
-file = "src/Event/SendVerificationEmailEvent.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Event\SendVerificationEmailEvent::getTarget`.'
-count = 1
 
 [[issues]]
 file = "src/Event/SendVerificationEmailEvent.php"
@@ -469,147 +325,15 @@ message = 'Property `$verificationToken` does not exist on class `Webware\UserMa
 count = 1
 
 [[issues]]
-file = "src/Http/Admin/Middleware/Container/ProcessToggleUserActiveMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/Middleware/Container/ProcessToggleUserActiveMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/Middleware/Container/ProcessUpdateUserMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/Middleware/Container/ProcessUpdateUserMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
 file = "src/Http/Admin/Middleware/ProcessToggleUserActiveMiddleware.php"
 code = "possibly-false-argument"
 message = 'Argument #1 of method `Webware\UserManager\Command\ToggleUserActiveCommand::__construct` is possibly `false`, but parameter type `int` does not accept it.'
 count = 1
 
 [[issues]]
-file = "src/Http/Admin/RequestHandler/Container/CreateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\CreateUserHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/Container/CreateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\CreateUserHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/Container/ToggleUserActiveHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\ToggleUserActiveHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/Container/ToggleUserActiveHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\ToggleUserActiveHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/Container/UpdateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\UpdateUserHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/Container/UpdateUserHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\UpdateUserHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/Container/UpdateUserModalHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\UpdateUserModalHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/Container/UpdateUserModalHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Admin\RequestHandler\Container\UpdateUserModalHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/CreateUserHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/CreateUserHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/ToggleUserActiveHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler::handle`.'
-count = 1
-
-[[issues]]
 file = "src/Http/Admin/RequestHandler/ToggleUserActiveHandler.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/ToggleUserActiveHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/IdentityMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Middleware\Container\IdentityMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/IdentityMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Middleware\Container\IdentityMiddlewareFactory::__invoke`.'
 count = 1
 
 [[issues]]
@@ -623,30 +347,6 @@ file = "src/Http/Middleware/Container/LoginMiddlewareFactory.php"
 code = "mixed-assignment"
 message = "Assigning `nonnull` type to a variable may lead to unexpected behavior."
 count = 2
-
-[[issues]]
-file = "src/Http/Middleware/Container/LoginMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Middleware\Container\LoginMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/LoginMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Middleware\Container\LoginMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/RegistrationMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\Middleware\Container\RegistrationMiddlewareFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/Container/RegistrationMiddlewareFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\Middleware\Container\RegistrationMiddlewareFactory::__invoke`.'
-count = 1
 
 [[issues]]
 file = "src/Http/Middleware/IdentityMiddleware.php"
@@ -673,81 +373,15 @@ message = "Attempting to call a method on `null`."
 count = 1
 
 [[issues]]
-file = "src/Http/Middleware/LoginMiddleware.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Mezzio\Session\Exception\SessionNotInitializedException` in `Webware\UserManager\Http\Middleware\LoginMiddleware::process`.'
-count = 1
-
-[[issues]]
-file = "src/Http/Middleware/RegistrationMiddleware.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\Middleware\RegistrationMiddleware::process`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/LoginHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\LoginHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/LoginHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\LoginHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
 file = "src/Http/RequestHandler/Container/LogoutHandlerFactory.php"
 code = "redundant-docblock-type"
 message = "Redundant docblock type for variable `$helperManager`."
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/Container/LogoutHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\LogoutHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/LogoutHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\LogoutHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
 file = "src/Http/RequestHandler/Container/RegistrationHandlerFactory.php"
 code = "redundant-docblock-type"
 message = "Redundant docblock type for variable `$helperManager`."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/RegistrationHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\RegistrationHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/RegistrationHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\RegistrationHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/UserListHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\UserListHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/Container/UserListHandlerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Http\RequestHandler\Container\UserListHandlerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/LoginHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\RequestHandler\LoginHandler::handle`.'
 count = 1
 
 [[issues]]
@@ -763,18 +397,6 @@ message = "Attempting to access a method on a non-object type (`mixed`)."
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/LoginHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\LoginHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/LogoutHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\RequestHandler\LogoutHandler::handle`.'
-count = 1
-
-[[issues]]
 file = "src/Http/RequestHandler/RegistrationHandler.php"
 code = "redundant-comparison"
 message = "Redundant `!==` comparison: left-hand side is always not identical to right-hand side."
@@ -784,24 +406,6 @@ count = 1
 file = "src/Http/RequestHandler/RegistrationHandler.php"
 code = "redundant-logical-operation"
 message = "Redundant `&&` operation: left operand is always truthy and right operand is evaluated."
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/RegistrationHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\RegistrationHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/ResendVerificationHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\ResendVerificationHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/UserListHandler.php"
-code = "missing-override-attribute"
-message = 'Missing `#[Override]` attribute on overriding method `Webware\UserManager\Http\RequestHandler\UserListHandler::handle`.'
 count = 1
 
 [[issues]]
@@ -817,57 +421,9 @@ message = 'Argument #2 of method `Laminas\Diactoros\MessageTrait::withHeader` is
 count = 1
 
 [[issues]]
-file = "src/Http/RequestHandler/UserListHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\UserListHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Http/RequestHandler/VerifyEmailHandler.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Laminas\Diactoros\Exception\InvalidArgumentException` in `Webware\UserManager\Http\RequestHandler\VerifyEmailHandler::handle`.'
-count = 1
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "impossible-nonnull-entry-check"
-message = '''Impossible `isset` check on key `'Webware\Mailer\MailerInterface'` accessed on `array{'user': array{'base_url': string, 'from_email': string, 'from_name': string}, Webware\Mailer\MailerInterface::class: array{'verification_email_subject': string}}`.'''
-count = 1
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "redundant-cast"
-message = "Redundant cast to `(string)`: the expression already has this type."
-count = 4
-
-[[issues]]
 file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
 code = "redundant-docblock-type"
 message = "Redundant docblock type for variable `$helperManager`."
-count = 1
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "redundant-null-coalesce"
-message = "Redundant null coalesce: left-hand side can never be `null` or undefined."
-count = 4
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "redundant-null-coalesce"
-message = "Redundant null coalesce: left-hand side is always `null`."
-count = 2
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\Listener\Container\SendVerificationEmailListenerFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\Listener\Container\SendVerificationEmailListenerFactory::__invoke`.'
 count = 1
 
 [[issues]]
@@ -952,7 +508,7 @@ count = 2
 file = "src/Repository/UserRepository.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
-count = 3
+count = 2
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
@@ -1033,54 +589,6 @@ message = "This condition (type `true`) will always evaluate to true."
 count = 1
 
 [[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::checkStatus`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::findAll`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::findByConfiguredCredential`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::findByEmail`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::findById`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::findByVerificationToken`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::insert`.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `PhpDb\Sql\Exception\InvalidArgumentException` in `Webware\UserManager\Repository\UserRepository::update`.'
-count = 1
-
-[[issues]]
 file = "src/Repository/UserRepositoryFactory.php"
 code = "possibly-undefined-string-array-index"
 message = "Possibly undefined array key `string('username')` accessed on `array<array-key, mixed>`."
@@ -1117,18 +625,6 @@ message = 'Possible argument type mismatch for argument #3 of `Mezzio\Router\Rou
 count = 1
 
 [[issues]]
-file = "src/RouteProvider.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Mezzio\Exception\InvalidMiddlewareException` in `Webware\UserManager\RouteProvider::registerRoutes`.'
-count = 1
-
-[[issues]]
-file = "src/RouteProvider.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Mezzio\Router\Exception\DuplicateRouteException` in `Webware\UserManager\RouteProvider::registerRoutes`.'
-count = 1
-
-[[issues]]
 file = "src/View/Helper/UserAdminUrl.php"
 code = "imprecise-type"
 message = "Type `array` in parameter `$options` is imprecise, equivalent to `array<array-key, mixed>`."
@@ -1171,30 +667,6 @@ message = '''Possible argument type mismatch for argument #5 of `Mezzio\Helper\U
 count = 1
 
 [[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `InvalidArgumentException` in `Webware\UserManager\View\Helper\UserAdminUrl::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrl.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Mezzio\Helper\Exception\RuntimeException` in `Webware\UserManager\View\Helper\UserAdminUrl::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrlFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\View\Helper\UserAdminUrlFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserAdminUrlFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\View\Helper\UserAdminUrlFactory::__invoke`.'
-count = 1
-
-[[issues]]
 file = "src/View/Helper/UserUrl.php"
 code = "imprecise-type"
 message = "Type `array` in parameter `$options` is imprecise, equivalent to `array<array-key, mixed>`."
@@ -1234,30 +706,6 @@ count = 1
 file = "src/View/Helper/UserUrl.php"
 code = "possibly-invalid-argument"
 message = '''Possible argument type mismatch for argument #5 of `Mezzio\Helper\UrlHelper::__invoke`: expected `array{'reuse_query_params'?: bool, 'reuse_result_params'?: bool, 'router'?: array<array-key, mixed>}`, but possibly received `array<array-key, mixed>`.'''
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `InvalidArgumentException` in `Webware\UserManager\View\Helper\UserUrl::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrl.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Mezzio\Helper\Exception\RuntimeException` in `Webware\UserManager\View\Helper\UserUrl::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrlFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\ContainerExceptionInterface` in `Webware\UserManager\View\Helper\UserUrlFactory::__invoke`.'
-count = 1
-
-[[issues]]
-file = "src/View/Helper/UserUrlFactory.php"
-code = "unhandled-thrown-type"
-message = 'Potentially unhandled exception `Psr\Container\NotFoundExceptionInterface` in `Webware\UserManager\View\Helper\UserUrlFactory::__invoke`.'
 count = 1
 
 [[issues]]
