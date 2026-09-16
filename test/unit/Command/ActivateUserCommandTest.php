@@ -23,10 +23,10 @@ final class ActivateUserCommandTest extends TestCase
     }
 
     #[Test]
-    public function getNameReturnsFullyQualifiedClassName(): void
+    public function getCommandNameReturnsFullyQualifiedClassName(): void
     {
         $command = new ActivateUserCommand(id: 1);
 
-        static::assertSame(ActivateUserCommand::class, $command->getName());
+        static::assertSame(ActivateUserCommand::class, $command->getCommandName());
     }
 }

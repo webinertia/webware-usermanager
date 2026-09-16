@@ -377,27 +377,3 @@ file = "src/View/Helper/UserUrl.php"
 code = "possibly-invalid-argument"
 message = 'Possible argument type mismatch for argument #1 of `Mezzio\Helper\UrlHelper::__invoke`: expected `non-empty-string|null`, but possibly received `string`.'
 count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Command\CreateUserCommand`.'
-count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Command\ToggleUserActiveCommand`.'
-count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Command\UpdateUserCommand`.'
-count = 1
-
-[[issues]]
-file = "vendor/webware/message-bus/src/Command/NamedCommandTrait.php"
-code = "uninitialized-property"
-message = 'Property `$name` is not initialized in the constructor of class `Webware\UserManager\Entity\User`.'
-count = 1

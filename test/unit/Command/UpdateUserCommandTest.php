@@ -35,7 +35,7 @@ final class UpdateUserCommandTest extends TestCase
     }
 
     #[Test]
-    public function getNameReturnsFullyQualifiedClassName(): void
+    public function getCommandNameReturnsFullyQualifiedClassName(): void
     {
         $command = new UpdateUserCommand(
             id       : 1,
@@ -46,6 +46,6 @@ final class UpdateUserCommandTest extends TestCase
             active   : false,
         );
 
-        static::assertSame(UpdateUserCommand::class, $command->getName());
+        static::assertSame(UpdateUserCommand::class, $command->getCommandName());
     }
 }

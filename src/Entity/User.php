@@ -12,8 +12,6 @@ use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
-use Webware\MessageBus\Command\NamedCommandInterface;
-use Webware\MessageBus\Command\NamedCommandTrait;
 
 use function array_values;
 use function is_array;
@@ -28,10 +26,8 @@ use const PASSWORD_DEFAULT;
 
 // @mago-expect lint:cyclomatic-complexity,too-many-methods - accepted: the property hooks and builders are deliberately kept on one entity.
 // @mago-expect analysis:class-must-be-final,unsafe-instantiation - accepted: User is non-final by design so consumers can extend it, and the with*() builders and populate() must construct `static`.
-class User implements UserInterface, NamedCommandInterface
+class User implements UserInterface
 {
-    use NamedCommandTrait;
-
     // @mago-expect lint:excessive-parameter-list,halstead - accepted: the promoted properties are the row shape, and each carries its normalising hook.
     public function __construct(
         public private(set) int|string|null $id = null {

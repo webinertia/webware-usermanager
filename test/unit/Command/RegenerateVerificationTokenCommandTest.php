@@ -34,7 +34,7 @@ final class RegenerateVerificationTokenCommandTest extends TestCase
     }
 
     #[Test]
-    public function getNameReturnsFullyQualifiedClassName(): void
+    public function getCommandNameReturnsFullyQualifiedClassName(): void
     {
         $command = new RegenerateVerificationTokenCommand(
             id            : 1,
@@ -42,6 +42,6 @@ final class RegenerateVerificationTokenCommandTest extends TestCase
             tokenCreatedAt: '2026-09-08 12:00:00',
         );
 
-        static::assertSame(RegenerateVerificationTokenCommand::class, $command->getName());
+        static::assertSame(RegenerateVerificationTokenCommand::class, $command->getCommandName());
     }
 }

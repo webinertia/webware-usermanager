@@ -7,18 +7,18 @@ namespace Webware\UserManager\Command;
 use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
 
-final readonly class UpdateUserCommand implements NamedCommandInterface
+final class UpdateUserCommand implements NamedCommandInterface
 {
     use NamedCommandTrait;
 
     /** @param string[] $roleId */
     // @mago-expect lint:excessive-parameter-list - accepted: the promoted properties are the row shape; splitting the list changes every call site.
     public function __construct(
-        public string|int $id,
-        public string $firstName,
-        public string $lastName,
-        public string $email,
-        public array $roleId,
-        public bool $active,
+        public readonly string|int $id,
+        public readonly string $firstName,
+        public readonly string $lastName,
+        public readonly string $email,
+        public readonly array $roleId,
+        public readonly bool $active,
     ) {}
 }
