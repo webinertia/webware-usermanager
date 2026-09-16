@@ -41,6 +41,7 @@ class User implements UserInterface, NamedCommandInterface
                 }
             }
         },
+        /** @var array<array-key, mixed>|string|null */
         public private(set) array|string|null $roleId = null {
             get => $this->roleId ?? null;
             set(array|string|null $value) {
@@ -71,6 +72,7 @@ class User implements UserInterface, NamedCommandInterface
                 $this->active = (bool) $value;
             }
         },
+        /** @var DateTimeImmutable|array<array-key, mixed>|string|null */
         public private(set) DateTimeImmutable|array|string|null $createdAt = null {
             get => $this->createdAt ?? new DateTimeImmutable();
             set(DateTimeImmutable|array|string|null $value) {
@@ -85,6 +87,7 @@ class User implements UserInterface, NamedCommandInterface
         },
         #[SensitiveParameter] public private(set) ?string $verificationToken = null,
 
+        /** @var DateTimeImmutable|array<array-key, mixed>|string|null */
         public private(set) DateTimeImmutable|array|string|null $tokenCreatedAt = null {
             get => $this->tokenCreatedAt ?? new DateTimeImmutable();
             set(DateTimeImmutable|array|string|null $value) {
@@ -182,6 +185,9 @@ class User implements UserInterface, NamedCommandInterface
         return new static(...$data);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     #[Override]
     public function toArray(): array
     {

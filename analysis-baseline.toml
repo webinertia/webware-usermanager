@@ -98,30 +98,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$createdAt` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$roleId` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in parameter `$tokenCreatedAt` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "imprecise-type"
-message = "Type `array` in return type of `toArray` is imprecise, equivalent to `array<array-key, mixed>`."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "incompatible-parameter-type"
 message = 'Parameter `$data` of `Webware\UserManager\Entity\User::populate()` expects type `array<string, mixed>` but parent `PhpDb\ResultSet\RowPrototypeInterface::populate()` expects type `array<array-key, mixed>`'
 count = 1
