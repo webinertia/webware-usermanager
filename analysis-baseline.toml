@@ -7,12 +7,6 @@ message = "This condition (type `false`) will always evaluate to false."
 count = 1
 
 [[issues]]
-file = "src/Command/CreateUserCommand.php"
-code = "redundant-comparison"
-message = "Redundant `===` comparison: left-hand side is never identical to right-hand side."
-count = 1
-
-[[issues]]
 file = "src/CommandHandler/ToggleUserActiveHandler.php"
 code = "non-existent-property"
 message = 'Property `$active` does not exist on interface `Webware\Core\UserInterface`.'
@@ -142,12 +136,6 @@ count = 1
 file = "src/Entity/User.php"
 code = "property-type-coercion"
 message = "A value of a less specific type `array<array-key, mixed>|null` is being assigned to property `$details` (array<string, mixed>|null)."
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "redundant-comparison"
-message = "Redundant `===` comparison: left-hand side is never identical to right-hand side."
 count = 1
 
 [[issues]]

@@ -41,6 +41,7 @@ final class CreateUserCommand implements NamedCommandInterface
         public private(set) string $passwordHash {
             get => $this->passwordHash;
             set(string $value) {
+                // @mago-expect analysis:redundant-comparison - accepted: password_get_info()['algo'] is null for a non-hash on PHP 8.4, so this test is what routes plaintext into password_hash(); mago types the element as non-null.
                 if (null === password_get_info($value)['algo']) {
                     $this->passwordHash = password_hash($value, PASSWORD_DEFAULT);
                 } else {
