@@ -19,11 +19,12 @@ use function password_get_info;
 use function password_hash;
 use function strtolower;
 
-class CreateUserCommand implements NamedCommandInterface
+final class CreateUserCommand implements NamedCommandInterface
 {
     use NamedCommandTrait;
 
     /** @param array|string $roleId */
+    // @mago-expect lint:excessive-parameter-list - accepted: the promoted properties are the row shape; splitting the list changes every call site.
     public function __construct(
         public private(set) string $firstName {
             get => $this->firstName;

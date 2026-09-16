@@ -26,12 +26,16 @@ use function strtolower;
 
 use const PASSWORD_DEFAULT;
 
+// @mago-expect lint:cyclomatic-complexity - accepted: the property hooks and builders are deliberately kept on one entity.
+// @mago-expect lint:too-many-methods - accepted: the with*() builders are this class's public API.
 // @mago-expect analysis:class-must-be-final - accepted: User is non-final by design so consumers can extend it.
 // @mago-expect analysis:unsafe-instantiation - accepted: the with*() builders and populate() must construct `static` to preserve the subclass.
 class User implements UserInterface, NamedCommandInterface
 {
     use NamedCommandTrait;
 
+    // @mago-expect lint:excessive-parameter-list - accepted: the promoted properties are the row shape; splitting the list changes every call site.
+    // @mago-expect lint:halstead - accepted: the constructor is dense because every promoted property also carries its normalising hook.
     public function __construct(
         public private(set) int|string|null $id = null {
             get => $this->id ?? null;

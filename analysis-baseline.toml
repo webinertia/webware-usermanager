@@ -2,12 +2,6 @@ variant = "loose"
 
 [[issues]]
 file = "src/Command/CreateUserCommand.php"
-code = "class-must-be-final"
-message = 'Class `Webware\UserManager\Command\CreateUserCommand` should be declared `final`.'
-count = 1
-
-[[issues]]
-file = "src/Command/CreateUserCommand.php"
 code = "impossible-condition"
 message = "This condition (type `false`) will always evaluate to false."
 count = 1
@@ -41,12 +35,6 @@ file = "src/Command/CreateUserCommand.php"
 code = "unreachable-else-clause"
 message = "Unreachable else clause"
 count = 2
-
-[[issues]]
-file = "src/Command/UpdateUserCommand.php"
-code = "class-must-be-final"
-message = 'Class `Webware\UserManager\Command\UpdateUserCommand` should be declared `final`.'
-count = 1
 
 [[issues]]
 file = "src/CommandHandler/ToggleUserActiveHandler.php"
@@ -206,14 +194,20 @@ count = 1
 
 [[issues]]
 file = "src/Event/SendVerificationEmailEvent.php"
-code = "mixed-return-statement"
-message = 'Could not infer a precise return type for function `Webware\UserManager\Event\SendVerificationEmailEvent::getToken`. Saw type `mixed`.'
+code = "invalid-return-statement"
+message = 'Invalid return type for function `Webware\UserManager\Event\SendVerificationEmailEvent::getToken`: expected `string`, but found `null|string`.'
 count = 1
 
 [[issues]]
 file = "src/Event/SendVerificationEmailEvent.php"
 code = "non-existent-property"
 message = 'Property `$verificationToken` does not exist on class `Webware\UserManager\Command\UpdateUserCommand`.'
+count = 1
+
+[[issues]]
+file = "src/Event/SendVerificationEmailEvent.php"
+code = "nullable-return-statement"
+message = 'Function `Webware\UserManager\Event\SendVerificationEmailEvent::getToken` is declared to return `string` but possibly returns a nullable value (inferred as `null|string`).'
 count = 1
 
 [[issues]]
@@ -274,12 +268,6 @@ count = 1
 file = "src/Listener/Container/SendVerificationEmailListenerFactory.php"
 code = "redundant-docblock-type"
 message = "Redundant docblock type for variable `$helperManager`."
-count = 1
-
-[[issues]]
-file = "src/Listener/SendVerificationEmailListener.php"
-code = "mixed-assignment"
-message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
 count = 1
 
 [[issues]]

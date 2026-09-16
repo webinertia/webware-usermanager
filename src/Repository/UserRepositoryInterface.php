@@ -40,6 +40,7 @@ interface UserRepositoryInterface
      * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
      * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      */
+    // @mago-expect lint:excessive-parameter-list - accepted: the parameter list mirrors the SQL select findAll() builds.
     public function findAll(
         array $selectColumns = [Sql\Select::SQL_STAR],
         PredicateInterface|array|string|Closure|null $where = null,

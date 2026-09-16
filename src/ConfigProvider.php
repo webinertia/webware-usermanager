@@ -64,6 +64,7 @@ use function rtrim;
  *     Webware\Console\ConsoleInterface: array{commands: array<string, class-string>}
  * }
  */
+// @mago-expect lint:too-many-methods - accepted: one getter per config section, which keeps each section independently testable.
 final class ConfigProvider
 {
     /**
