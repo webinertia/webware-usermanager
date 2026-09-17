@@ -37,7 +37,7 @@ The direction is inverted: a string, wrapped once, at the contract boundary.
 | `Entity\User::withRoleId()` | wraps and merges arrays | takes and stores a plain string |
 | `Console\UserSchema` — `roleId` | `Json`, `nullable: false` | `Varchar(50)` |
 | acl `Role/SingleRoleUserProxy.php` | presents one role as a Mezzio `iterable` | deleted |
-| acl `Role/UserRoleIterator.php` | iterates the role list | unnecessary |
+| acl `Role/UserRoleIterator.php` | iterates the role list | removed — no longer needed |
 
 Unchanged by this direction:
 
@@ -45,6 +45,10 @@ Unchanged by this direction:
 - ACL role names — proper nouns: `'Guest'`, `'Member'`, `'Administrator'`, `'Developer'`
 - `getIdentity()` — the email address, or `'Guest'` for a guest principal
 - the authorization boundary; Laminas ACL resolves roles through `getRoleId()`
+
+> **Note (2026-09-17):** `Role/UserRoleIterator.php` in `webware-acl` was previously frozen
+> ("make no changes to UserRoleIterator"). That freeze is released — it is to be **removed** along
+> with `SingleRoleUserProxy`, since one role needs no iterator.
 
 ## Precedent
 
