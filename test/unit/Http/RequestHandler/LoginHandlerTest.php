@@ -32,7 +32,10 @@ final class LoginHandlerTest extends TestCase
 
         $request = new ServerRequest()->withAttribute(
             UserInterface::class,
-            new User(email: 'jane@example.com'),
+            new User(
+                email : 'jane@example.com',
+                roleId: 'Member',
+            ),
         );
 
         $response = $handler->handle($request);
@@ -72,7 +75,10 @@ final class LoginHandlerTest extends TestCase
     {
         $handler = new LoginHandler($this->createStub(TemplateRendererInterface::class));
 
-        $request = new ServerRequest()->withAttribute(UserInterface::class, new User(email: 'jane@example.com'))
+        $request = new ServerRequest()->withAttribute(UserInterface::class, new User(
+            email : 'jane@example.com',
+            roleId: 'Member',
+        ))
             ->withAttribute(Attribute::Request->value, true);
 
         $response = $handler->handle($request);

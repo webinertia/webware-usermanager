@@ -6,21 +6,24 @@ namespace Webware\UserManager\Entity;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
 use Webware\UserManager\Exception\UnassignedIdentityException;
 use Webware\UserManager\UserInterface;
 
+use function array_shift;
 use function array_values;
 use function is_array;
+use function is_iterable;
 use function is_string;
+use function iterator_to_array;
 use function json_decode;
 use function json_validate;
 use function password_get_info;
 use function password_hash;
 use function strtolower;
+use function strval;
 
 use const PASSWORD_DEFAULT;
 
@@ -40,20 +43,18 @@ class User implements UserInterface
                 }
             }
         },
-        /** @var array<array-key, mixed>|string|null */
-        public private(set) array|string|null $roleId = null {
-            get => $this->roleId ?? null;
-            set(array|string|null $value) {
+        /** @var string[]|string */
+        public private(set) array|string $roleId = [self::GUEST_ROLE] {
+            get => $this->roleId;
+            set(array|string $value) {
                 if (is_string($value)) {
-                    if (json_validate($value)) {
-                        $decoded      = json_decode($value, associative: true);
-                        $this->roleId = is_array($decoded) ? $decoded : [];
-                    } else {
-                        $this->roleId = [$value];
-                    }
+                    $decoded = json_validate($value) ? json_decode($value, associative: true) : $value;
+                    $roles   = is_array($decoded) ? $decoded : [$decoded];
                 } else {
-                    $this->roleId = $value;
+                    $roles = $value;
                 }
+
+                $this->roleId = [strval(array_shift($roles) ?? self::GUEST_ROLE)];
             }
         },
         public private(set) ?string $firstName = null,
@@ -136,16 +137,23 @@ class User implements UserInterface
     }
 
     /**
-     * @throws UnassignedIdentityException when the entity was never hydrated with an email.
+     * A hydrated user reports its email address. A guest principal is constructed without
+     * an email address, so it reports the guest role name instead.
+     *
+     * @throws UnassignedIdentityException when a non-guest entity carries no email address.
      */
     #[Override]
     public function getIdentity(): string
     {
-        return (
-            $this->email ?? throw new UnassignedIdentityException(
+        if (null !== $this->email) {
+            return $this->email;
+        }
+
+        return self::GUEST_ROLE === $this->getRoleId()
+            ? self::GUEST_ROLE
+            : throw new UnassignedIdentityException(
                 'Cannot resolve a user identity: the user row has no email address.',
-            )
-        );
+            );
     }
 
     /**
@@ -170,16 +178,24 @@ class User implements UserInterface
     }
 
     #[Override]
-    public function getRoleId(): array|string|null
+    public function getRoleId(): string
     {
+        if (is_iterable($this->roleId)) {
+            return iterator_to_array($this->roleId)[0] ?? static::GUEST_ROLE;
+        }
+
         return $this->roleId;
     }
 
-    /** @return RoleInterface[]|null */
+    /** @return string[] */
     #[Override]
-    public function getRoles(): ?array
+    public function getRoles(): iterable
     {
-        return $this->roleId;
+        if (is_iterable($this->roleId)) {
+            return iterator_to_array($this->roleId);
+        }
+
+        return [$this->roleId];
     }
 
     /** @param array<string, mixed> $data */
@@ -325,18 +341,16 @@ class User implements UserInterface
         );
     }
 
-    /** @param RoleInterface[]|string[]|string $roleId */
+    /** @param string[]|string $roleId */
     public function withRoleId(array|string $roleId): static
     {
         if (is_string($roleId)) {
             $roleId = [$roleId];
         }
 
-        $roles = is_array($this->roleId) ? $this->roleId : [];
-
         return new static(
             id               : $this->id,
-            roleId           : [...$roles, ...array_values($roleId)],
+            roleId           : array_values($roleId),
             firstName        : $this->firstName,
             lastName         : $this->lastName,
             email            : $this->email,
@@ -347,12 +361,6 @@ class User implements UserInterface
             tokenCreatedAt   : $this->tokenCreatedAt,
             details          : $this->details,
         );
-    }
-
-    /** @param array<string, mixed> $withRowData */
-    public function withRowData(array $withRowData): UserInterface&RowPrototypeInterface
-    {
-        return $this->populate(data: $withRowData);
     }
 
     /** @param array<string, mixed>|null $withRowData */

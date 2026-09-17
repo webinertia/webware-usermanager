@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\Core\UserInterface;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Exception\UnassignedIdentityException;
 
@@ -35,7 +36,6 @@ use function random_bytes;
 #[CoversMethod(User::class, 'withLastName')]
 #[CoversMethod(User::class, 'withPasswordHash')]
 #[CoversMethod(User::class, 'withRoleId')]
-#[CoversMethod(User::class, 'withRowData')]
 #[CoversMethod(User::class, '__invoke')]
 final class UserTest extends TestCase
 {
@@ -61,7 +61,7 @@ final class UserTest extends TestCase
     #[Test]
     public function constructorDecodesRoleIdJsonString(): void
     {
-        static::assertSame(['member'], new User(roleId: '["member"]')->roleId);
+        static::assertSame(['Member'], new User(roleId: '["Member"]')->roleId);
     }
 
     #[Test]
@@ -73,7 +73,7 @@ final class UserTest extends TestCase
     #[Test]
     public function constructorWrapsNonJsonRoleIdString(): void
     {
-        static::assertSame(['member'], new User(roleId: 'member')->roleId);
+        static::assertSame(['Member'], new User(roleId: 'Member')->roleId);
     }
 
     #[Test]
@@ -92,6 +92,14 @@ final class UserTest extends TestCase
     }
 
     #[Test]
+    public function getIdentityThrowsWhenNonGuestCarriesNoEmail(): void
+    {
+        $this->expectException(UnassignedIdentityException::class);
+
+        new User(roleId: 'Member')->getIdentity();
+    }
+
+    #[Test]
     public function getOwnerIdReturnsId(): void
     {
         static::assertSame(7, new User(id: 7)->getOwnerId());
@@ -106,10 +114,10 @@ final class UserTest extends TestCase
     #[Test]
     public function getRoleIdAndRolesExposeRoleId(): void
     {
-        $user = new User(roleId: ['member']);
+        $user = new User(roleId: ['Member']);
 
-        static::assertSame(['member'], $user->getRoleId());
-        static::assertSame(['member'], $user->getRoles());
+        static::assertSame('Member', $user->getRoleId());
+        static::assertSame(['Member'], $user->getRoles());
     }
 
     #[Test]
@@ -133,9 +141,7 @@ final class UserTest extends TestCase
 
         static::assertNotSame($user, $instance);
         static::assertNull($instance->getOwnerId());
-
-        $this->expectException(UnassignedIdentityException::class);
-        $instance->getIdentity();
+        static::assertSame(UserInterface::GUEST_ROLE, $instance->getIdentity());
     }
 
     #[Test]
@@ -253,38 +259,26 @@ final class UserTest extends TestCase
     }
 
     #[Test]
-    public function withRoleIdAcceptsStringRole(): void
+    public function withRoleIdReplacesArrayRole(): void
     {
-        $clone = new User(roleId: ['member'])->withRoleId('admin');
+        $clone = new User(roleId: ['Member'])->withRoleId(['Administrator']);
 
-        static::assertSame(['member', 'admin'], $clone->roleId);
+        static::assertSame(['Administrator'], $clone->roleId);
     }
 
     #[Test]
-    public function withRoleIdMergesIntoNullRoleId(): void
+    public function withRoleIdReplacesDefaultRole(): void
     {
-        $clone = new User()->withRoleId('admin');
+        $clone = new User()->withRoleId('Administrator');
 
-        static::assertSame(['admin'], $clone->roleId);
+        static::assertSame(['Administrator'], $clone->roleId);
     }
 
     #[Test]
-    public function withRoleIdMergesRoles(): void
+    public function withRoleIdReplacesStringRole(): void
     {
-        $clone = new User(roleId: ['member'])->withRoleId(['admin']);
+        $clone = new User(roleId: ['Member'])->withRoleId('Administrator');
 
-        static::assertSame(['member', 'admin'], $clone->roleId);
-    }
-
-    #[Test]
-    public function withRowDataReturnsPopulatedInstance(): void
-    {
-        $user = new User();
-
-        $populated = $user->withRowData(['id' => 2, 'email' => 'B@EXAMPLE.COM']);
-
-        static::assertNotSame($user, $populated);
-        static::assertSame(2, $populated->getOwnerId());
-        static::assertSame('b@example.com', $populated->getIdentity());
+        static::assertSame(['Administrator'], $clone->roleId);
     }
 }

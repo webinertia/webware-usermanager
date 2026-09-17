@@ -18,8 +18,6 @@ use Webware\Htmx\Attribute;
 use Webware\Htmx\Response\Header;
 use Webware\Message\SystemMessengerInterface;
 
-use function in_array;
-
 /**
  * Renders the login page.
  *
@@ -42,12 +40,9 @@ final class LoginHandler implements RequestHandlerInterface
         /** @var UserInterface $user */
         $user = $request->getAttribute(UserInterface::class);
 
-        // The Guest principal carries only the Guest role, so any other role means an
-        // authenticated session. Roles are read instead of the identity because an entity
-        // that was never hydrated has no identity to report.
-        $roles = $user->getRoles() ?? [];
-
-        if (! in_array(UserInterface::GUEST_ROLE, $roles, strict: true)) {
+        // The guest principal is built from GUEST_ROLE alone, so the role is the attribute
+        // every principal carries; any other role is a session hydrated from a row.
+        if (UserInterface::GUEST_ROLE !== $user->getRoleId()) {
             // Authenticated — redirect; HTMX boosted forms need HX-Redirect
             if ($request->getAttribute(Attribute::Request->value) === true) {
                 return new EmptyResponse(200, [Header::Redirect->value => '/']);

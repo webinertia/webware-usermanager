@@ -32,12 +32,6 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "incompatible-parameter-type"
-message = 'Parameter `$data` of `Webware\UserManager\Entity\User::populate()` expects type `array<string, mixed>` but parent `PhpDb\ResultSet\RowPrototypeInterface::populate()` expects type `array<array-key, mixed>`'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "invalid-property-assignment-value"
 message = "Invalid type for property `$details`: expected `array<string, mixed>|null`, but got `list{string}`."
 count = 1
@@ -56,20 +50,8 @@ count = 1
 
 [[issues]]
 file = "src/Entity/User.php"
-code = "invalid-return-statement"
-message = 'Invalid return type for function `Webware\UserManager\Entity\User::getRoleId`: expected `string`, but found `array<array-key, mixed>|null|string`.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
 code = "invalid-type-cast"
 message = 'Object of type `$this(Webware\UserManager\Entity\User)` cast to `array`. Property visibility (public, protected, private) affects the resulting array.'
-count = 1
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "less-specific-nested-return-statement"
-message = '''Returned type `array<array-key, mixed>|null|string` is less specific than the declared return type `array<array-key, Laminas\Permissions\Acl\Role\RoleInterface>|null` for function `Webware\UserManager\Entity\User::getRoles` due to nested 'mixed'.'''
 count = 1
 
 [[issues]]
@@ -101,12 +83,6 @@ file = "src/Entity/User.php"
 code = "mixed-assignment"
 message = "Assigning `mixed` type to a variable may lead to unexpected behavior."
 count = 2
-
-[[issues]]
-file = "src/Entity/User.php"
-code = "nullable-return-statement"
-message = 'Function `Webware\UserManager\Entity\User::getRoleId` is declared to return `string` but possibly returns a nullable value (inferred as `array<array-key, mixed>|null|string`).'
-count = 1
 
 [[issues]]
 file = "src/Entity/User.php"

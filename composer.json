@@ -21,6 +21,7 @@
         "laminas/laminas-diactoros": "^3.8",
         "laminas/laminas-filter": "^3.0",
         "laminas/laminas-inputfilter": "3.0.x-dev",
+        "laminas/laminas-permissions-acl": "^2.16",
         "laminas/laminas-validator": "^3.7",
         "laminas/laminas-view": "^2.30 || ^3.0",
         "mezzio/mezzio": "^3.26",
