@@ -5,6 +5,36 @@
 
 ---
 
+## Goal
+
+Force the invariant to a `string` and keep it there. The array is never an input, never stored, and
+never mutated — it exists at exactly one point: the outbound `getRoles()` return.
+
+```php
+public function getRoles(): iterable
+{
+    return [$this->roleId];
+}
+```
+
+That return is the **only** array in the role/identity contract surface, because it is the only member
+of that surface which deviates from Laminas permissions ACL's shape:
+
+| Contract member | Laminas permissions ACL | Mezzio authentication |
+|---|---|---|
+| `getRoleId()` | `@return string` | — |
+| `getResourceId()` | `@return string` | — |
+| `getOwnerId()` | `@return mixed` | — |
+| `getIdentity()` | — | `: string` |
+| `getRoles()` | *no equivalent — Laminas handles multiple roles by inheritance, not arrays* | `: iterable` |
+| `getDetail()` / `getDetails()` | — | `mixed` / `: array` |
+
+Every role-shaped member Laminas defines is a string. The array is Mezzio's; it arrives through
+`getRoles()` alone. Wrapping at that one boundary — and nowhere else — is the whole direction.
+
+(`getDetails(): array` also returns an array, but it is Mezzio-only, has no Laminas counterpart, and
+is not part of the role identity surface.)
+
 ## The problem with the current approach
 
 Approaching `roleId` as an array put the array at the centre and treated the single role as a
