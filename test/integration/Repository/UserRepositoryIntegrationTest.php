@@ -157,7 +157,7 @@ final class UserRepositoryIntegrationTest extends TestCase
         int $active = 1,
     ): array {
         return [
-            'roleId'       => '["member"]',
+            'roleId'       => 'Member',
             'firstName'    => 'Jane',
             'lastName'     => 'Doe',
             'email'        => $email,

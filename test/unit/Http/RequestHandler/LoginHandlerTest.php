@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\Core\Role;
 use Webware\Core\UserInterface;
 use Webware\Htmx\Attribute;
 use Webware\Htmx\Response\Header;
@@ -60,7 +61,7 @@ final class LoginHandlerTest extends TestCase
 
         $request = new ServerRequest()->withAttribute(
             UserInterface::class,
-            new User(roleId: UserInterface::GUEST_ROLE),
+            new User(roleId: Role::Guest->value),
         )
             ->withAttribute(SystemMessengerInterface::class, $messenger);
 

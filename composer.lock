@@ -3549,16 +3549,16 @@
         },
         {
             "name": "webware/webware-core",
-            "version": "1.0.0-alpha.2",
+            "version": "1.0.0-alpha.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-core.git",
-                "reference": "1bfa9471f09a7446b1c055f0014faa7a549e70e9"
+                "reference": "a536b81cb4f157ff039b9f3de560a809b8612a7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/1bfa9471f09a7446b1c055f0014faa7a549e70e9",
-                "reference": "1bfa9471f09a7446b1c055f0014faa7a549e70e9",
+                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/a536b81cb4f157ff039b9f3de560a809b8612a7d",
+                "reference": "a536b81cb4f157ff039b9f3de560a809b8612a7d",
                 "shasum": ""
             },
             "require": {
@@ -3612,9 +3612,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webinertia/webware-core/issues",
-                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.2"
+                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.4"
             },
-            "time": "2026-09-18T03:24:13+00:00"
+            "time": "2026-09-18T08:28:33+00:00"
         },
         {
             "name": "webware/webware-event",

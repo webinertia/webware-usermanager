@@ -9,8 +9,9 @@ use DateTimeZone;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
+use Webware\Core\Role;
+use Webware\Core\UserInterface;
 use Webware\UserManager\Exception\UnassignedIdentityException;
-use Webware\UserManager\UserInterface;
 
 use function is_array;
 use function is_string;
@@ -22,6 +23,9 @@ use function strtolower;
 
 use const PASSWORD_DEFAULT;
 
+/**
+ * @import-type UserPrototype from UserInterface
+ */
 // @mago-expect lint:cyclomatic-complexity,too-many-methods - accepted: the property hooks and builders are deliberately kept on one entity.
 // @mago-expect analysis:class-must-be-final,unsafe-instantiation - accepted: User is non-final by design so consumers can extend it, and the with*() builders and populate() must construct `static`.
 class User implements UserInterface
@@ -38,7 +42,7 @@ class User implements UserInterface
                 }
             }
         },
-        public private(set) string $roleId = self::GUEST_ROLE,
+        public private(set) string $roleId = Role::Guest->value,
         public private(set) ?string $firstName = null,
         public private(set) ?string $lastName = null,
         public private(set) ?string $email = null {
@@ -131,8 +135,8 @@ class User implements UserInterface
             return $this->email;
         }
 
-        return self::GUEST_ROLE === $this->getRoleId()
-            ? self::GUEST_ROLE
+        return Role::Guest->value === $this->getRoleId()
+            ? Role::Guest->value
             : throw new UnassignedIdentityException(
                 'Cannot resolve a user identity: the user row has no email address.',
             );
@@ -180,12 +184,15 @@ class User implements UserInterface
     }
 
     /**
-     * @return array<string, mixed>
+     * @return UserPrototype
      */
     #[Override]
     public function toArray(): array
     {
-        return (array) $this;
+        /** @var UserPrototype $row */
+        $row = (array) $this;
+
+        return $row;
     }
 
     #[Override]

@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
+use Webware\Core\Role;
 use Webware\Message\Exception\InvalidHopsValueException;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
@@ -25,8 +26,6 @@ use function is_array;
 
 final class RegistrationMiddleware implements MiddlewareInterface
 {
-    const string DEFAULT_ROLE_ID = 'Member';
-
     public function __construct(
         private readonly MessageBusInterface $messageBus,
         private readonly TemplateRendererInterface $template,
@@ -44,7 +43,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
         $data = [
             ...(is_array($body) ? $body : []),
             'verificationToken' => Uuid::uuid7()->toString(),
-            'roleId'            => self::DEFAULT_ROLE_ID,
+            'roleId'            => Role::Member->value,
             'active'            => '0',
         ];
 

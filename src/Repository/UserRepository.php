@@ -18,13 +18,13 @@ use Psl\Type;
 use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SensitiveParameter;
+use Webware\Core\UserInterface;
 use Webware\Log\Event\LogEvent;
 use Webware\Log\LogChannel;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\UserInterface;
 
 use function is_array;
 use function password_verify;

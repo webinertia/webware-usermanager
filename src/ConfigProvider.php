@@ -9,6 +9,7 @@ use Webware\Admin\Container\Configuration as AdminConfiguration;
 use Webware\Admin\Event\RegisterWidgetEvent;
 use Webware\Console\ConsoleInterface;
 use Webware\Core\AclInterface;
+use Webware\Core\Role;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\ConfigProvider as BusProvider;
 use Webware\MessageBus\MessageBusInterface;
@@ -74,8 +75,8 @@ final class ConfigProvider
     {
         return [
             'roles'     => [
-                'Guest'  => [],
-                'Member' => ['Guest'],
+                Role::Guest->value  => [],
+                Role::Member->value => [Role::Guest->value],
             ],
             'resources' => [
                 Container\Configuration::ROUTE_NAME_PREFIX_VALUE
@@ -112,7 +113,7 @@ final class ConfigProvider
                     . 'toggle.update' => true,
             ],
             'allow'     => [
-                'Guest'         => [
+                Role::Guest->value         => [
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'session.read'               => [],
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'session.create'             => [],
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'register.read'              => [],
@@ -121,10 +122,10 @@ final class ConfigProvider
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'resend.verification.read'   => [],
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'resend.verification.create' => [],
                 ],
-                'Member'        => [
+                Role::Member->value        => [
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'logout.read' => [],
                 ],
-                'Administrator' => [
+                Role::Administrator->value => [
                     AdminConfiguration::ADMIN_ROUTE_NAME_PREFIX_VALUE
                         . rtrim(
                             Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE,
@@ -142,7 +143,7 @@ final class ConfigProvider
                 ],
             ],
             'deny'      => [
-                'Member' => [
+                Role::Member->value => [
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'session.read'               => [],
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'session.create'             => [],
                     Container\Configuration::ROUTE_NAME_PREFIX_VALUE . 'register.read'              => [],

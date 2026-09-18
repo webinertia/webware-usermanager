@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Webware\Core\UserInterface;
+use Webware\Core\Role;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Exception\UnassignedIdentityException;
 
@@ -135,7 +135,7 @@ final class UserTest extends TestCase
 
         static::assertNotSame($user, $instance);
         static::assertNull($instance->getOwnerId());
-        static::assertSame(UserInterface::GUEST_ROLE, $instance->getIdentity());
+        static::assertSame(Role::Guest->value, $instance->getIdentity());
     }
 
     #[Test]

@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Core\Role;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
@@ -61,7 +62,7 @@ final class IdentityMiddlewareTest extends TestCase
         $request = new ServerRequest()->withAttribute(SessionInterface::class, $session);
         $middleware->process($request, $handler);
 
-        self::assertSame(['roleId' => UserInterface::GUEST_ROLE], $factoryData);
+        self::assertSame(['roleId' => Role::Guest->value], $factoryData);
     }
 
     #[Test]
@@ -98,7 +99,7 @@ final class IdentityMiddlewareTest extends TestCase
         );
 
         self::assertInstanceOf(EmptyResponse::class, $response);
-        self::assertSame(['roleId' => UserInterface::GUEST_ROLE], $factoryData);
+        self::assertSame(['roleId' => Role::Guest->value], $factoryData);
         self::assertInstanceOf(User::class, $capturedRequest?->getAttribute(UserInterface::class));
     }
 
@@ -228,7 +229,7 @@ final class IdentityMiddlewareTest extends TestCase
         $response = new SessionMiddleware($persistence)->process(new ServerRequest(), $handler);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
-        self::assertSame(['roleId' => UserInterface::GUEST_ROLE], $factoryData);
+        self::assertSame(['roleId' => Role::Guest->value], $factoryData);
     }
 
     #[Test]
