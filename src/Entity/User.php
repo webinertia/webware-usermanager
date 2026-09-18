@@ -189,10 +189,8 @@ class User implements UserInterface
     #[Override]
     public function toArray(): array
     {
-        /** @var UserPrototype $row */
-        $row = (array) $this;
-
-        return $row;
+        /** @var UserPrototype */
+        return (array) $this;
     }
 
     #[Override]
