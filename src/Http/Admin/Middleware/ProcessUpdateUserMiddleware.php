@@ -46,7 +46,7 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        /** @var array{id: int, firstName: string, lastName: string, email: string, roleId: array<string>, active: bool} $values */
+        /** @var array{id: int, firstName: string, lastName: string, email: string, roleId: string, active: bool} $values */
         $values = $filterResult->value();
 
         $result = $this->messageBus->handle(new UpdateUserCommand(

@@ -32,7 +32,7 @@ use function random_bytes;
 #[CoversMethod(User::class, 'withDetail')]
 #[CoversMethod(User::class, 'withEmail')]
 #[CoversMethod(User::class, 'withFirstName')]
-#[CoversMethod(User::class, 'withId')]
+#[CoversMethod(User::class, 'withIdentity')]
 #[CoversMethod(User::class, 'withLastName')]
 #[CoversMethod(User::class, 'withPasswordHash')]
 #[CoversMethod(User::class, 'withRoleId')]
@@ -59,21 +59,15 @@ final class UserTest extends TestCase
     }
 
     #[Test]
-    public function constructorDecodesRoleIdJsonString(): void
-    {
-        static::assertSame(['Member'], new User(roleId: '["Member"]')->roleId);
-    }
-
-    #[Test]
     public function constructorLowercasesEmail(): void
     {
         static::assertSame('jane@example.com', new User(email: 'JANE@EXAMPLE.COM')->email);
     }
 
     #[Test]
-    public function constructorWrapsNonJsonRoleIdString(): void
+    public function constructorStoresRoleIdString(): void
     {
-        static::assertSame(['Member'], new User(roleId: 'Member')->roleId);
+        static::assertSame('Member', new User(roleId: 'Member')->roleId);
     }
 
     #[Test]
@@ -114,7 +108,7 @@ final class UserTest extends TestCase
     #[Test]
     public function getRoleIdAndRolesExposeRoleId(): void
     {
-        $user = new User(roleId: ['Member']);
+        $user = new User(roleId: 'Member');
 
         static::assertSame('Member', $user->getRoleId());
         static::assertSame(['Member'], $user->getRoles());
@@ -228,15 +222,15 @@ final class UserTest extends TestCase
     }
 
     #[Test]
-    public function withIdReturnsNewInstance(): void
+    public function withIdentityReturnsNewInstance(): void
     {
         $user = new User(id: 1);
 
-        $clone = $user->withId(2);
+        $clone = $user->withIdentity('jane@example.com');
 
         static::assertNotSame($user, $clone);
-        static::assertSame(1, $user->id);
-        static::assertSame(2, $clone->id);
+        static::assertSame('jane@example.com', $clone->getIdentity());
+        static::assertSame(1, $clone->id);
     }
 
     #[Test]
@@ -259,26 +253,18 @@ final class UserTest extends TestCase
     }
 
     #[Test]
-    public function withRoleIdReplacesArrayRole(): void
-    {
-        $clone = new User(roleId: ['Member'])->withRoleId(['Administrator']);
-
-        static::assertSame(['Administrator'], $clone->roleId);
-    }
-
-    #[Test]
     public function withRoleIdReplacesDefaultRole(): void
     {
         $clone = new User()->withRoleId('Administrator');
 
-        static::assertSame(['Administrator'], $clone->roleId);
+        static::assertSame('Administrator', $clone->roleId);
     }
 
     #[Test]
     public function withRoleIdReplacesStringRole(): void
     {
-        $clone = new User(roleId: ['Member'])->withRoleId('Administrator');
+        $clone = new User(roleId: 'Member')->withRoleId('Administrator');
 
-        static::assertSame(['Administrator'], $clone->roleId);
+        static::assertSame('Administrator', $clone->roleId);
     }
 }

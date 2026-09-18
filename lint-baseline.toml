@@ -16,13 +16,7 @@ count = 1
 file = "src/Command/CreateUserCommand.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
-count = 4
-
-[[issues]]
-file = "src/Command/CreateUserCommand.php"
-code = "no-else-clause"
-message = "Avoid `elseif` clauses."
-count = 1
+count = 3
 
 [[issues]]
 file = "src/CommandHandler/CreateUserHandler.php"
@@ -46,7 +40,7 @@ count = 1
 file = "src/Entity/User.php"
 code = "no-else-clause"
 message = "Avoid `else` clauses."
-count = 6
+count = 5
 
 [[issues]]
 file = "src/Entity/User.php"

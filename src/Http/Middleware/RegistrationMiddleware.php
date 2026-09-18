@@ -22,12 +22,10 @@ use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 
 use function is_array;
-use function json_encode;
 
 final class RegistrationMiddleware implements MiddlewareInterface
 {
     const string DEFAULT_ROLE_ID = 'Member';
-    const array DEFAULT_ROLE    = ['Member'];
 
     public function __construct(
         private readonly MessageBusInterface $messageBus,
@@ -46,7 +44,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
         $data = [
             ...(is_array($body) ? $body : []),
             'verificationToken' => Uuid::uuid7()->toString(),
-            'roleId'            => json_encode(self::DEFAULT_ROLE),
+            'roleId'            => self::DEFAULT_ROLE_ID,
             'active'            => '0',
         ];
 

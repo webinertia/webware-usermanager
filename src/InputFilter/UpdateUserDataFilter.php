@@ -12,7 +12,7 @@ use Override;
 use Webware\Core\InputFilter\SystemMessageTrait;
 
 /**
- * @extends InputFilter\InputFilter<array{id: int, firstName: string, lastName: string, email: string, roleId: array<string>, active: bool}>
+ * @extends InputFilter\InputFilter<array{id: int, firstName: string, lastName: string, email: string, roleId: string, active: bool}>
  */
 final class UpdateUserDataFilter extends InputFilter\InputFilter
 {

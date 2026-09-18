@@ -34,7 +34,7 @@ final class IdentityMiddlewareTest extends TestCase
     #[Test]
     public function clearsSessionAndCreatesGuestWhenStatusCheckFails(): void
     {
-        $sessionData = ['id' => 5, 'email' => 'jane@example.com', 'roleId' => ['Member']];
+        $sessionData = ['id' => 5, 'email' => 'jane@example.com', 'roleId' => 'Member'];
 
         $session = $this->createMock(SessionInterface::class);
         $session->expects($this->once())->method('get')->with(UserInterface::class)->willReturn($sessionData);
@@ -105,7 +105,7 @@ final class IdentityMiddlewareTest extends TestCase
     #[Test]
     public function fallsBackToZeroIdWhenSessionLacksId(): void
     {
-        $sessionData = ['email' => 'jane@example.com', 'roleId' => ['Member']];
+        $sessionData = ['email' => 'jane@example.com', 'roleId' => 'Member'];
 
         $session = $this->createStub(SessionInterface::class);
         $session->method('get')->willReturn($sessionData);
@@ -142,7 +142,7 @@ final class IdentityMiddlewareTest extends TestCase
     #[Test]
     public function reconstructsUserFromValidSessionData(): void
     {
-        $sessionData = ['id' => 5, 'email' => 'jane@example.com', 'roleId' => ['Member']];
+        $sessionData = ['id' => 5, 'email' => 'jane@example.com', 'roleId' => 'Member'];
 
         $session = $this->createStub(SessionInterface::class);
         $session->method('get')->willReturn($sessionData);

@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Webware\UserManager\Command;
 
 use DateTimeImmutable;
-use InvalidArgumentException;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
 
-use function is_array;
-use function json_encode;
-use function json_validate;
 use function password_get_info;
 use function password_hash;
 use function strtolower;
@@ -22,7 +18,6 @@ final class CreateUserCommand implements NamedCommandInterface
 {
     use NamedCommandTrait;
 
-    /** @param array|string $roleId */
     // @mago-expect lint:excessive-parameter-list - accepted: the promoted properties are the row shape; splitting the list changes every call site.
     public function __construct(
         public private(set) string $firstName {
@@ -55,22 +50,7 @@ final class CreateUserCommand implements NamedCommandInterface
                 $this->email = strtolower($value);
             }
         },
-        public private(set) array|string $roleId {
-            get => $this->roleId;
-            set(array|string $value) {
-                if (is_array($value)) {
-                    $encoded = json_encode($value);
-                    if (false === $encoded) {
-                        throw new InvalidArgumentException('roleId could not be encoded to JSON.');
-                    }
-                    $this->roleId = $encoded;
-                } elseif (json_validate($value)) {
-                    $this->roleId = $value;
-                } else {
-                    throw new InvalidArgumentException('roleId must be a valid JSON string or an array.');
-                }
-            }
-        },
+        public private(set) string $roleId,
         #[SensitiveParameter]
         public private(set) string $verificationToken {
             get => $this->verificationToken;

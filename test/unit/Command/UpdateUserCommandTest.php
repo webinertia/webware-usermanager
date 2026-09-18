@@ -22,7 +22,7 @@ final class UpdateUserCommandTest extends TestCase
             firstName: 'Jane',
             lastName : 'Doe',
             email    : 'jane@example.com',
-            roleId   : ['member'],
+            roleId   : 'Member',
             active   : true,
         );
 
@@ -30,7 +30,7 @@ final class UpdateUserCommandTest extends TestCase
         static::assertSame('Jane', $command->firstName);
         static::assertSame('Doe', $command->lastName);
         static::assertSame('jane@example.com', $command->email);
-        static::assertSame(['member'], $command->roleId);
+        static::assertSame('Member', $command->roleId);
         static::assertTrue($command->active);
     }
 
@@ -42,7 +42,7 @@ final class UpdateUserCommandTest extends TestCase
             firstName: 'Jane',
             lastName : 'Doe',
             email    : 'jane@example.com',
-            roleId   : ['member'],
+            roleId   : 'Member',
             active   : false,
         );
 

@@ -61,7 +61,7 @@ final class SendVerificationEmailListenerTest extends TestCase
             lastName         : 'Doe',
             passwordHash     : bin2hex(random_bytes(16)),
             email            : 'jane@example.com',
-            roleId           : ['Member'],
+            roleId           : 'Member',
             verificationToken: bin2hex(random_bytes(16)),
         );
 

@@ -27,12 +27,10 @@ use Webware\Core\AclInterface;
 use Webware\Core\UserInterface;
 use Webware\UserManager\Repository\Schema;
 
-use function json_encode;
 use function password_hash;
 use function sprintf;
 use function strtolower;
 
-use const JSON_THROW_ON_ERROR;
 use const PASSWORD_DEFAULT;
 
 #[AsCommand(
@@ -168,7 +166,7 @@ final class InitDbCommand extends Command
         );
 
         return [
-            'roleId'       => json_encode([$role], JSON_THROW_ON_ERROR),
+            'roleId'       => $role,
             'firstName'    => $firstName,
             'lastName'     => $lastName,
             'email'        => strtolower($email),

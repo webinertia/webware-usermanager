@@ -56,7 +56,7 @@ final class UserSchemaTest extends TestCase
         self::assertFalse($columns[0]->isNullable());
         self::assertSame(['unsigned' => true, 'autoincrement' => true], $columns[0]->getOptions());
 
-        self::assertInstanceOf(Json::class, $columns[1]);
+        self::assertInstanceOf(Varchar::class, $columns[1]);
         self::assertSame('roleId', $columns[1]->getName());
         self::assertFalse($columns[1]->isNullable());
 

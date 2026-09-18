@@ -86,7 +86,7 @@ final class CreateUserHandlerTest extends TestCase
             lastName         : 'Doe',
             passwordHash     : bin2hex(random_bytes(16)),
             email            : 'JANE@EXAMPLE.COM',
-            roleId           : ['member'],
+            roleId           : 'Member',
             verificationToken: bin2hex(random_bytes(16)),
         );
     }

@@ -116,7 +116,7 @@ final class InitDbCommandTest extends TestCase
 
         $row = $this->insertRow($capturedInsert);
         self::assertSame('jsmith@example.com', $row['email']);
-        self::assertSame('["Developer"]', $row['roleId']);
+        self::assertSame('Developer', $row['roleId']);
         self::assertSame(1, $row['active']);
     }
 
@@ -142,7 +142,7 @@ final class InitDbCommandTest extends TestCase
         self::assertSame(Command::SUCCESS, $tester->getStatusCode());
         self::assertNotNull($capturedInsert);
 
-        self::assertSame('["Developer"]', $this->insertRow($capturedInsert)['roleId']);
+        self::assertSame('Developer', $this->insertRow($capturedInsert)['roleId']);
     }
 
     private function createAdapter(

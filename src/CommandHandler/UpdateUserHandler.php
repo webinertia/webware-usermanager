@@ -11,8 +11,6 @@ use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
-use function json_encode;
-
 final class UpdateUserHandler implements CommandHandlerInterface
 {
     public function __construct(
@@ -32,7 +30,7 @@ final class UpdateUserHandler implements CommandHandlerInterface
                 'firstName' => $command->firstName,
                 'lastName'  => $command->lastName,
                 'email'     => $command->email,
-                'roleId'    => json_encode($command->roleId),
+                'roleId'    => $command->roleId,
                 'active'    => $command->active ? 1 : 0,
             ]);
         } catch (Throwable $e) {

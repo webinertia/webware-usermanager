@@ -62,7 +62,7 @@ final class UpdateUserHandlerTest extends TestCase
                 'firstName' => 'Jane',
                 'lastName'  => 'Smith',
                 'email'     => 'jane@example.com',
-                'roleId'    => '["member"]',
+                'roleId'    => 'Member',
                 'active'    => 1,
             ])
             ->willReturn(1);
@@ -79,7 +79,7 @@ final class UpdateUserHandlerTest extends TestCase
             firstName: 'Jane',
             lastName : 'Smith',
             email    : 'jane@example.com',
-            roleId   : ['member'],
+            roleId   : 'Member',
             active   : true,
         );
     }
