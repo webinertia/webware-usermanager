@@ -6,14 +6,13 @@ namespace Webware\UserManager\Entity;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use Laminas\Permissions\Acl\Role\RoleInterface;
 use Override;
 use PhpDb\ResultSet\RowPrototypeInterface;
 use SensitiveParameter;
+use Webware\Core\Role;
+use Webware\Core\UserInterface;
 use Webware\UserManager\Exception\UnassignedIdentityException;
-use Webware\UserManager\UserInterface;
 
-use function array_values;
 use function is_array;
 use function is_string;
 use function json_decode;
@@ -24,11 +23,14 @@ use function strtolower;
 
 use const PASSWORD_DEFAULT;
 
+/**
+ * @import-type UserPrototype from UserInterface
+ */
 // @mago-expect lint:cyclomatic-complexity,too-many-methods - accepted: the property hooks and builders are deliberately kept on one entity.
 // @mago-expect analysis:class-must-be-final,unsafe-instantiation - accepted: User is non-final by design so consumers can extend it, and the with*() builders and populate() must construct `static`.
 class User implements UserInterface
 {
-    // @mago-expect lint:excessive-parameter-list,halstead - accepted: the promoted properties are the row shape, and each carries its normalising hook.
+    // @mago-expect lint:excessive-parameter-list - accepted: the promoted properties are the row shape.
     public function __construct(
         public private(set) int|string|null $id = null {
             get => $this->id ?? null;
@@ -40,22 +42,7 @@ class User implements UserInterface
                 }
             }
         },
-        /** @var array<array-key, mixed>|string|null */
-        public private(set) array|string|null $roleId = null {
-            get => $this->roleId ?? null;
-            set(array|string|null $value) {
-                if (is_string($value)) {
-                    if (json_validate($value)) {
-                        $decoded      = json_decode($value, associative: true);
-                        $this->roleId = is_array($decoded) ? $decoded : [];
-                    } else {
-                        $this->roleId = [$value];
-                    }
-                } else {
-                    $this->roleId = $value;
-                }
-            }
-        },
+        public private(set) string $roleId = Role::Guest->value,
         public private(set) ?string $firstName = null,
         public private(set) ?string $lastName = null,
         public private(set) ?string $email = null {
@@ -136,16 +123,23 @@ class User implements UserInterface
     }
 
     /**
-     * @throws UnassignedIdentityException when the entity was never hydrated with an email.
+     * A hydrated user reports its email address. A guest principal is constructed without
+     * an email address, so it reports the guest role name instead.
+     *
+     * @throws UnassignedIdentityException when a non-guest entity carries no email address.
      */
     #[Override]
     public function getIdentity(): string
     {
-        return (
-            $this->email ?? throw new UnassignedIdentityException(
+        if (null !== $this->email) {
+            return $this->email;
+        }
+
+        return Role::Guest->value === $this->getRoleId()
+            ? Role::Guest->value
+            : throw new UnassignedIdentityException(
                 'Cannot resolve a user identity: the user row has no email address.',
-            )
-        );
+            );
     }
 
     /**
@@ -170,19 +164,19 @@ class User implements UserInterface
     }
 
     #[Override]
-    public function getRoleId(): array|string|null
+    public function getRoleId(): string
     {
         return $this->roleId;
     }
 
-    /** @return RoleInterface[]|null */
+    /** @return iterable<int|string, string> */
     #[Override]
-    public function getRoles(): ?array
+    public function getRoles(): iterable
     {
-        return $this->roleId;
+        return [$this->roleId];
     }
 
-    /** @param array<string, mixed> $data */
+    /** @param array<array-key, mixed> $data */
     #[Override]
     public function populate(array $data): UserInterface&RowPrototypeInterface
     {
@@ -190,14 +184,16 @@ class User implements UserInterface
     }
 
     /**
-     * @return array<string, mixed>
+     * @return UserPrototype
      */
     #[Override]
     public function toArray(): array
     {
+        /** @var UserPrototype */
         return (array) $this;
     }
 
+    #[Override]
     public function withActive(bool $active): static
     {
         return new static(
@@ -215,6 +211,7 @@ class User implements UserInterface
         );
     }
 
+    #[Override]
     public function withDetail(string $name, mixed $value): static
     {
         $details = is_array($this->details) ? $this->details : [];
@@ -234,6 +231,7 @@ class User implements UserInterface
         );
     }
 
+    #[Override]
     public function withEmail(string $email): static
     {
         return new static(
@@ -251,6 +249,7 @@ class User implements UserInterface
         );
     }
 
+    #[Override]
     public function withFirstName(string $firstName): static
     {
         return new static(
@@ -268,24 +267,17 @@ class User implements UserInterface
         );
     }
 
+    /**
+     * In this implementation the identity is the email address, so the builder delegates
+     * to withEmail() and keeps its normalisation.
+     */
     #[Override]
-    public function withId(int|string|null $id): static
+    public function withIdentity(string $identity): static
     {
-        return new static(
-            id               : $id,
-            roleId           : $this->roleId,
-            firstName        : $this->firstName,
-            lastName         : $this->lastName,
-            email            : $this->email,
-            passwordHash     : $this->passwordHash,
-            active           : $this->active,
-            createdAt        : $this->createdAt,
-            verificationToken: $this->verificationToken,
-            tokenCreatedAt   : $this->tokenCreatedAt,
-            details          : $this->details,
-        );
+        return $this->withEmail($identity);
     }
 
+    #[Override]
     public function withLastName(string $lastName): static
     {
         return new static(
@@ -303,6 +295,7 @@ class User implements UserInterface
         );
     }
 
+    #[Override]
     public function withPasswordHash(string $passwordHash): static
     {
         // @mago-expect analysis:redundant-comparison - accepted: password_get_info()['algo'] is null for a non-hash on PHP 8.4, so this test is what routes plaintext into password_hash(); mago types the element as non-null.
@@ -325,18 +318,12 @@ class User implements UserInterface
         );
     }
 
-    /** @param RoleInterface[]|string[]|string $roleId */
-    public function withRoleId(array|string $roleId): static
+    #[Override]
+    public function withRoleId(string $roleId): static
     {
-        if (is_string($roleId)) {
-            $roleId = [$roleId];
-        }
-
-        $roles = is_array($this->roleId) ? $this->roleId : [];
-
         return new static(
             id               : $this->id,
-            roleId           : [...$roles, ...array_values($roleId)],
+            roleId           : $roleId,
             firstName        : $this->firstName,
             lastName         : $this->lastName,
             email            : $this->email,
@@ -347,12 +334,6 @@ class User implements UserInterface
             tokenCreatedAt   : $this->tokenCreatedAt,
             details          : $this->details,
         );
-    }
-
-    /** @param array<string, mixed> $withRowData */
-    public function withRowData(array $withRowData): UserInterface&RowPrototypeInterface
-    {
-        return $this->populate(data: $withRowData);
     }
 
     /** @param array<string, mixed>|null $withRowData */

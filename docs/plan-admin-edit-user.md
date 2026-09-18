@@ -1,5 +1,9 @@
 # Admin Edit User — Implementation Plan
 
+> **Partly superseded (2026-09-17):** role assignment described here as a JSON-encoded array (a
+> multi-select, `wrap in [$value]`) becomes a single role string. See
+> [`roleid-single-role-direction.md`](roleid-single-role-direction.md).
+
 **Date:** 2026-06-17  
 **Branch:** `webware-usermanager-update-user`  
 **Target:** `0.1.x`

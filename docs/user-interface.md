@@ -1,5 +1,15 @@
 # UserInterface Contract
 
+> **Partly superseded (2026-09-17):** this document describes a role array and a
+> `Webware\Acl\Role\SingleRoleUserProxy` presenting it. See
+> [`roleid-single-role-direction.md`](roleid-single-role-direction.md) — `roleId` becomes a hard
+> `string`, `getRoles()` wraps it, and the proxy is not needed.
+>
+> **Also superseded (2026-09-18):** `withId(int|string|null $id): static` shown below was replaced
+> by `withIdentity(string $identity): static` in `webware-core` `1.0.0-alpha.2` — the id column
+> value is constructor-only, and the identity string is what the contract constrains. `getRoles()`
+> is `iterable`.
+
 `Webware\Core\UserInterface` is the **canonical user identity type** for the
 webware package ecosystem. It lives in
 [`webware/webware-core`](https://github.com/webinertia/webware-core) — the

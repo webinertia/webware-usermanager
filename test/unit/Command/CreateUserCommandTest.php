@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace WebwareTest\UserManager\Command;
 
 use DateTimeImmutable;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
@@ -52,27 +51,11 @@ final class CreateUserCommandTest extends TestCase
     }
 
     #[Test]
-    public function roleIdAcceptsValidJsonString(): void
+    public function roleIdAcceptsRoleName(): void
     {
-        $command = $this->command(roleId: '["member"]');
+        $command = $this->command(roleId: 'Member');
 
-        static::assertSame('["member"]', $command->roleId);
-    }
-
-    #[Test]
-    public function roleIdArrayIsEncodedToJson(): void
-    {
-        $command = $this->command(roleId: ['member', 'admin']);
-
-        static::assertSame('["member","admin"]', $command->roleId);
-    }
-
-    #[Test]
-    public function roleIdRejectsInvalidString(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->command(roleId: 'not-json');
+        static::assertSame('Member', $command->roleId);
     }
 
     #[Test]
@@ -87,13 +70,10 @@ final class CreateUserCommandTest extends TestCase
         static::assertSame('2024-01-02 03:04:05', $command->tokenCreatedAt);
     }
 
-    /**
-     * @param list<string>|string $roleId
-     */
     private function command(
         string $email = 'jane@example.com',
         ?string $passwordHash = null,
-        array|string $roleId = ['member'],
+        string $roleId = 'Member',
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $tokenCreatedAt = null,
     ): CreateUserCommand {

@@ -23,16 +23,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use Webware\Core\AclInterface;
-use Webware\Core\UserInterface;
+use Webware\Core\Role;
 use Webware\UserManager\Repository\Schema;
 
-use function json_encode;
 use function password_hash;
 use function sprintf;
 use function strtolower;
 
-use const JSON_THROW_ON_ERROR;
 use const PASSWORD_DEFAULT;
 
 #[AsCommand(
@@ -45,10 +42,10 @@ final class InitDbCommand extends Command
      * @var list<string>
      */
     private const array ROLES = [
-        AclInterface::DEVELOPER_ROLE_ID,
-        'Administrator',
-        'Member',
-        UserInterface::GUEST_ROLE,
+        Role::Developer->value,
+        Role::Administrator->value,
+        Role::Member->value,
+        Role::Guest->value,
     ];
 
     /**
@@ -95,7 +92,7 @@ final class InitDbCommand extends Command
             name       : 'role',
             mode       : InputOption::VALUE_REQUIRED,
             description: 'Role for the seeded user',
-            default    : AclInterface::DEVELOPER_ROLE_ID,
+            default    : Role::Developer->value,
         );
     }
 
@@ -163,12 +160,12 @@ final class InitDbCommand extends Command
             $input->getOption('role') ?? $helper->ask(
                 $input,
                 $output,
-                new ChoiceQuestion('Role:', self::ROLES, AclInterface::DEVELOPER_ROLE_ID),
+                new ChoiceQuestion('Role:', self::ROLES, Role::Developer->value),
             )
         );
 
         return [
-            'roleId'       => json_encode([$role], JSON_THROW_ON_ERROR),
+            'roleId'       => $role,
             'firstName'    => $firstName,
             'lastName'     => $lastName,
             'email'        => strtolower($email),

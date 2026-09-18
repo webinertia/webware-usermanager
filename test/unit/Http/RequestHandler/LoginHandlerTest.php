@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\Core\Role;
 use Webware\Core\UserInterface;
 use Webware\Htmx\Attribute;
 use Webware\Htmx\Response\Header;
@@ -32,7 +33,10 @@ final class LoginHandlerTest extends TestCase
 
         $request = new ServerRequest()->withAttribute(
             UserInterface::class,
-            new User(email: 'jane@example.com'),
+            new User(
+                email : 'jane@example.com',
+                roleId: 'Member',
+            ),
         );
 
         $response = $handler->handle($request);
@@ -57,7 +61,7 @@ final class LoginHandlerTest extends TestCase
 
         $request = new ServerRequest()->withAttribute(
             UserInterface::class,
-            new User(roleId: UserInterface::GUEST_ROLE),
+            new User(roleId: Role::Guest->value),
         )
             ->withAttribute(SystemMessengerInterface::class, $messenger);
 
@@ -72,7 +76,10 @@ final class LoginHandlerTest extends TestCase
     {
         $handler = new LoginHandler($this->createStub(TemplateRendererInterface::class));
 
-        $request = new ServerRequest()->withAttribute(UserInterface::class, new User(email: 'jane@example.com'))
+        $request = new ServerRequest()->withAttribute(UserInterface::class, new User(
+            email : 'jane@example.com',
+            roleId: 'Member',
+        ))
             ->withAttribute(Attribute::Request->value, true);
 
         $response = $handler->handle($request);

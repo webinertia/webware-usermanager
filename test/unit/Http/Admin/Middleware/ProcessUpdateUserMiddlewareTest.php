@@ -41,7 +41,7 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
                     $command instanceof UpdateUserCommand
                     && 42 === $command->id
                     && 'Jane' === $command->firstName
-                    && ['member'] === $command->roleId
+                    && 'Member' === $command->roleId
                     && true === $command->active
                 ),
             ))
@@ -78,7 +78,7 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
                 'firstName' => 'Jane',
                 'lastName'  => 'Doe',
                 'email'     => 'jane@example.com',
-                'roleId'    => ['member'],
+                'roleId'    => 'Member',
                 'active'    => '1',
             ]);
 
@@ -129,7 +129,7 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
                 'firstName' => 'Jane',
                 'lastName'  => 'Doe',
                 'email'     => 'jane@example.com',
-                'roleId'    => ['member'],
+                'roleId'    => 'Member',
                 'active'    => '1',
             ]);
 

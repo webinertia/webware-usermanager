@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Core\Role;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Query\CheckUserActiveQuery;
@@ -21,7 +22,7 @@ use Webware\UserManager\Query\CheckUserActiveQuery;
  * Reads the session written by LoginMiddleware. When a payload is present and the
  * account is still active (CheckUserActiveQuery), the user factory reconstructs
  * the authenticated User from the stored row. Otherwise the session is cleared and
- * a User carrying UserInterface::GUEST_ROLE is attached.
+ * a User carrying Role::Guest is attached.
  *
  * Always calls the next handler — access decisions are AuthorizationMiddleware's job.
  * Pipe this once in the global pipeline, after SessionMiddleware.
@@ -53,7 +54,7 @@ final class IdentityMiddleware implements MiddlewareInterface
         $userInfo = $session->get(UserInterface::class);
 
         if (null === $userInfo) {
-            $user = ($this->userFactory)(['roleId' => UserInterface::GUEST_ROLE]);
+            $user = ($this->userFactory)(['roleId' => Role::Guest->value]);
         } else {
             /** @var bool $check */
             $check = $this->messageBus->handle(new CheckUserActiveQuery(id: (int) ($userInfo['id'] ?? 0)))->getResult();
@@ -62,7 +63,7 @@ final class IdentityMiddleware implements MiddlewareInterface
                 $user = ($this->userFactory)($userInfo);
             } else {
                 $session->clear();
-                $user = ($this->userFactory)(['roleId' => UserInterface::GUEST_ROLE]);
+                $user = ($this->userFactory)(['roleId' => Role::Guest->value]);
             }
         }
 

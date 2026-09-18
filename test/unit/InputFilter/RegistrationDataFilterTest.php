@@ -42,14 +42,14 @@ final class RegistrationDataFilterTest extends TestCase
             'passwordHash'        => $password,
             'confirmPasswordHash' => $password,
             'verificationToken'   => Uuid::uuid4()->toString(),
-            'roleId'              => ' ["member"] ',
+            'roleId'              => ' Member ',
         ]);
 
         self::assertTrue($result->valid());
         self::assertSame('Jane', $result->value()['firstName']);
         self::assertSame('Doe', $result->value()['lastName']);
         self::assertSame('jane@example.com', $result->value()['email']);
-        self::assertSame('["member"]', $result->value()['roleId']);
+        self::assertSame('Member', $result->value()['roleId']);
         self::assertFalse($result->value()['active']);
     }
 
@@ -75,7 +75,7 @@ final class RegistrationDataFilterTest extends TestCase
             'email'               => 'not-an-email',
             'passwordHash'        => $password,
             'confirmPasswordHash' => $password,
-            'roleId'              => '["member"]',
+            'roleId'              => 'Member',
         ]);
 
         self::assertFalse($result->valid());
@@ -103,7 +103,7 @@ final class RegistrationDataFilterTest extends TestCase
             'email'               => 'jane@example.com',
             'passwordHash'        => bin2hex(random_bytes(16)),
             'confirmPasswordHash' => bin2hex(random_bytes(16)),
-            'roleId'              => '["member"]',
+            'roleId'              => 'Member',
         ]);
 
         self::assertFalse($result->valid());
@@ -227,7 +227,7 @@ final class RegistrationDataFilterTest extends TestCase
             'passwordHash'        => $password,
             'confirmPasswordHash' => $password,
             'verificationToken'   => Uuid::uuid4()->toString(),
-            'roleId'              => '["member"]',
+            'roleId'              => 'Member',
         ];
     }
 }

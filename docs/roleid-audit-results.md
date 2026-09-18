@@ -1,5 +1,9 @@
 # `roleId` Usage Audit
 
+> **Superseded in part (2026-09-17):** the array shape recorded below is the *current* state, not the
+target. See [`roleid-single-role-direction.md`](roleid-single-role-direction.md) — `roleId` becomes a
+hard `string`, the column becomes `varchar(50)`, and `getRoles()` wraps the string.
+
 > Generated 2026-06-16 from live database (PhpDb MCP) + full codebase grep.
 
 ---

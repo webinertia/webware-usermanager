@@ -35,7 +35,7 @@ final class UpdateUserDataFilterTest extends TestCase
             'firstName' => ' Jane ',
             'lastName'  => ' Doe ',
             'email'     => ' jane@example.com ',
-            'roleId'    => ['member'],
+            'roleId'    => 'Member',
             'active'    => '1',
         ]);
 
@@ -43,7 +43,7 @@ final class UpdateUserDataFilterTest extends TestCase
         self::assertSame(42, $result->value()['id']);
         self::assertSame('Jane', $result->value()['firstName']);
         self::assertSame('jane@example.com', $result->value()['email']);
-        self::assertSame(['member'], $result->value()['roleId']);
+        self::assertSame('Member', $result->value()['roleId']);
         self::assertTrue($result->value()['active']);
     }
 
@@ -67,7 +67,7 @@ final class UpdateUserDataFilterTest extends TestCase
             'firstName' => 'Jane',
             'lastName'  => 'Doe',
             'email'     => 'not-an-email',
-            'roleId'    => ['member'],
+            'roleId'    => 'Member',
         ]);
 
         self::assertFalse($result->valid());
@@ -148,11 +148,11 @@ final class UpdateUserDataFilterTest extends TestCase
     public function trimsStringRoleId(): void
     {
         $data           = $this->validData();
-        $data['roleId'] = ' member ';
+        $data['roleId'] = ' Member ';
 
         $result = $this->filter()->validate($data);
 
-        self::assertSame('member', $result->value()['roleId']);
+        self::assertSame('Member', $result->value()['roleId']);
     }
 
     private function filter(): UpdateUserDataFilter
@@ -168,7 +168,7 @@ final class UpdateUserDataFilterTest extends TestCase
             'firstName' => 'Jane',
             'lastName'  => 'Doe',
             'email'     => 'jane@example.com',
-            'roleId'    => ['member'],
+            'roleId'    => 'Member',
             'active'    => '1',
         ];
     }

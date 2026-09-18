@@ -54,8 +54,9 @@ final class UserSchema
                 nullable: false,
             )->setOptions(options: ['unsigned' => true, 'autoincrement' => true]),
         );
-        $table->addColumn(new Json(
+        $table->addColumn(new Varchar(
             name    : 'roleId',
+            length  : 50,
             nullable: false,
         ));
         $table->addColumn(new Varchar(

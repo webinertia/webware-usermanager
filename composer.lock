@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6be4f3dacf80d488035824db79e7c73",
+    "content-hash": "9ec0571af7a4d3f415c630e4692fdbc3",
     "packages": [
         {
             "name": "brick/math",
@@ -3549,16 +3549,16 @@
         },
         {
             "name": "webware/webware-core",
-            "version": "1.0.0-alpha.1",
+            "version": "1.0.0-alpha.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-core.git",
-                "reference": "e74d76469b74a74ef40e8f12d6fb79590b32d6de"
+                "reference": "a536b81cb4f157ff039b9f3de560a809b8612a7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/e74d76469b74a74ef40e8f12d6fb79590b32d6de",
-                "reference": "e74d76469b74a74ef40e8f12d6fb79590b32d6de",
+                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/a536b81cb4f157ff039b9f3de560a809b8612a7d",
+                "reference": "a536b81cb4f157ff039b9f3de560a809b8612a7d",
                 "shasum": ""
             },
             "require": {
@@ -3612,9 +3612,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webinertia/webware-core/issues",
-                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.1"
+                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.4"
             },
-            "time": "2026-09-17T00:15:21+00:00"
+            "time": "2026-09-18T08:28:33+00:00"
         },
         {
             "name": "webware/webware-event",

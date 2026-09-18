@@ -287,7 +287,7 @@ final class UserRepositoryTest extends TestCase
             lastName         : 'Doe',
             passwordHash     : bin2hex(random_bytes(16)),
             email            : 'jane@example.com',
-            roleId           : ['member'],
+            roleId           : 'Member',
             verificationToken: bin2hex(random_bytes(16)),
         );
 
@@ -310,7 +310,7 @@ final class UserRepositoryTest extends TestCase
             firstName: 'Jane',
             lastName : 'Doe',
             email    : 'jane@example.com',
-            roleId   : ['member'],
+            roleId   : 'Member',
             active   : true,
         );
 
@@ -352,7 +352,7 @@ final class UserRepositoryTest extends TestCase
     ): array {
         return [
             'id'                => $id,
-            'roleId'            => '["member"]',
+            'roleId'            => 'Member',
             'firstName'         => 'Jane',
             'lastName'          => 'Doe',
             'email'             => $email,

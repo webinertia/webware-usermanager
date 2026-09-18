@@ -30,7 +30,7 @@ final class SendVerificationEmailEventTest extends TestCase
             lastName         : 'Doe',
             passwordHash     : bin2hex(random_bytes(16)),
             email            : 'jane@example.com',
-            roleId           : ['member'],
+            roleId           : 'Member',
             verificationToken: $token,
         );
 

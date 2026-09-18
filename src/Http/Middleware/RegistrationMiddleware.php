@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
+use Webware\Core\Role;
 use Webware\Message\Exception\InvalidHopsValueException;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
@@ -22,13 +23,9 @@ use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 
 use function is_array;
-use function json_encode;
 
 final class RegistrationMiddleware implements MiddlewareInterface
 {
-    const string DEFAULT_ROLE_ID = 'Member';
-    const array DEFAULT_ROLE    = ['Member'];
-
     public function __construct(
         private readonly MessageBusInterface $messageBus,
         private readonly TemplateRendererInterface $template,
@@ -46,7 +43,7 @@ final class RegistrationMiddleware implements MiddlewareInterface
         $data = [
             ...(is_array($body) ? $body : []),
             'verificationToken' => Uuid::uuid7()->toString(),
-            'roleId'            => json_encode(self::DEFAULT_ROLE),
+            'roleId'            => Role::Member->value,
             'active'            => '0',
         ];
 
