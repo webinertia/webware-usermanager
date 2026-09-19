@@ -3894,16 +3894,16 @@
         },
         {
             "name": "webware/webware-message",
-            "version": "1.0.0-beta.2",
+            "version": "1.0.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-message.git",
-                "reference": "1602d2e62a6b8c36939fb7ed87b6bcade716980d"
+                "reference": "58535d4b8901a98e449ebbf346653831aad3d459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-message/zipball/1602d2e62a6b8c36939fb7ed87b6bcade716980d",
-                "reference": "1602d2e62a6b8c36939fb7ed87b6bcade716980d",
+                "url": "https://api.github.com/repos/webinertia/webware-message/zipball/58535d4b8901a98e449ebbf346653831aad3d459",
+                "reference": "58535d4b8901a98e449ebbf346653831aad3d459",
                 "shasum": ""
             },
             "require": {
@@ -3962,9 +3962,9 @@
             "support": {
                 "chat": "https://discord.gg/9TxQ74EPsG",
                 "issues": "https://github.com/webinertia/webware-message/issues",
-                "source": "https://github.com/webinertia/webware-message/tree/1.0.0-beta.2"
+                "source": "https://github.com/webinertia/webware-message/tree/1.0.0-beta.3"
             },
-            "time": "2026-09-03T18:52:13+00:00"
+            "time": "2026-09-18T18:16:31+00:00"
         }
     ],
     "packages-dev": [
@@ -8535,12 +8535,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "884216c4b85b0792e9e75fddd826e72e4bff92c7"
+                "reference": "f1dd47da8977aa9dcb913f443ed6c26042da059f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/884216c4b85b0792e9e75fddd826e72e4bff92c7",
-                "reference": "884216c4b85b0792e9e75fddd826e72e4bff92c7",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f1dd47da8977aa9dcb913f443ed6c26042da059f",
+                "reference": "f1dd47da8977aa9dcb913f443ed6c26042da059f",
                 "shasum": ""
             },
             "conflict": {
@@ -9068,7 +9068,7 @@
                 "mediawiki/data-transfer": ">=1.39,<1.39.11|>=1.41,<1.41.3|>=1.42,<1.42.2",
                 "mediawiki/maps": "<12.1.3",
                 "mediawiki/matomo": "<2.4.3",
-                "mediawiki/semantic-media-wiki": "<4.0.2",
+                "mediawiki/semantic-media-wiki": "<=7.2.1",
                 "mehrwert/phpmyadmin": "<3.2",
                 "melisplatform/melis-asset-manager": "<5.0.1",
                 "melisplatform/melis-cms": "<5.3.4",
@@ -9172,7 +9172,7 @@
                 "paragonie/random_compat": "<2",
                 "paragonie/sodium_compat": "<1.24.1|>=2,<2.5.1",
                 "passbolt/passbolt_api": "<4.6.2",
-                "paymenter/paymenter": "<=1.5.4",
+                "paymenter/paymenter": "<=1.5.6",
                 "paypal/adaptivepayments-sdk-php": "<=3.9.2",
                 "paypal/invoice-sdk-php": "<=3.9",
                 "paypal/merchant-sdk-php": "<3.12",
@@ -9673,7 +9673,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-17T23:23:12+00:00"
+            "time": "2026-09-18T20:28:15+00:00"
         },
         {
             "name": "sanmai/di-container",
@@ -13008,12 +13008,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-tools.git",
-                "reference": "744216f665ebd2e96119457c6a1b8b061d6e5fcc"
+                "reference": "94973ac63c4012f5e2c1e6a1fda4d0fd3f4bf999"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/744216f665ebd2e96119457c6a1b8b061d6e5fcc",
-                "reference": "744216f665ebd2e96119457c6a1b8b061d6e5fcc",
+                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/94973ac63c4012f5e2c1e6a1fda4d0fd3f4bf999",
+                "reference": "94973ac63c4012f5e2c1e6a1fda4d0fd3f4bf999",
                 "shasum": ""
             },
             "require": {
@@ -13050,7 +13050,7 @@
                 "issues": "https://github.com/webinertia/webware-tools/issues",
                 "source": "https://github.com/webinertia/webware-tools/tree/0.1.x"
             },
-            "time": "2026-09-16T18:25:18+00:00"
+            "time": "2026-09-18T21:46:45+00:00"
         }
     ],
     "aliases": [],
