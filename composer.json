@@ -45,7 +45,7 @@
         "webware/webware-core": "^1.0.0-alpha.4",
         "webware/webware-event": "^0.1",
         "webware/webware-htmx": "0.1.x-dev",
-        "webware/webware-log": "^1.0",
+        "webware/webware-log": "^1.0 || ^2.0",
         "webware/webware-mailer": "^1.0.0-beta.4",
         "webware/webware-message": "^1.0.0-beta.2"
     },
