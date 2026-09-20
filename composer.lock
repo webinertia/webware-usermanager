@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "efe7a8d421b3a9260d213c10bf77177e",
+    "content-hash": "b56b9a83be73cba75fa78cb51fccbcb4",
     "packages": [
         {
             "name": "brick/math",
@@ -3549,16 +3549,16 @@
         },
         {
             "name": "webware/webware-core",
-            "version": "1.0.0-alpha.4",
+            "version": "1.0.0-alpha.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-core.git",
-                "reference": "a536b81cb4f157ff039b9f3de560a809b8612a7d"
+                "reference": "78aac9353787650e82bf806a7c095728f4688a29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/a536b81cb4f157ff039b9f3de560a809b8612a7d",
-                "reference": "a536b81cb4f157ff039b9f3de560a809b8612a7d",
+                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/78aac9353787650e82bf806a7c095728f4688a29",
+                "reference": "78aac9353787650e82bf806a7c095728f4688a29",
                 "shasum": ""
             },
             "require": {
@@ -3585,7 +3585,7 @@
                 "phpunit/phpunit": "^13.3",
                 "roave/backward-compatibility-check": "^8.21.0",
                 "roave/security-advisories": "dev-master",
-                "webware/webware-tools": "^0.1.x-dev"
+                "webware/webware-tools": "^1.0.0-beta.2"
             },
             "type": "library",
             "autoload": {
@@ -3612,9 +3612,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webinertia/webware-core/issues",
-                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.4"
+                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.5"
             },
-            "time": "2026-09-18T08:28:33+00:00"
+            "time": "2026-09-20T14:44:57+00:00"
         },
         {
             "name": "webware/webware-event",
