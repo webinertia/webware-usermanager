@@ -19,6 +19,22 @@ widget.
 composer require webware/webware-usermanager
 ```
 
+### Provider load order
+
+`webware/webware-core` aliases `Mezzio\Authentication\UserInterface` to
+`Webware\Core\UserInterface`, and this package registers the implementation behind it.
+Register the providers in `config/config.php` in this order:
+
+1. `Mezzio\Authentication\ConfigProvider`
+2. `Webware\Core\ConfigProvider`
+3. `Webware\UserManager\ConfigProvider`
+
+The component installer adds providers in the order packages were installed, which is not
+necessarily this order — check `config/config.php` after installing and reorder if needed.
+Any provider that declares an entry for `Mezzio\Authentication\UserInterface` competes for
+the same service name and the last one aggregated wins, so load `mezzio/mezzio-authentication`
+first, then `webware/webware-core`, then this package.
+
 ## Documentation
 
 See [docs/](docs/).
