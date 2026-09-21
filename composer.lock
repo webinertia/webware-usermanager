@@ -3682,12 +3682,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-htmx.git",
-                "reference": "6579f8a543ca32991d44beee960205690bad7fe7"
+                "reference": "4cfc365431e454a1ba5de7401697d4cffa3f65cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-htmx/zipball/6579f8a543ca32991d44beee960205690bad7fe7",
-                "reference": "6579f8a543ca32991d44beee960205690bad7fe7",
+                "url": "https://api.github.com/repos/webinertia/webware-htmx/zipball/4cfc365431e454a1ba5de7401697d4cffa3f65cc",
+                "reference": "4cfc365431e454a1ba5de7401697d4cffa3f65cc",
                 "shasum": ""
             },
             "require": {
@@ -3709,7 +3709,7 @@
                 "phpunit/phpunit": "^13.3",
                 "roave/backward-compatibility-check": "^8.21.0",
                 "roave/security-advisories": "dev-master",
-                "webware/webware-tools": "^0.1.x-dev"
+                "webware/webware-tools": "^1.0.0-beta.2"
             },
             "default-branch": true,
             "type": "library",
@@ -3740,7 +3740,7 @@
                 "issues": "https://github.com/webinertia/webware-htmx/issues",
                 "source": "https://github.com/webinertia/webware-htmx/tree/0.1.x"
             },
-            "time": "2026-09-17T00:34:41+00:00"
+            "time": "2026-09-21T07:05:15+00:00"
         },
         {
             "name": "webware/webware-log",
