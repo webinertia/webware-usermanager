@@ -11,7 +11,7 @@ use Mezzio\Router\Exception\ExceptionInterface as RouterException;
 use Mezzio\Router\RouteCollectorInterface;
 use Mezzio\Router\RouteProviderInterface;
 use Override;
-use Webware\Htmx\Middleware\DisableBodyMiddleware;
+use Webware\Htmx\Http\Middleware\DisableBodyMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessToggleUserActiveMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
