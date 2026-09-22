@@ -79,10 +79,9 @@ final class RouteProviderTest extends TestCase
             );
 
         $provider = new RouteProvider(
-            routeSegment        : 'user.manager',
-            routeNamePrefix     : 'user.manager.',
-            adminRouteSegment   : 'admin/user.manager',
-            adminRouteNamePrefix: 'admin.user.manager.',
+            routeSegment     : 'user.manager',
+            adminRouteSegment: 'admin/user.manager',
+            routeNames       : $this->fixtureRouteNames(),
         );
 
         $provider->registerRoutes($collector, $factory);
@@ -148,10 +147,9 @@ final class RouteProviderTest extends TestCase
             );
 
         $provider = new RouteProvider(
-            routeSegment        : 'user.manager',
-            routeNamePrefix     : 'user.manager.',
-            adminRouteSegment   : 'admin/user.manager',
-            adminRouteNamePrefix: 'admin.user.manager.',
+            routeSegment     : 'user.manager',
+            adminRouteSegment: 'admin/user.manager',
+            routeNames       : $this->fixtureRouteNames(),
         );
 
         $provider->registerRoutes($collector, $factory);
@@ -186,6 +184,31 @@ final class RouteProviderTest extends TestCase
             ],
             $routes,
         );
+    }
+
+    /**
+     * The route names the provider is now handed, rather than composing them itself.
+     * Composition is the factory's job and is verified in RouteProviderFactoryTest.
+     *
+     * @return array<string, non-empty-string>
+     */
+    private function fixtureRouteNames(): array
+    {
+        return [
+            'session.read'               => 'user.manager.session.read',
+            'session.create'             => 'user.manager.session.create',
+            'register.read'              => 'user.manager.register.read',
+            'register.create'            => 'user.manager.register.create',
+            'verify.email.read'          => 'user.manager.verify.email.read',
+            'resend.verification.read'   => 'user.manager.resend.verification.read',
+            'resend.verification.create' => 'user.manager.resend.verification.create',
+            'logout.read'                => 'user.manager.logout.read',
+            'admin.index'                => 'admin.user.manager',
+            'admin.create'               => 'admin.user.manager.create',
+            'admin.update'               => 'admin.user.manager.update',
+            'admin.update.modal'         => 'admin.user.manager.update.modal',
+            'admin.toggle.update'        => 'admin.user.manager.toggle.update',
+        ];
     }
 
     /**

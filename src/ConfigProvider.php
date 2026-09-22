@@ -33,7 +33,14 @@ use function rtrim;
  *     deny: array<string, array<string, list<mixed>>>
  * }
  * @type AuthenticationConfig = array<string, non-empty-string>
- * @type DefaultConfig = array<string, non-empty-string>
+ * @type DefaultConfig = array{
+ *     admin_route_name_prefix: non-empty-string,
+ *     admin_route_segment: non-empty-string,
+ *     login_path: non-empty-string,
+ *     route_name_prefix: non-empty-string,
+ *     route_segment: non-empty-string,
+ *     routes: array<string, non-empty-string>
+ * }
  * @type Dependencies = array{
  *     aliases: array<interface-string, class-string>,
  *     factories: array<class-string, class-string>,
@@ -41,6 +48,21 @@ use function rtrim;
  * }
  * @type InputFilterConfig = array{factories: array<class-string, class-string>}
  * @type ListenerConfig = array<class-string, list<array{listener: class-string, priority: int}>>
+ * @type RouteNames = array{
+ *     'admin.create': non-empty-string,
+ *     'admin.index': non-empty-string,
+ *     'admin.toggle.update': non-empty-string,
+ *     'admin.update': non-empty-string,
+ *     'admin.update.modal': non-empty-string,
+ *     'logout.read': non-empty-string,
+ *     'register.create': non-empty-string,
+ *     'register.read': non-empty-string,
+ *     'resend.verification.create': non-empty-string,
+ *     'resend.verification.read': non-empty-string,
+ *     'session.create': non-empty-string,
+ *     'session.read': non-empty-string,
+ *     'verify.email.read': non-empty-string
+ * }
  * @type RouteProviderConfig = array{route-providers: list<class-string>}
  * @type TemplateConfig = array{paths: array<string, list<string>>}
  * @type ViewHelperConfig = array{
@@ -195,7 +217,10 @@ final class ConfigProvider
             Container\Configuration::ROUTE_NAME_PREFIX_KEY       => Container\Configuration::ROUTE_NAME_PREFIX_VALUE,
             Container\Configuration::ADMIN_ROUTE_SEGMENT_KEY     => Container\Configuration::ADMIN_ROUTE_SEGMENT_VALUE,
             Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_KEY => Container\Configuration::ADMIN_ROUTE_NAME_PREFIX_VALUE,
-            'login_path'                                         => '/'
+            // Consumer overrides for any route name, keyed by the same names the
+            // RouteProvider reads. Left empty here so composition stays the default.
+            'routes'     => [],
+            'login_path' => '/'
                 . Container\Configuration::ROUTE_SEGMENT_VALUE
                 . '/login',
         ];
