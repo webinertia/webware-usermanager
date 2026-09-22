@@ -531,20 +531,20 @@
         },
         {
             "name": "laminas/laminas-httphandlerrunner",
-            "version": "2.13.0",
+            "version": "2.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-httphandlerrunner.git",
-                "reference": "181eaeeb838ad3d80fbbcfb0657a46bc212bbd4e"
+                "reference": "14d5182a4ba180c998dfbba9d19f9a70337c02b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/181eaeeb838ad3d80fbbcfb0657a46bc212bbd4e",
-                "reference": "181eaeeb838ad3d80fbbcfb0657a46bc212bbd4e",
+                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/14d5182a4ba180c998dfbba9d19f9a70337c02b4",
+                "reference": "14d5182a4ba180c998dfbba9d19f9a70337c02b4",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/http-message-implementation": "^1.0 || ^2.0",
                 "psr/http-server-handler": "^1.0"
@@ -590,11 +590,11 @@
             },
             "funding": [
                 {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
+                    "url": "https://crowdfunding.linuxfoundation.org/initiatives/laminas-project",
+                    "type": "custom"
                 }
             ],
-            "time": "2025-10-12T20:58:29+00:00"
+            "time": "2026-09-21T10:14:52+00:00"
         },
         {
             "name": "laminas/laminas-hydrator",
@@ -3477,12 +3477,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-admin.git",
-                "reference": "ccd0b80ee063a40b7faa811f318146c8d780d345"
+                "reference": "cd945a030da3bdd70856d7967c2367c5b972ec34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/ccd0b80ee063a40b7faa811f318146c8d780d345",
-                "reference": "ccd0b80ee063a40b7faa811f318146c8d780d345",
+                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/cd945a030da3bdd70856d7967c2367c5b972ec34",
+                "reference": "cd945a030da3bdd70856d7967c2367c5b972ec34",
                 "shasum": ""
             },
             "require": {
@@ -3511,7 +3511,7 @@
                 "roave/backward-compatibility-check": "^8.21.0",
                 "roave/security-advisories": "dev-master",
                 "webware/coding-standard": "^0.1.0",
-                "webware/webware-tools": "^0.1.x-dev"
+                "webware/webware-tools": "^1.0.0-beta.2"
             },
             "suggest": {
                 "webware/webware-acl": "Provides the ACL implementation and ACL configuration consumed by the dashboard widget filtering, plus the ACL management UI."
@@ -3545,20 +3545,20 @@
                 "issues": "https://github.com/webinertia/webware-admin/issues",
                 "source": "https://github.com/webinertia/webware-admin/tree/0.1.x"
             },
-            "time": "2026-09-17T01:10:03+00:00"
+            "time": "2026-09-21T21:43:09+00:00"
         },
         {
             "name": "webware/webware-core",
-            "version": "1.0.0-alpha.5",
+            "version": "1.0.0-alpha.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-core.git",
-                "reference": "78aac9353787650e82bf806a7c095728f4688a29"
+                "reference": "46b8325250b1d0852de2b7c293452fafccf7a729"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/78aac9353787650e82bf806a7c095728f4688a29",
-                "reference": "78aac9353787650e82bf806a7c095728f4688a29",
+                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/46b8325250b1d0852de2b7c293452fafccf7a729",
+                "reference": "46b8325250b1d0852de2b7c293452fafccf7a729",
                 "shasum": ""
             },
             "require": {
@@ -3612,9 +3612,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webinertia/webware-core/issues",
-                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.5"
+                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.6"
             },
-            "time": "2026-09-20T14:44:57+00:00"
+            "time": "2026-09-21T03:09:42+00:00"
         },
         {
             "name": "webware/webware-event",
@@ -3682,12 +3682,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-htmx.git",
-                "reference": "4cfc365431e454a1ba5de7401697d4cffa3f65cc"
+                "reference": "cc00c802d500a244e626c4db9332a277a1b607b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-htmx/zipball/4cfc365431e454a1ba5de7401697d4cffa3f65cc",
-                "reference": "4cfc365431e454a1ba5de7401697d4cffa3f65cc",
+                "url": "https://api.github.com/repos/webinertia/webware-htmx/zipball/cc00c802d500a244e626c4db9332a277a1b607b0",
+                "reference": "cc00c802d500a244e626c4db9332a277a1b607b0",
                 "shasum": ""
             },
             "require": {
@@ -3740,20 +3740,20 @@
                 "issues": "https://github.com/webinertia/webware-htmx/issues",
                 "source": "https://github.com/webinertia/webware-htmx/tree/0.1.x"
             },
-            "time": "2026-09-21T07:05:15+00:00"
+            "time": "2026-09-21T21:43:24+00:00"
         },
         {
             "name": "webware/webware-log",
-            "version": "2.0.0-alpha.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-log.git",
-                "reference": "a6843fa2cba004614c70b09a9c109e11bd338ab1"
+                "reference": "185828124c1ef0462ea95004afd1c4d3876d5474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-log/zipball/a6843fa2cba004614c70b09a9c109e11bd338ab1",
-                "reference": "a6843fa2cba004614c70b09a9c109e11bd338ab1",
+                "url": "https://api.github.com/repos/webinertia/webware-log/zipball/185828124c1ef0462ea95004afd1c4d3876d5474",
+                "reference": "185828124c1ef0462ea95004afd1c4d3876d5474",
                 "shasum": ""
             },
             "require": {
@@ -3767,7 +3767,8 @@
             "require-dev": {
                 "infection/infection": "^0.35.0",
                 "laminas/laminas-diactoros": "^3.5",
-                "laminas/laminas-i18n": "^3.0",
+                "laminas/laminas-eventmanager": "^3.14",
+                "laminas/laminas-i18n": "^2.31.0",
                 "laminas/laminas-servicemanager": "^3.23.0 || ^4.0.0",
                 "mezzio/mezzio": "^3.26",
                 "mezzio/mezzio-authentication": "^1.13",
@@ -3816,9 +3817,9 @@
             "support": {
                 "chat": "https://discord.gg/89DfgmuF6C",
                 "issues": "https://github.com/webinertia/webware-log/issues",
-                "source": "https://github.com/webinertia/webware-log/tree/2.0.0-alpha.1"
+                "source": "https://github.com/webinertia/webware-log/tree/1.1.0"
             },
-            "time": "2026-09-18T19:04:55+00:00"
+            "time": "2026-08-22T23:05:37+00:00"
         },
         {
             "name": "webware/webware-mailer",
@@ -4819,27 +4820,25 @@
         },
         {
             "name": "doctrine/lexer",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd"
+                "reference": "e96fe45e92a54233726014a7cc7340abf29bb14c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd",
-                "reference": "31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/e96fe45e92a54233726014a7cc7340abf29bb14c",
+                "reference": "e96fe45e92a54233726014a7cc7340abf29bb14c",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^12",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^10.5",
-                "psalm/plugin-phpunit": "^0.18.3",
-                "vimeo/psalm": "^5.21"
+                "doctrine/coding-standard": "^14",
+                "phpstan/phpstan": "^2",
+                "phpunit/phpunit": "^10.5.58 || ^12.5.4"
             },
             "type": "library",
             "autoload": {
@@ -4876,7 +4875,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/lexer/issues",
-                "source": "https://github.com/doctrine/lexer/tree/3.0.1"
+                "source": "https://github.com/doctrine/lexer/tree/3.0.2"
             },
             "funding": [
                 {
@@ -4892,7 +4891,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-05T11:56:58+00:00"
+            "time": "2026-06-14T20:44:06+00:00"
         },
         {
             "name": "fidry/cpu-core-counter",
@@ -12948,12 +12947,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-console.git",
-                "reference": "02b642f93bc1de52897c0a77ea746c5bc3ee44ed"
+                "reference": "7ec447b1755523dabf67783c314c8d9ddfb90320"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/02b642f93bc1de52897c0a77ea746c5bc3ee44ed",
-                "reference": "02b642f93bc1de52897c0a77ea746c5bc3ee44ed",
+                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/7ec447b1755523dabf67783c314c8d9ddfb90320",
+                "reference": "7ec447b1755523dabf67783c314c8d9ddfb90320",
                 "shasum": ""
             },
             "require": {
@@ -13001,7 +13000,7 @@
                 "issues": "https://github.com/webinertia/webware-console/issues",
                 "source": "https://github.com/webinertia/webware-console/tree/0.1.x"
             },
-            "time": "2026-09-20T01:48:08+00:00"
+            "time": "2026-09-21T21:43:13+00:00"
         },
         {
             "name": "webware/webware-tools",
