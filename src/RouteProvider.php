@@ -12,6 +12,7 @@ use Mezzio\Router\RouteCollectorInterface;
 use Mezzio\Router\RouteProviderInterface;
 use Override;
 use Webware\Htmx\Http\Middleware\DisableBodyMiddleware;
+use Webware\Message\Http\Middleware\NotificationMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessToggleUserActiveMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
@@ -176,6 +177,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             $middlewareFactory->prepare([
                 BodyParamsMiddleware::class,
                 ProcessUpdateUserMiddleware::class,
+                NotificationMiddleware::class,
                 UpdateUserHandler::class,
             ]),
             ['PATCH'],
@@ -198,6 +200,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
                 ProcessToggleUserActiveMiddleware::class,
+                NotificationMiddleware::class,
                 ToggleUserActiveHandler::class,
             ]),
             "{$this->adminRouteNamePrefix}toggle.update",

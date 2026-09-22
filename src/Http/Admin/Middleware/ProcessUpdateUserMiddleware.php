@@ -13,7 +13,6 @@ use Webware\Message\Exception\InvalidHopsValueException;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
-use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 
@@ -58,12 +57,8 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
             active   : $values['active'],
         ));
 
-        if ($result->getStatus() === MessageStatus::Success) {
-            $messenger?->success('User updated.', hops: 0, now: true);
-        } else {
-            $messenger?->danger('User could not be updated. Please try again.', hops: 0, now: true);
-        }
-
+        // The success/failure notification is sent centrally by NotificationMiddleware
+        // from the CommandResult below. This middleware only dispatches and stores it.
         return $handler->handle($request->withAttribute(CommandResult::class, $result));
     }
 }

@@ -32,6 +32,8 @@ final class UpdateUserCommandTest extends TestCase
         static::assertSame('jane@example.com', $command->email);
         static::assertSame('Member', $command->roleId);
         static::assertTrue($command->active);
+        static::assertSame('User updated.', $command->successMessage);
+        static::assertSame('User could not be updated. Please try again.', $command->failureMessage);
     }
 
     #[Test]
