@@ -31,7 +31,7 @@ use function is_string;
 final class ProcessUpdateUserMiddlewareTest extends TestCase
 {
     #[Test]
-    public function dispatchesCommandAndNotifiesOnSuccess(): void
+    public function dispatchesCommandAndStoresResult(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
         $bus->expects($this->once())
@@ -51,9 +51,6 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
                 return new CommandResult($message, MessageStatus::Success, null);
             });
 
-        $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())->method('success')->with('User updated.', 0, true);
-
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
         $handler->expects($this->once())
@@ -72,7 +69,6 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         );
 
         $request = new ServerRequest()->withMethod('PATCH')
-            ->withAttribute(SystemMessengerInterface::class, $messenger)
             ->withAttribute('id', '42')
             ->withParsedBody([
                 'firstName' => 'Jane',
@@ -89,7 +85,7 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
     }
 
     #[Test]
-    public function notifiesFailureWhenCommandFails(): void
+    public function storesFailureResultWithoutNotifying(): void
     {
         $bus = $this->createStub(MessageBusInterface::class);
         $bus->method('handle')->willReturnCallback(
@@ -101,9 +97,9 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         );
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())
-            ->method('danger')
-            ->with('User could not be updated. Please try again.', 0, true);
+        $messenger->expects($this->never())->method('success');
+        $messenger->expects($this->never())->method('danger');
+        $messenger->expects($this->never())->method('warning');
 
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
@@ -136,7 +132,9 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         $response = $middleware->processPatch($request, $handler);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
-        self::assertInstanceOf(CommandResult::class, $capturedRequest?->getAttribute(CommandResult::class));
+        $result = $capturedRequest?->getAttribute(CommandResult::class);
+        self::assertInstanceOf(CommandResult::class, $result);
+        self::assertSame(MessageStatus::Failure, $result?->getStatus());
     }
 
     #[Test]

@@ -12,13 +12,95 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\MiddlewareInterface;
+use Webware\Message\Http\Middleware\NotificationMiddleware;
+use Webware\UserManager\Http\Admin\Middleware\ProcessToggleUserActiveMiddleware;
+use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
+use Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler;
+use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
 use Webware\UserManager\RouteProvider;
+
+use function array_search;
+use function in_array;
+use function is_array;
 
 #[CoversClass(RouteProvider::class)]
 #[CoversMethod(RouteProvider::class, '__construct')]
 #[CoversMethod(RouteProvider::class, 'registerRoutes')]
 final class RouteProviderTest extends TestCase
 {
+    #[Test]
+    public function adminWriteRoutesNotifyCentrallyAfterDispatch(): void
+    {
+        $middleware = $this->createStub(MiddlewareInterface::class);
+
+        /** @var list<array<class-string>> $prepared */
+        $prepared = [];
+
+        $factory = $this->createStub(MiddlewareFactoryInterface::class);
+        $factory->method('prepare')
+            ->willReturnCallback(
+                static function (mixed $pipeline) use (&$prepared, $middleware): MiddlewareInterface {
+                    if (is_array($pipeline)) {
+                        /** @var array<class-string> $pipeline */
+                        $prepared[] = $pipeline;
+                    }
+
+                    return $middleware;
+                },
+            );
+
+        $collector = $this->createStub(RouteCollectorInterface::class);
+        $collector->method('get')
+            ->willReturnCallback(
+                static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => new Route(
+                    $path,
+                    $mw,
+                    ['GET'],
+                    $name,
+                ),
+            );
+        $collector->method('post')
+            ->willReturnCallback(
+                static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => new Route(
+                    $path,
+                    $mw,
+                    ['POST'],
+                    $name,
+                ),
+            );
+        $collector->method('route')
+            ->willReturnCallback(
+                static fn(
+                    string $path,
+                    MiddlewareInterface $mw,
+                    ?array $methods = null,
+                    ?string $name = null,
+                ): Route => new Route($path, $mw, $methods ?? [], $name),
+            );
+
+        $provider = new RouteProvider(
+            routeSegment        : 'user.manager',
+            routeNamePrefix     : 'user.manager.',
+            adminRouteSegment   : 'admin/user.manager',
+            adminRouteNamePrefix: 'admin.user.manager.',
+        );
+
+        $provider->registerRoutes($collector, $factory);
+
+        self::assertSame(
+            NotificationMiddleware::class,
+            $this->middlewareAfter(ProcessUpdateUserMiddleware::class, UpdateUserHandler::class, $prepared),
+        );
+        self::assertSame(
+            NotificationMiddleware::class,
+            $this->middlewareAfter(
+                ProcessToggleUserActiveMiddleware::class,
+                ToggleUserActiveHandler::class,
+                $prepared,
+            ),
+        );
+    }
+
     #[Test]
     public function registersAllPublicAndAdminRoutes(): void
     {
@@ -104,5 +186,30 @@ final class RouteProviderTest extends TestCase
             ],
             $routes,
         );
+    }
+
+    /**
+     * Returns the middleware immediately following $process in the pipeline that
+     * ends with $terminal, or null when that pipeline cannot be located.
+     *
+     * @param list<array<class-string>> $prepared
+     */
+    private function middlewareAfter(string $process, string $terminal, array $prepared): ?string
+    {
+        foreach ($prepared as $pipeline) {
+            if (! in_array($terminal, $pipeline, strict: true)) {
+                continue;
+            }
+
+            $index = array_search($process, $pipeline, strict: true);
+
+            if (false === $index) {
+                return null;
+            }
+
+            return $pipeline[$index + 1] ?? null;
+        }
+
+        return null;
     }
 }

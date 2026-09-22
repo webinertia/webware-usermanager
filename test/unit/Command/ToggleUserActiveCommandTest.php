@@ -20,6 +20,8 @@ final class ToggleUserActiveCommandTest extends TestCase
         $command = new ToggleUserActiveCommand(id: 42);
 
         static::assertSame(42, $command->id);
+        static::assertSame('User status updated.', $command->successMessage);
+        static::assertSame('User status could not be updated. Please try again.', $command->failureMessage);
     }
 
     #[Test]
