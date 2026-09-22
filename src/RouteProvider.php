@@ -30,18 +30,15 @@ use Webware\UserManager\Http\RequestHandler\ResendVerificationHandler;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
 use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
 
-/**
- * @import-type RouteNames from ConfigProvider
- */
+use function rtrim;
+
 final readonly class RouteProvider implements RouteProviderInterface
 {
-    /**
-     * @param RouteNames $routeNames
-     */
     public function __construct(
         private string $routeSegment,
+        private string $routeNamePrefix,
         private string $adminRouteSegment,
-        private array $routeNames,
+        private string $adminRouteNamePrefix,
     ) {}
 
     /**
@@ -60,7 +57,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 DisableBodyMiddleware::class,
                 LoginHandler::class,
             ]),
-            $this->routeNames['session.read'],
+            "{$this->routeNamePrefix}session.read",
         );
 
         $routeCollector->post(
@@ -70,7 +67,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 LoginMiddleware::class,
                 LoginHandler::class,
             ]),
-            $this->routeNames['session.create'],
+            "{$this->routeNamePrefix}session.create",
         );
 
         // Registration routes
@@ -80,7 +77,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 DisableBodyMiddleware::class,
                 RegistrationHandler::class,
             ]),
-            $this->routeNames['register.read'],
+            "{$this->routeNamePrefix}register.read",
         );
 
         $routeCollector->post(
@@ -90,7 +87,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 RegistrationMiddleware::class,
                 RegistrationHandler::class,
             ]),
-            $this->routeNames['register.create'],
+            "{$this->routeNamePrefix}register.create",
         );
 
         $routeCollector->get(
@@ -100,7 +97,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 ProcessVerifyEmailMiddleware::class,
                 VerifyEmailHandler::class,
             ]),
-            $this->routeNames['verify.email.read'],
+            "{$this->routeNamePrefix}verify.email.read",
         );
 
         $routeCollector->get(
@@ -110,7 +107,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 ProcessResendVerificationMiddleware::class,
                 ResendVerificationHandler::class,
             ]),
-            $this->routeNames['resend.verification.read'],
+            "{$this->routeNamePrefix}resend.verification.read",
         );
 
         $routeCollector->post(
@@ -120,7 +117,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 ProcessResendVerificationMiddleware::class,
                 ResendVerificationHandler::class,
             ]),
-            $this->routeNames['resend.verification.create'],
+            "{$this->routeNamePrefix}resend.verification.create",
         );
 
         $routeCollector->get(
@@ -128,7 +125,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             $middlewareFactory->prepare([
                 LogoutHandler::class,
             ]),
-            $this->routeNames['logout.read'],
+            "{$this->routeNamePrefix}logout.read",
         )->setOptions([
             'navigation' => 'user',
             'label'      => 'Logout',
@@ -143,7 +140,10 @@ final readonly class RouteProvider implements RouteProviderInterface
             $middlewareFactory->prepare([
                 UserListHandler::class,
             ]),
-            $this->routeNames['admin.index'],
+            rtrim(
+                string    : $this->adminRouteNamePrefix,
+                characters: '.',
+            ),
         )->setOptions([
             'navigation' => 'admin',
             'label'      => 'Users',
@@ -158,13 +158,16 @@ final readonly class RouteProvider implements RouteProviderInterface
                 CreateUserHandler::class,
             ]),
             ['GET', 'POST'],
-            $this->routeNames['admin.create'],
+            "{$this->adminRouteNamePrefix}create",
         )
             ->setOptions([
                 'navigation' => 'admin',
                 'label'      => 'Create User',
                 'icon'       => 'bi-person-plus-fill',
-                'parent'     => $this->routeNames['admin.index'],
+                'parent'     => rtrim(
+                    string    : $this->adminRouteNamePrefix,
+                    characters: '.',
+                ),
                 'order'      => 10,
             ]);
 
@@ -178,7 +181,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 UpdateUserHandler::class,
             ]),
             ['PATCH'],
-            $this->routeNames['admin.update'],
+            "{$this->adminRouteNamePrefix}update",
         );
 
         // Return the htmx modal for updating a user
@@ -189,7 +192,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 UpdateUserModalHandler::class,
             ]),
             ['GET'],
-            $this->routeNames['admin.update.modal'],
+            "{$this->adminRouteNamePrefix}update.modal",
         );
 
         $routeCollector->post(
@@ -200,7 +203,7 @@ final readonly class RouteProvider implements RouteProviderInterface
                 NotificationMiddleware::class,
                 ToggleUserActiveHandler::class,
             ]),
-            $this->routeNames['admin.toggle.update'],
+            "{$this->adminRouteNamePrefix}toggle.update",
         );
     }
 }
