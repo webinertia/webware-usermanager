@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0088e0256f2fb0ef267833946ef56a7b",
+    "content-hash": "ad0780bfc0f285537610d557cebb87da",
     "packages": [
         {
             "name": "brick/math",
@@ -3744,16 +3744,16 @@
         },
         {
             "name": "webware/webware-log",
-            "version": "1.1.0",
+            "version": "2.0.0-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-log.git",
-                "reference": "185828124c1ef0462ea95004afd1c4d3876d5474"
+                "reference": "a6843fa2cba004614c70b09a9c109e11bd338ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-log/zipball/185828124c1ef0462ea95004afd1c4d3876d5474",
-                "reference": "185828124c1ef0462ea95004afd1c4d3876d5474",
+                "url": "https://api.github.com/repos/webinertia/webware-log/zipball/a6843fa2cba004614c70b09a9c109e11bd338ab1",
+                "reference": "a6843fa2cba004614c70b09a9c109e11bd338ab1",
                 "shasum": ""
             },
             "require": {
@@ -3767,8 +3767,7 @@
             "require-dev": {
                 "infection/infection": "^0.35.0",
                 "laminas/laminas-diactoros": "^3.5",
-                "laminas/laminas-eventmanager": "^3.14",
-                "laminas/laminas-i18n": "^2.31.0",
+                "laminas/laminas-i18n": "^3.0",
                 "laminas/laminas-servicemanager": "^3.23.0 || ^4.0.0",
                 "mezzio/mezzio": "^3.26",
                 "mezzio/mezzio-authentication": "^1.13",
@@ -3817,9 +3816,9 @@
             "support": {
                 "chat": "https://discord.gg/89DfgmuF6C",
                 "issues": "https://github.com/webinertia/webware-log/issues",
-                "source": "https://github.com/webinertia/webware-log/tree/1.1.0"
+                "source": "https://github.com/webinertia/webware-log/tree/2.0.0-alpha.1"
             },
-            "time": "2026-08-22T23:05:37+00:00"
+            "time": "2026-09-18T19:04:55+00:00"
         },
         {
             "name": "webware/webware-mailer",
