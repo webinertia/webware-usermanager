@@ -41,10 +41,10 @@
         "ramsey/uuid": "^4.7",
         "webmozart/assert": "^2.4.1",
         "webware/message-bus": "^2.0.0-beta.3",
-        "webware/webware-admin": "0.1.x-dev",
+        "webware/webware-admin": "1.0.x-dev",
         "webware/webware-core": "^1.0.0-alpha.5",
         "webware/webware-event": "^1.0.0-alpha.2",
-        "webware/webware-htmx": "0.1.x-dev",
+        "webware/webware-htmx": "1.0.x-dev",
         "webware/webware-log": "^2.0.0-alpha.1",
         "webware/webware-mailer": "^1.0.0-beta.5",
         "webware/webware-message": "^1.0.0-beta.2"
@@ -55,7 +55,7 @@
         "phpunit/phpunit": "^13.3",
         "roave/backward-compatibility-check": "^8.21.0",
         "roave/security-advisories": "dev-master",
-        "webware/webware-console": "0.1.x-dev",
+        "webware/webware-console": "1.0.x-dev",
         "webware/webware-tools": "^1.0.0-beta.2"
     },
     "autoload": {
