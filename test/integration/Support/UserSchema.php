@@ -6,14 +6,14 @@ namespace WebwareTestIntegration\UserManager\Support;
 
 use PhpDb\Adapter\AdapterInterface;
 use PhpDb\Sql\Sql;
-use Webware\UserManager\Console\UserSchema as ConsoleUserSchema;
+use Webware\UserManager\Console\Schema\UserSchema as ConsoleUserSchema;
 use Webware\UserManager\Repository\Schema;
 
 use function sprintf;
 
 /**
  * Test-facing helper that executes the production user schema DDL against a
- * live adapter. Delegates to Webware\UserManager\Console\UserSchema so the
+ * live adapter. Delegates to Webware\UserManager\Console\Schema\UserSchema so the
  * integration-test schema cannot drift from the real schema.
  */
 final class UserSchema
