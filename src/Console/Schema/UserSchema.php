@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Webware\UserManager\Console;
+namespace Webware\UserManager\Console\Schema;
 
 use PhpDb\Sql\Argument\Literal as ArgLiteral;
 use PhpDb\Sql\Ddl\Column\Datetime;

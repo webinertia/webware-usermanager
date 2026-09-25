@@ -24,6 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Webware\Core\Role;
+use Webware\UserManager\Console\Schema\UserSchema;
 use Webware\UserManager\Repository\Schema;
 
 use function password_hash;

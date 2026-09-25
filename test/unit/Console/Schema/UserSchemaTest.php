@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WebwareTest\UserManager\Console;
+namespace WebwareTest\UserManager\Console\Schema;
 
 use PhpDb\Adapter\Driver\ConnectionInterface;
 use PhpDb\Adapter\Driver\DriverInterface;
@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\UserManager\Console\Ddl\Column\TinyInteger;
-use Webware\UserManager\Console\UserSchema;
+use Webware\UserManager\Console\Schema\UserSchema;
 
 use function array_keys;
 
