@@ -21,13 +21,13 @@
         // (string) cast on the always-string role option are equivalent mutants:
         // they cannot be observed through CommandTester-based tests.
         "TrueValue": {
-            "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::collectUser::158"]
+            "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::questionFor::230"]
         },
         "FalseValue": {
-            "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::collectUser::159"]
+            "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::questionFor::231"]
         },
         "CastString": {
-            "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::collectUser::162"]
+            "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::resolveRole::241"]
         },
         // Configuration fallbacks (from_email/from_name/base_url/subject defaults
         // and the 86400-second token TTL default) are unobservable without
