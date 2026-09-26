@@ -106,10 +106,9 @@ Integration tests need MySQL and run in the tooling container
   still passed for the recorded gate because it costs nothing and keeps the command
   stable.
 - **`composer test-coverage` has no `--testsuite` filter**, so it runs unit *and*
-  integration. On the host the 6 integration tests error out (the DB hostname `mysql`
-  only resolves inside the compose network) and the run reports `Errors: 6`. It is a
-  container/CI command: CI overrides `TESTS_ADAPTER_MYSQL_HOSTNAME=127.0.0.1` and runs
-  a MySQL service.
+  integration. `TESTS_ADAPTER_MYSQL_HOSTNAME` is `127.0.0.1` everywhere — the compose
+  database publishes 3306 to the host and CI's service publishes the same port — so the
+  same command runs unchanged on the host and in CI.
 - **Container runs leave root-owned artifacts in the workspace**, which silently corrupt
   host measurements: `.phpunit.cache/code-coverage/` (root-owned, causes ~95
   `file_put_contents` permission warnings per host coverage run) and `clover.xml`
