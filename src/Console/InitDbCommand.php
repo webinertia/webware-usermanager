@@ -18,18 +18,22 @@ use Symfony\Component\Console\Exception\InvalidArgumentException as ConsoleInval
 use Symfony\Component\Console\Exception\LogicException as ConsoleLogicException;
 use Symfony\Component\Console\Exception\RuntimeException as ConsoleRuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Webware\Core\Role;
 use Webware\UserManager\Console\Schema\UserSchema;
 use Webware\UserManager\Repository\Schema;
 
+use function implode;
+use function in_array;
 use function password_hash;
 use function sprintf;
+use function str_replace;
 use function strtolower;
+use function ucfirst;
 
 use const PASSWORD_DEFAULT;
 
@@ -50,6 +54,17 @@ final class InitDbCommand extends Command
     ];
 
     /**
+     * The mandatory values, in the order they are asked for when missing.
+     *
+     * A user must be created, so these are declared as required arguments rather
+     * than options: Symfony has no way to mark an option required, and a value
+     * the operator has to give is invisible to anything reading the definition.
+     *
+     * @var list<string>
+     */
+    private const array REQUIRED_ARGUMENTS = ['first-name', 'last-name', 'email', 'password'];
+
+    /**
      * @throws ConsoleLogicException
      */
     public function __construct(
@@ -64,29 +79,24 @@ final class InitDbCommand extends Command
     #[Override]
     protected function configure(): void
     {
-        $this->addOption(
-            name       : 'drop',
-            mode       : InputOption::VALUE_NONE,
-            description: 'Drop the user table before recreating it',
-        );
-        $this->addOption(
+        $this->addArgument(
             name       : 'first-name',
-            mode       : InputOption::VALUE_REQUIRED,
+            mode       : InputArgument::REQUIRED,
             description: 'First name for the seeded user',
         );
-        $this->addOption(
+        $this->addArgument(
             name       : 'last-name',
-            mode       : InputOption::VALUE_REQUIRED,
+            mode       : InputArgument::REQUIRED,
             description: 'Last name for the seeded user',
         );
-        $this->addOption(
+        $this->addArgument(
             name       : 'email',
-            mode       : InputOption::VALUE_REQUIRED,
+            mode       : InputArgument::REQUIRED,
             description: 'Email for the seeded user',
         );
-        $this->addOption(
+        $this->addArgument(
             name       : 'password',
-            mode       : InputOption::VALUE_REQUIRED,
+            mode       : InputArgument::REQUIRED,
             description: 'Password for the seeded user',
         );
         $this->addOption(
@@ -94,6 +104,11 @@ final class InitDbCommand extends Command
             mode       : InputOption::VALUE_REQUIRED,
             description: 'Role for the seeded user',
             default    : Role::Developer->value,
+        );
+        $this->addOption(
+            name       : 'drop',
+            mode       : InputOption::VALUE_NONE,
+            description: 'Drop the user table before recreating it',
         );
     }
 
@@ -121,7 +136,7 @@ final class InitDbCommand extends Command
         $this->executeDdl($sql, $schema->userTable());
 
         $output->writeln('Creating initial user...');
-        $row = $this->collectUser($input, $output);
+        $row = $this->collectUser($input);
         $this->executeInsert($sql, Schema::User->value, $row);
 
         $output->writeln(sprintf('User created: %s — roles: %s', $row['email'], $row['roleId']));
@@ -131,46 +146,47 @@ final class InitDbCommand extends Command
     }
 
     /**
+     * Asks for any mandatory value that was not supplied.
+     *
+     * Symfony runs this before the definition is validated, which is the only
+     * point at which a required argument can still be filled in interactively —
+     * so the command stays usable when run directly with no arguments.
+     *
      * @throws ConsoleInvalidArgumentException
      * @throws ConsoleLogicException
      * @throws ConsoleRuntimeException
+     */
+    #[Override]
+    protected function interact(InputInterface $input, OutputInterface $output): void
+    {
+        $helper = new QuestionHelper();
+
+        foreach (self::REQUIRED_ARGUMENTS as $name) {
+            if (null !== $input->getArgument($name)) {
+                continue;
+            }
+
+            $input->setArgument(
+                name: $name,
+                value: $helper->ask($input, $output, $this->questionFor($name)),
+            );
+        }
+    }
+
+    /**
+     * @throws ConsoleInvalidArgumentException
      * @throws JsonException
      *
      * @return array{roleId: string, firstName: string, lastName: string, email: string, passwordHash: string, active: int}
      */
-    private function collectUser(InputInterface $input, OutputInterface $output): array
+    private function collectUser(InputInterface $input): array
     {
-        $helper = new QuestionHelper();
-
-        $firstName = (string) (
-            $input->getOption('first-name') ?? $helper->ask($input, $output, new Question('First name: '))
-        );
-        $lastName = (string) (
-            $input->getOption('last-name') ?? $helper->ask($input, $output, new Question('Last name: '))
-        );
-        $email    = (string) ($input->getOption('email') ?? $helper->ask($input, $output, new Question('Email: ')));
-        $password = (string) (
-            $input->getOption('password') ?? $helper->ask(
-                $input,
-                $output,
-                new Question('Password: ')->setHidden(true)
-                    ->setHiddenFallback(false),
-            )
-        );
-        $role = (string) (
-            $input->getOption('role') ?? $helper->ask(
-                $input,
-                $output,
-                new ChoiceQuestion('Role:', self::ROLES, Role::Developer->value),
-            )
-        );
-
         return [
-            'roleId'       => $role,
-            'firstName'    => $firstName,
-            'lastName'     => $lastName,
-            'email'        => strtolower($email),
-            'passwordHash' => password_hash($password, PASSWORD_DEFAULT),
+            'roleId'       => $this->resolveRole($input),
+            'firstName'    => (string) $input->getArgument('first-name'),
+            'lastName'     => (string) $input->getArgument('last-name'),
+            'email'        => strtolower((string) $input->getArgument('email')),
+            'passwordHash' => password_hash((string) $input->getArgument('password'), PASSWORD_DEFAULT),
             'active'       => 1,
         ];
     }
@@ -196,5 +212,44 @@ final class InitDbCommand extends Command
         $sql->prepareStatementForSqlObject(
             new InsertIgnore(table: $table)->values($row),
         )->execute();
+    }
+
+    /**
+     * @throws ConsoleLogicException
+     */
+    private function questionFor(string $name): Question
+    {
+        $prompt =
+            ucfirst(str_replace(
+                search : '-',
+                replace: ' ',
+                subject: $name,
+            )) . ': ';
+
+        return match ($name) {
+            'password' => new Question('Password: ')->setHidden(true)
+                ->setHiddenFallback(false),
+            default    => new Question($prompt),
+        };
+    }
+
+    /**
+     * @throws ConsoleInvalidArgumentException
+     */
+    private function resolveRole(InputInterface $input): string
+    {
+        $role = (string) $input->getOption('role');
+
+        if (! in_array(
+            needle  : $role,
+            haystack: self::ROLES,
+            strict  : true,
+        )) {
+            throw new ConsoleInvalidArgumentException(
+                sprintf('Invalid role "%s"; expected one of: %s.', $role, implode(', ', self::ROLES)),
+            );
+        }
+
+        return $role;
     }
 }

@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Tester\CommandTester;
 use Webware\UserManager\Console\InitDbCommand;
 
@@ -28,7 +29,7 @@ use function random_bytes;
 final class InitDbCommandTest extends TestCase
 {
     #[Test]
-    public function configureDefinesCommandNameDescriptionAndOptions(): void
+    public function configureDefinesCommandNameDescriptionArgumentsAndOptions(): void
     {
         $command = new InitDbCommand($this->createStub(AdapterInterface::class));
 
@@ -36,12 +37,15 @@ final class InitDbCommandTest extends TestCase
 
         self::assertSame('user:init-db', $command->getName());
         self::assertSame('Create the user database schema and seed an initial user', $command->getDescription());
+
+        foreach (['first-name', 'last-name', 'email', 'password'] as $name) {
+            self::assertTrue($definition->hasArgument($name));
+            self::assertTrue($definition->getArgument($name)->isRequired());
+            self::assertFalse($definition->hasOption($name));
+        }
+
         self::assertTrue($definition->hasOption('drop'));
         self::assertFalse($definition->getOption('drop')->acceptValue());
-        self::assertTrue($definition->hasOption('first-name'));
-        self::assertTrue($definition->hasOption('last-name'));
-        self::assertTrue($definition->hasOption('email'));
-        self::assertTrue($definition->hasOption('password'));
         self::assertTrue($definition->hasOption('role'));
         self::assertSame('Developer', $definition->getOption('role')->getDefault());
     }
@@ -55,12 +59,7 @@ final class InitDbCommandTest extends TestCase
         ));
 
         $tester = new CommandTester($command);
-        $tester->execute([
-            '--first-name' => 'Joey',
-            '--last-name'  => 'Smith',
-            '--email'      => 'jsmith@example.com',
-            '--password'   => bin2hex(random_bytes(16)),
-        ]);
+        $tester->execute($this->arguments());
 
         self::assertSame(Command::SUCCESS, $tester->getStatusCode());
         self::assertStringContainsString('Creating user schema', $tester->getDisplay());
@@ -79,13 +78,7 @@ final class InitDbCommandTest extends TestCase
         ));
 
         $tester = new CommandTester($command);
-        $tester->execute([
-            '--drop'       => true,
-            '--first-name' => 'Joey',
-            '--last-name'  => 'Smith',
-            '--email'      => 'jsmith@example.com',
-            '--password'   => bin2hex(random_bytes(16)),
-        ]);
+        $tester->execute(['--drop' => true, ...$this->arguments()]);
 
         self::assertSame(Command::SUCCESS, $tester->getStatusCode());
         self::assertStringContainsString('Dropping existing user table', $tester->getDisplay());
@@ -105,10 +98,10 @@ final class InitDbCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $tester->execute([
-            '--first-name' => 'Joey',
-            '--last-name'  => 'Smith',
-            '--email'      => 'JSMITH@EXAMPLE.COM',
-            '--password'   => bin2hex(random_bytes(16)),
+            'first-name' => 'Joey',
+            'last-name'  => 'Smith',
+            'email'      => 'JSMITH@EXAMPLE.COM',
+            'password'   => bin2hex(random_bytes(16)),
         ]);
 
         self::assertSame(Command::SUCCESS, $tester->getStatusCode());
@@ -121,7 +114,7 @@ final class InitDbCommandTest extends TestCase
     }
 
     #[Test]
-    public function roleOptionDefaultTakesPrecedenceOverPrompt(): void
+    public function interactAsksForEveryMissingArgument(): void
     {
         $capturedInsert = null;
         $command        = new InitDbCommand($this->createAdapter(
@@ -131,18 +124,106 @@ final class InitDbCommandTest extends TestCase
         ));
 
         $tester = new CommandTester($command);
-        $tester->setInputs(['Member']);
+        $tester->setInputs(['Joey', 'Smith', 'JSMITH@EXAMPLE.COM', bin2hex(random_bytes(16))]);
+        $tester->execute([], ['interactive' => true]);
+
+        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
+        self::assertNotNull($capturedInsert);
+
+        $row = $this->insertRow($capturedInsert);
+        self::assertSame('Joey', $row['firstName']);
+        self::assertSame('Smith', $row['lastName']);
+        self::assertSame('jsmith@example.com', $row['email']);
+    }
+
+    #[Test]
+    public function interactSkipsArgumentsThatWereSupplied(): void
+    {
+        $capturedInsert = null;
+        $command        = new InitDbCommand($this->createAdapter(
+            queryCalls         : 1,
+            statementExecutions: 1,
+            capturedInsert     : $capturedInsert,
+        ));
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['jsmith@example.com', bin2hex(random_bytes(16))]);
         $tester->execute([
-            '--first-name' => 'Joey',
-            '--last-name'  => 'Smith',
-            '--email'      => 'jsmith@example.com',
-            '--password'   => bin2hex(random_bytes(16)),
+            'first-name' => 'Joey',
+            'last-name'  => 'Smith',
         ], ['interactive' => true]);
 
         self::assertSame(Command::SUCCESS, $tester->getStatusCode());
         self::assertNotNull($capturedInsert);
 
+        $row = $this->insertRow($capturedInsert);
+        self::assertSame('Joey', $row['firstName']);
+        self::assertSame('Smith', $row['lastName']);
+        self::assertSame('jsmith@example.com', $row['email']);
+    }
+
+    #[Test]
+    public function invalidRoleIsRejected(): void
+    {
+        $command = new InitDbCommand($this->createAdapter(
+            queryCalls         : 1,
+            statementExecutions: 0,
+        ));
+
+        $tester = new CommandTester($command);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $tester->execute(['--role' => 'Wizard', ...$this->arguments()]);
+    }
+
+    #[Test]
+    public function roleOptionDefaultsToDeveloper(): void
+    {
+        $capturedInsert = null;
+        $command        = new InitDbCommand($this->createAdapter(
+            queryCalls         : 1,
+            statementExecutions: 1,
+            capturedInsert     : $capturedInsert,
+        ));
+
+        $tester = new CommandTester($command);
+        $tester->execute($this->arguments());
+
+        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
+        self::assertNotNull($capturedInsert);
         self::assertSame('Developer', $this->insertRow($capturedInsert)['roleId']);
+    }
+
+    #[Test]
+    public function roleOptionIsHonoured(): void
+    {
+        $capturedInsert = null;
+        $command        = new InitDbCommand($this->createAdapter(
+            queryCalls         : 1,
+            statementExecutions: 1,
+            capturedInsert     : $capturedInsert,
+        ));
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--role' => 'Member', ...$this->arguments()]);
+
+        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
+        self::assertNotNull($capturedInsert);
+        self::assertSame('Member', $this->insertRow($capturedInsert)['roleId']);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function arguments(): array
+    {
+        return [
+            'first-name' => 'Joey',
+            'last-name'  => 'Smith',
+            'email'      => 'jsmith@example.com',
+            'password'   => bin2hex(random_bytes(16)),
+        ];
     }
 
     private function createAdapter(
