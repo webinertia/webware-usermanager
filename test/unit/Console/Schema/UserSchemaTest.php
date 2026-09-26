@@ -58,6 +58,7 @@ final class UserSchemaTest extends TestCase
 
         self::assertInstanceOf(Varchar::class, $columns[1]);
         self::assertSame('roleId', $columns[1]->getName());
+        self::assertSame(50, $columns[1]->getLength());
         self::assertFalse($columns[1]->isNullable());
 
         self::assertInstanceOf(Varchar::class, $columns[2]);
