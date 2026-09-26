@@ -23,11 +23,11 @@
 #
 # Packages whose tests need MySQL uncomment the `mysql` service below (and the
 # `phpmyadmin` web UI if wanted), plus the `depends_on` block on `tooling`. The
-# `mysql` service mirrors the `db-image` package parameter used by CI, and is
-# reachable from `tooling` as host `mysql` on port 3306 — matching the PhpDb
-# `mysql.local.php` connection convention. Packages that need a different
-# engine add an equivalent service here (postgres, mariadb, ...) mirroring
-# their own `db-image` parameter.
+# `mysql` service mirrors the `db-image` package parameter used by CI and
+# publishes 3306 to the host, so PHP — the app, the CLI and the test suite —
+# reaches it at `127.0.0.1`, the same value CI uses. Packages that need a
+# different engine add an equivalent service here (postgres, mariadb, ...)
+# mirroring their own `db-image` parameter.
 # ---------------------------------------------------------------------------
 
 services:
@@ -77,8 +77,8 @@ services:
   #
   # Mirrors the `db-image` / `db-env-json` / `db-port` Package Parameters in
   # the spec so the dev database matches CI. Point the package's local DB
-  # config (e.g. config/autoload/mysql.local.php) at host `mysql`, port 3306,
-  # using the credentials below.
+  # config (e.g. config/autoload/mysql.local.php) at host `127.0.0.1`, port
+  # 3306, using the credentials below.
   # -------------------------------------------------------------------------
   mysql:
     image: mysql:9.7
