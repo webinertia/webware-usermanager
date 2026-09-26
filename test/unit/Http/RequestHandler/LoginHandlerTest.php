@@ -85,6 +85,7 @@ final class LoginHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
+        self::assertSame(200, $response->getStatusCode());
         self::assertSame('/', $response->getHeaderLine(Header::Redirect->value));
     }
 }

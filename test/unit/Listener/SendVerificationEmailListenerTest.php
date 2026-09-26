@@ -30,6 +30,7 @@ final class SendVerificationEmailListenerTest extends TestCase
     {
         $dispatched = null;
         $result     = $this->createStub(CommandResultInterface::class);
+        $event      = $this->event();
 
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus->expects($this->once())
@@ -40,9 +41,18 @@ final class SendVerificationEmailListenerTest extends TestCase
                 return $result;
             });
 
-        $listener = $this->listener(messageBus: $messageBus);
+        $urlHelper = $this->createMock(UrlHelper::class);
+        $urlHelper->expects($this->once())
+            ->method('__invoke')
+            ->with('user.manager.verify.email.read', ['token' => $event->getToken()])
+            ->willReturn('/user/verify-email');
 
-        $listener($this->event());
+        $listener = $this->listener(
+            messageBus: $messageBus,
+            urlHelper : $urlHelper,
+        );
+
+        $listener($event);
 
         if (! $dispatched instanceof SendVerificationEmailCommand) {
             static::fail('Expected a SendVerificationEmailCommand to be dispatched.');
@@ -68,16 +78,24 @@ final class SendVerificationEmailListenerTest extends TestCase
         return new SendVerificationEmailEvent($command);
     }
 
-    private function listener(?MessageBusInterface $messageBus = null): SendVerificationEmailListener
-    {
+    /**
+     * The base URL carries a trailing slash on purpose: trimming it is the
+     * listener's job, so the fixture has to give it something to trim.
+     */
+    private function listener(
+        ?MessageBusInterface $messageBus = null,
+        ?UrlHelper $urlHelper = null,
+    ): SendVerificationEmailListener {
         $messageBus ??= $this->createStub(MessageBusInterface::class);
 
-        $urlHelper = $this->createStub(UrlHelper::class);
-        $urlHelper->method('__invoke')->willReturn('/user/verify-email');
+        if (! $urlHelper instanceof UrlHelper) {
+            $urlHelper = $this->createStub(UrlHelper::class);
+            $urlHelper->method('__invoke')->willReturn('/user/verify-email');
+        }
 
         return new SendVerificationEmailListener(
             messageBus         : $messageBus,
-            baseUrl            : 'https://example.com',
+            baseUrl            : 'https://example.com/',
             verificationSubject: 'Verify your email',
             userUrl            : new UserUrl($urlHelper, 'user.manager.'),
         );
