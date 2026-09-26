@@ -136,6 +136,56 @@ final class InitDbCommandTest extends TestCase
         self::assertSame('jsmith@example.com', $row['email']);
     }
 
+    /**
+     * The password question is hidden, and Symfony's hidden-input reader closes
+     * the prompt line itself because the typed value is never echoed. That
+     * newline is the one thing separating the hidden question from the derived
+     * one — their prompt text is identical — so it is what pins the arm.
+     */
+    #[Test]
+    public function interactHidesThePasswordPrompt(): void
+    {
+        $command = new InitDbCommand($this->createAdapter(
+            queryCalls         : 1,
+            statementExecutions: 1,
+        ));
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['Joey', 'Smith', 'JSMITH@EXAMPLE.COM', bin2hex(random_bytes(16))]);
+        $tester->execute([], ['interactive' => true]);
+
+        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
+
+        self::assertStringContainsString("Password: \n", $tester->getDisplay());
+    }
+
+    /**
+     * The prompt is derived from the argument name, so it is observable in the
+     * command's output. This pins the derivation itself — dash to space, first
+     * letter capitalized, colon suffix — rather than only the returned value,
+     * which the other interact tests already cover.
+     */
+    #[Test]
+    public function interactPromptsWithTheDerivedArgumentName(): void
+    {
+        $command = new InitDbCommand($this->createAdapter(
+            queryCalls         : 1,
+            statementExecutions: 1,
+        ));
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['Joey', 'Smith', 'JSMITH@EXAMPLE.COM', bin2hex(random_bytes(16))]);
+        $tester->execute([], ['interactive' => true]);
+
+        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
+
+        $display = $tester->getDisplay();
+
+        self::assertStringContainsString('First name: ', $display);
+        self::assertStringContainsString('Last name: ', $display);
+        self::assertStringContainsString('Email: ', $display);
+    }
+
     #[Test]
     public function interactSkipsArgumentsThatWereSupplied(): void
     {
