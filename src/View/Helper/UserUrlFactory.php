@@ -20,7 +20,7 @@ final readonly class UserUrlFactory
     {
         return new UserUrl(
             urlHelper      : $container->get(UrlHelper::class),
-            routeNamePrefix: Configuration::getRouteNamePrefix($container, self::class),
+            routeNamePrefix: Configuration::getRouteNamePrefix(),
         );
     }
 }

@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 use Webware\Admin\Container\Configuration as AdminConfiguration;
-use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Container\RouteProviderFactory;
 use Webware\UserManager\RouteProvider;
 
@@ -29,26 +28,17 @@ final class RouteProviderFactoryTest extends TestCase
                 [
                     'config',
                     [
-                        AdminConfiguration::CONFIG_KEY => [
-                            'admin_route_segment'     => 'admin',
-                            'admin_route_name_prefix' => 'admin.',
-                        ],
-                        Configuration::CONFIG_KEY      => [
-                            'route_segment'           => 'user.manager',
-                            'route_name_prefix'       => 'user.manager.',
-                            'admin_route_segment'     => 'user.manager',
-                            'admin_route_name_prefix' => 'user.manager.',
-                        ],
+                        AdminConfiguration::CONFIG_KEY => [AdminConfiguration::ADMIN_NAME_KEY => 'backoffice'],
                     ],
                 ],
             ]);
 
         $provider = (new RouteProviderFactory())($container);
 
-        self::assertSame('user.manager', $this->property($provider, 'routeSegment'));
-        self::assertSame('user.manager.', $this->property($provider, 'routeNamePrefix'));
-        self::assertSame('admin/user.manager', $this->property($provider, 'adminRouteSegment'));
-        self::assertSame('admin.user.manager.', $this->property($provider, 'adminRouteNamePrefix'));
+        self::assertSame('user', $this->property($provider, 'routeSegment'));
+        self::assertSame('user.', $this->property($provider, 'routeNamePrefix'));
+        self::assertSame('backoffice/user', $this->property($provider, 'adminRouteSegment'));
+        self::assertSame('backoffice.user.', $this->property($provider, 'adminRouteNamePrefix'));
     }
 
     private function property(RouteProvider $provider, string $name): string

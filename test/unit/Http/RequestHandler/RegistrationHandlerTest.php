@@ -27,7 +27,7 @@ final class RegistrationHandlerTest extends TestCase
     {
         $handler = new RegistrationHandler(
             template: $this->createStub(TemplateRendererInterface::class),
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $result  = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Success, null);
@@ -36,7 +36,7 @@ final class RegistrationHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         self::assertInstanceOf(RedirectResponse::class, $response);
-        self::assertSame('/user.manager/login', $response->getHeaderLine('Location'));
+        self::assertSame('/user/login', $response->getHeaderLine('Location'));
     }
 
     #[Test]
@@ -50,7 +50,7 @@ final class RegistrationHandlerTest extends TestCase
 
         $handler = new RegistrationHandler(
             template: $template,
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $result  = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Failure, 'nope');
@@ -72,7 +72,7 @@ final class RegistrationHandlerTest extends TestCase
 
         $handler = new RegistrationHandler(
             template: $template,
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $response = $handler->handle(new ServerRequest());

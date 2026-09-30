@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 use Webware\Admin\AdminInterface;
-use Webware\Core\UserInterface;
+use Webware\Admin\Container\Configuration as AdminConfiguration;
 use Webware\UserManager\View\Helper\UserAdminUrl;
 use Webware\UserManager\View\Helper\UserAdminUrlFactory;
 
@@ -33,8 +33,7 @@ final class UserAdminUrlFactoryTest extends TestCase
                 [
                     'config',
                     [
-                        AdminInterface::class => ['admin_route_name_prefix' => 'admin.'],
-                        UserInterface::class  => ['admin_route_name_prefix' => 'user.manager.'],
+                        AdminInterface::class => [AdminConfiguration::ADMIN_NAME_KEY => 'backoffice'],
                     ],
                 ],
             ]);
@@ -42,7 +41,7 @@ final class UserAdminUrlFactoryTest extends TestCase
         $helper = (new UserAdminUrlFactory())($container);
 
         self::assertInstanceOf(UserAdminUrl::class, $helper);
-        self::assertSame('admin.user.manager.', $this->routeNamePrefix($helper));
+        self::assertSame('backoffice.user.', $this->routeNamePrefix($helper));
     }
 
     private function routeNamePrefix(UserAdminUrl $helper): string

@@ -44,7 +44,7 @@ final class SendVerificationEmailListenerTest extends TestCase
         $urlHelper = $this->createMock(UrlHelper::class);
         $urlHelper->expects($this->once())
             ->method('__invoke')
-            ->with('user.manager.verify.email.read', ['token' => $event->getToken()])
+            ->with('user.verify.email.read', ['token' => $event->getToken()])
             ->willReturn('/user/verify-email');
 
         $listener = $this->listener(
@@ -97,7 +97,7 @@ final class SendVerificationEmailListenerTest extends TestCase
             messageBus         : $messageBus,
             baseUrl            : 'https://example.com/',
             verificationSubject: 'Verify your email',
-            userUrl            : new UserUrl($urlHelper, 'user.manager.'),
+            userUrl            : new UserUrl($urlHelper, 'user.'),
         );
     }
 }

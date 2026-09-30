@@ -24,7 +24,7 @@ final class ResendVerificationHandlerTest extends TestCase
     {
         $handler = new ResendVerificationHandler(
             template: $this->createStub(TemplateRendererInterface::class),
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $request = new ServerRequest()->withAttribute(
@@ -35,7 +35,7 @@ final class ResendVerificationHandlerTest extends TestCase
         $response = $handler->handle($request);
 
         static::assertInstanceOf(RedirectResponse::class, $response);
-        static::assertSame('/user.manager/login', $response->getHeaderLine('Location'));
+        static::assertSame('/user/login', $response->getHeaderLine('Location'));
     }
 
     #[Test]
@@ -49,7 +49,7 @@ final class ResendVerificationHandlerTest extends TestCase
 
         $handler = new ResendVerificationHandler(
             template: $template,
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $response = $handler->handle(new ServerRequest());
@@ -68,7 +68,7 @@ final class ResendVerificationHandlerTest extends TestCase
 
         $handler = new ResendVerificationHandler(
             template: $template,
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $request = new ServerRequest()->withAttribute(

@@ -24,13 +24,13 @@ final class VerifyEmailHandlerTest extends TestCase
     {
         $handler = new VerifyEmailHandler(
             template: $this->createStub(TemplateRendererInterface::class),
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $response = $handler->handle(new ServerRequest());
 
         static::assertInstanceOf(RedirectResponse::class, $response);
-        static::assertSame('/user.manager/login', $response->getHeaderLine('Location'));
+        static::assertSame('/user/login', $response->getHeaderLine('Location'));
     }
 
     #[Test]
@@ -44,7 +44,7 @@ final class VerifyEmailHandlerTest extends TestCase
 
         $handler = new VerifyEmailHandler(
             template: $template,
-            loginUrl: '/user.manager/login',
+            loginUrl: '/user/login',
         );
 
         $request = new ServerRequest()->withAttribute(

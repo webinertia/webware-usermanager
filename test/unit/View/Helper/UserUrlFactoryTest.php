@@ -11,7 +11,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
-use Webware\Core\UserInterface;
 use Webware\UserManager\View\Helper\UserUrl;
 use Webware\UserManager\View\Helper\UserUrlFactory;
 
@@ -25,17 +24,12 @@ final class UserUrlFactoryTest extends TestCase
         $urlHelper = $this->createStub(UrlHelper::class);
 
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('has')->willReturnMap([['config', true]]);
-        $container->method('get')
-            ->willReturnMap([
-                [UrlHelper::class, $urlHelper],
-                ['config', [UserInterface::class => ['route_name_prefix' => 'user.manager.']]],
-            ]);
+        $container->method('get')->willReturnMap([[UrlHelper::class, $urlHelper]]);
 
         $helper = (new UserUrlFactory())($container);
 
         self::assertInstanceOf(UserUrl::class, $helper);
-        self::assertSame('user.manager.', $this->routeNamePrefix($helper));
+        self::assertSame('user.', $this->routeNamePrefix($helper));
     }
 
     private function routeNamePrefix(UserUrl $helper): string

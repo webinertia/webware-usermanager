@@ -24,24 +24,24 @@ final class LogoutHandlerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session->expects($this->once())->method('clear');
 
-        $handler = new LogoutHandler(loginUrl: '/user.manager/login');
+        $handler = new LogoutHandler(loginUrl: '/user/login');
 
         $request = new ServerRequest()->withAttribute(SessionInterface::class, $session);
 
         $response = $handler->handle($request);
 
         self::assertInstanceOf(RedirectResponse::class, $response);
-        self::assertSame('/user.manager/login', $response->getHeaderLine('Location'));
+        self::assertSame('/user/login', $response->getHeaderLine('Location'));
     }
 
     #[Test]
     public function redirectsToLoginWhenNoSessionPresent(): void
     {
-        $handler = new LogoutHandler(loginUrl: '/user.manager/login');
+        $handler = new LogoutHandler(loginUrl: '/user/login');
 
         $response = $handler->handle(new ServerRequest());
 
         self::assertInstanceOf(RedirectResponse::class, $response);
-        self::assertSame('/user.manager/login', $response->getHeaderLine('Location'));
+        self::assertSame('/user/login', $response->getHeaderLine('Location'));
     }
 }

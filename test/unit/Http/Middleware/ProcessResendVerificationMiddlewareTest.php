@@ -200,7 +200,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         $urlHelper->expects($this->once())
             ->method('__invoke')
             ->with(
-                'user.manager.verify.email.read',
+                'user.verify.email.read',
                 static::callback(static fn(array $params): bool => '' !== ($params['token'] ?? '')),
                 [],
                 null,
@@ -287,7 +287,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
 
         new ProcessResendVerificationMiddleware(
             messageBus         : $bus,
-            userUrl            : new UserUrl($urlHelper, 'user.manager.'),
+            userUrl            : new UserUrl($urlHelper, 'user.'),
             baseUrl            : 'https://example.com/',
             verificationSubject: 'Verify your email',
         )->process($request, $handler);

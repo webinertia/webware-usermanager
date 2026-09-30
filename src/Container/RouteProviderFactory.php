@@ -16,19 +16,13 @@ final readonly class RouteProviderFactory
      */
     public function __invoke(ContainerInterface $container): RouteProvider
     {
-        $routeSegment    = Configuration::getRouteSegment($container, self::class);
-        $routeNamePrefix = Configuration::getRouteNamePrefix($container, self::class);
-
-        $adminBaseRouteSegment      = AdminConfiguration::getAdminRouteSegment($container, self::class);
-        $moduleAdminRouteSegment    = Configuration::getAdminRouteSegment($container, self::class);
-        $adminBaseRouteNamePrefix   = AdminConfiguration::getAdminRouteNamePrefix($container, self::class);
-        $moduleAdminRouteNamePrefix = Configuration::getAdminRouteNamePrefix($container, self::class);
+        $adminName = AdminConfiguration::getAdminName($container, self::class);
 
         return new RouteProvider(
-            $routeSegment,
-            $routeNamePrefix,
-            "{$adminBaseRouteSegment}/{$moduleAdminRouteSegment}",
-            $adminBaseRouteNamePrefix . $moduleAdminRouteNamePrefix,
+            routeSegment        : Configuration::getRouteSegment(),
+            routeNamePrefix     : Configuration::getRouteNamePrefix(),
+            adminRouteSegment   : Configuration::getAdminRouteSegment($adminName),
+            adminRouteNamePrefix: Configuration::getAdminRouteNamePrefix($adminName),
         );
     }
 }

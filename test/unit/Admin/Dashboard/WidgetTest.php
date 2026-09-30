@@ -18,7 +18,7 @@ final class WidgetTest extends TestCase
     public function exposesWidgetMetadataAndResource(): void
     {
         $widget = new Widget(
-            resourceId   : 'user.manager',
+            resourceId   : 'user',
             totalUsers   : 12,
             activeUsers  : 8,
             inactiveUsers: 4,
@@ -28,7 +28,7 @@ final class WidgetTest extends TestCase
         self::assertSame('read', $widget->privilege);
         self::assertSame('user::admin-widget', $widget->template);
         self::assertSame(5, $widget->order);
-        self::assertSame('user.manager', $widget->getResourceId());
+        self::assertSame('user', $widget->getResourceId());
         self::assertSame(12, $widget->totalUsers);
         self::assertSame(8, $widget->activeUsers);
         self::assertSame(4, $widget->inactiveUsers);
