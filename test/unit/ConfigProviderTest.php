@@ -228,7 +228,7 @@ final class ConfigProviderTest extends TestCase
                         dirname(
                             path  : __DIR__,
                             levels: 2,
-                        ) . '/src/../templates/user',
+                        ) . '/src/../templates/default/user',
                     ],
                 ],
             ],

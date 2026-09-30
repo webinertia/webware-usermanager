@@ -256,7 +256,7 @@ final class ConfigProvider
     {
         return [
             'paths' => [
-                'user' => [__DIR__ . '/../templates/user'],
+                'user' => [__DIR__ . '/../templates/default/user'],
             ],
         ];
     }
