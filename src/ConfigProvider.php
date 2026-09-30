@@ -29,8 +29,7 @@ use function rtrim;
  * @type AclConfig = array{
  *     roles: array<string, list<string>>,
  *     resources: array<string, bool>,
- *     allow: array<string, array<string, list<mixed>>>,
- *     deny: array<string, array<string, list<mixed>>>
+ *     rule_seed_providers: list<class-string>
  * }
  * @type AuthenticationConfig = array<string, non-empty-string>
  * @type DefaultConfig = array<string, non-empty-string>
@@ -78,11 +77,11 @@ final class ConfigProvider
         $admin = Container\Configuration::getAdminRouteNamePrefix(AdminConfiguration::ADMIN_NAME);
 
         return [
-            'roles'     => [
+            'roles'               => [
                 Role::Guest->value  => [],
                 Role::Member->value => [Role::Guest->value],
             ],
-            'resources' => [
+            'resources'           => [
                 "{$public}session.read"               => true,
                 "{$public}session.create"             => true,
                 "{$public}register.read"              => true,
@@ -97,36 +96,8 @@ final class ConfigProvider
                 "{$admin}update"                      => true,
                 "{$admin}toggle.update"               => true,
             ],
-            'allow'     => [
-                Role::Guest->value         => [
-                    "{$public}session.read"               => [],
-                    "{$public}session.create"             => [],
-                    "{$public}register.read"              => [],
-                    "{$public}register.create"            => [],
-                    "{$public}verify.email.read"          => [],
-                    "{$public}resend.verification.read"   => [],
-                    "{$public}resend.verification.create" => [],
-                ],
-                Role::Member->value        => [
-                    "{$public}logout.read" => [],
-                ],
-                Role::Administrator->value => [
-                    rtrim($admin, characters: '.') => [],
-                    "{$admin}create"               => [],
-                    "{$admin}update"               => [],
-                    "{$admin}toggle.update"        => [],
-                ],
-            ],
-            'deny'      => [
-                Role::Member->value => [
-                    "{$public}session.read"               => [],
-                    "{$public}session.create"             => [],
-                    "{$public}register.read"              => [],
-                    "{$public}register.create"            => [],
-                    "{$public}verify.email.read"          => [],
-                    "{$public}resend.verification.read"   => [],
-                    "{$public}resend.verification.create" => [],
-                ],
+            'rule_seed_providers' => [
+                Acl\RuleSeeds::class,
             ],
         ];
     }
@@ -222,7 +193,8 @@ final class ConfigProvider
                 RegisterWidgetListener::class                                  => RegisterWidgetListenerFactory::class,
             ],
             'invokables' => [
-                Entity\User::class => Entity\User::class,
+                Entity\User::class   => Entity\User::class,
+                Acl\RuleSeeds::class => Acl\RuleSeeds::class,
             ],
         ];
     }

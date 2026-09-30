@@ -14,6 +14,7 @@ use Webware\Core\AclInterface;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\ConfigProvider as BusProvider;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Acl\RuleSeeds;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Command\ActivateUserCommand;
 use Webware\UserManager\Command\CreateUserCommand;
@@ -70,11 +71,11 @@ final class ConfigProviderTest extends TestCase
     {
         self::assertSame(
             [
-                'roles'     => [
+                'roles'               => [
                     'Guest'  => [],
                     'Member' => ['Guest'],
                 ],
-                'resources' => [
+                'resources'           => [
                     'user.session.read'               => true,
                     'user.session.create'             => true,
                     'user.register.read'              => true,
@@ -89,37 +90,7 @@ final class ConfigProviderTest extends TestCase
                     'admin.user.update'               => true,
                     'admin.user.toggle.update'        => true,
                 ],
-                'allow'     => [
-                    'Guest'         => [
-                        'user.session.read'               => [],
-                        'user.session.create'             => [],
-                        'user.register.read'              => [],
-                        'user.register.create'            => [],
-                        'user.verify.email.read'          => [],
-                        'user.resend.verification.read'   => [],
-                        'user.resend.verification.create' => [],
-                    ],
-                    'Member'        => [
-                        'user.logout.read' => [],
-                    ],
-                    'Administrator' => [
-                        'admin.user'               => [],
-                        'admin.user.create'        => [],
-                        'admin.user.update'        => [],
-                        'admin.user.toggle.update' => [],
-                    ],
-                ],
-                'deny'      => [
-                    'Member' => [
-                        'user.session.read'               => [],
-                        'user.session.create'             => [],
-                        'user.register.read'              => [],
-                        'user.register.create'            => [],
-                        'user.verify.email.read'          => [],
-                        'user.resend.verification.read'   => [],
-                        'user.resend.verification.create' => [],
-                    ],
-                ],
+                'rule_seed_providers' => [RuleSeeds::class],
             ],
             $this->provider->getAclConfig(),
         );
@@ -171,6 +142,7 @@ final class ConfigProviderTest extends TestCase
         self::assertSame(UserFactory::class, $deps['factories'][UserInterface::class]);
         self::assertArrayNotHasKey(User::class, $deps['factories']);
         self::assertArrayHasKey(User::class, $deps['invokables']);
+        self::assertArrayHasKey(RuleSeeds::class, $deps['invokables']);
         self::assertArrayHasKey(InitDbCommand::class, $deps['factories']);
     }
 
