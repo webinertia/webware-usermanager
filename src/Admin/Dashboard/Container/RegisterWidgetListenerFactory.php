@@ -22,11 +22,9 @@ final readonly class RegisterWidgetListenerFactory
      */
     public function __invoke(ContainerInterface $container): RegisterWidgetListener
     {
-        $resourceId = rtrim(
-            AdminConfiguration::getAdminRouteNamePrefix($container, self::class)
-                . Configuration::getAdminRouteNamePrefix($container, self::class),
-            characters: '.',
-        );
+        $adminName = AdminConfiguration::getAdminName($container, self::class);
+
+        $resourceId = rtrim(Configuration::getAdminRouteNamePrefix($adminName), characters: '.');
 
         return new RegisterWidgetListener(
             resourceId: $resourceId,

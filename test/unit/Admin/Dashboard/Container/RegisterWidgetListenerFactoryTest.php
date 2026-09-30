@@ -17,7 +17,6 @@ use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Admin\Dashboard\Widget;
-use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Query\FetchUsersQuery;
 
 use function iterator_to_array;
@@ -56,7 +55,7 @@ final class RegisterWidgetListenerFactoryTest extends TestCase
 
         static::assertCount(1, $widgets);
         static::assertInstanceOf(Widget::class, $widgets[0]);
-        static::assertSame('admin.user.manager', $widgets[0]->resourceId);
+        static::assertSame('backoffice.user', $widgets[0]->resourceId);
     }
 
     private function configuredContainer(MessageBusInterface $bus): ContainerInterface
@@ -68,8 +67,7 @@ final class RegisterWidgetListenerFactoryTest extends TestCase
                 [
                     'config',
                     [
-                        AdminConfiguration::CONFIG_KEY => ['admin_route_name_prefix' => 'admin.'],
-                        Configuration::CONFIG_KEY      => ['admin_route_name_prefix' => 'user.manager.'],
+                        AdminConfiguration::CONFIG_KEY => [AdminConfiguration::ADMIN_NAME_KEY => 'backoffice'],
                     ],
                 ],
                 [MessageBusInterface::class, $bus],

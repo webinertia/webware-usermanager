@@ -75,49 +75,49 @@ final class ConfigProviderTest extends TestCase
                     'Member' => ['Guest'],
                 ],
                 'resources' => [
-                    'user.manager.session.read'                => true,
-                    'user.manager.session.create'              => true,
-                    'user.manager.register.read'               => true,
-                    'user.manager.register.create'             => true,
-                    'user.manager.verify.email.read'           => true,
-                    'user.manager.resend.verification.read'    => true,
-                    'user.manager.resend.verification.create'  => true,
-                    'user.manager.logout.read'                 => true,
-                    'user.manager.account.read'                => true,
-                    'webware.admin.user.manager'               => true,
-                    'webware.admin.user.manager.create'        => true,
-                    'webware.admin.user.manager.update'        => true,
-                    'webware.admin.user.manager.toggle.update' => true,
+                    'user.session.read'               => true,
+                    'user.session.create'             => true,
+                    'user.register.read'              => true,
+                    'user.register.create'            => true,
+                    'user.verify.email.read'          => true,
+                    'user.resend.verification.read'   => true,
+                    'user.resend.verification.create' => true,
+                    'user.logout.read'                => true,
+                    'user.account.read'               => true,
+                    'admin.user'                      => true,
+                    'admin.user.create'               => true,
+                    'admin.user.update'               => true,
+                    'admin.user.toggle.update'        => true,
                 ],
                 'allow'     => [
                     'Guest'         => [
-                        'user.manager.session.read'               => [],
-                        'user.manager.session.create'             => [],
-                        'user.manager.register.read'              => [],
-                        'user.manager.register.create'            => [],
-                        'user.manager.verify.email.read'          => [],
-                        'user.manager.resend.verification.read'   => [],
-                        'user.manager.resend.verification.create' => [],
+                        'user.session.read'               => [],
+                        'user.session.create'             => [],
+                        'user.register.read'              => [],
+                        'user.register.create'            => [],
+                        'user.verify.email.read'          => [],
+                        'user.resend.verification.read'   => [],
+                        'user.resend.verification.create' => [],
                     ],
                     'Member'        => [
-                        'user.manager.logout.read' => [],
+                        'user.logout.read' => [],
                     ],
                     'Administrator' => [
-                        'webware.admin.user.manager'               => [],
-                        'webware.admin.user.manager.create'        => [],
-                        'webware.admin.user.manager.update'        => [],
-                        'webware.admin.user.manager.toggle.update' => [],
+                        'admin.user'               => [],
+                        'admin.user.create'        => [],
+                        'admin.user.update'        => [],
+                        'admin.user.toggle.update' => [],
                     ],
                 ],
                 'deny'      => [
                     'Member' => [
-                        'user.manager.session.read'               => [],
-                        'user.manager.session.create'             => [],
-                        'user.manager.register.read'              => [],
-                        'user.manager.register.create'            => [],
-                        'user.manager.verify.email.read'          => [],
-                        'user.manager.resend.verification.read'   => [],
-                        'user.manager.resend.verification.create' => [],
+                        'user.session.read'               => [],
+                        'user.session.create'             => [],
+                        'user.register.read'              => [],
+                        'user.register.create'            => [],
+                        'user.verify.email.read'          => [],
+                        'user.resend.verification.read'   => [],
+                        'user.resend.verification.create' => [],
                     ],
                 ],
             ],
@@ -132,7 +132,7 @@ final class ConfigProviderTest extends TestCase
 
         self::assertSame('email', $config['username']);
         self::assertSame('password', $config['password']);
-        self::assertSame('/user.manager/login', $config['redirect']);
+        self::assertSame('/user/login', $config['redirect']);
         self::assertSame('/', $config['post_login_redirect']);
     }
 
@@ -156,11 +156,7 @@ final class ConfigProviderTest extends TestCase
     {
         $config = $this->provider->getDefaultConfig();
 
-        self::assertSame('user.manager', $config['route_segment']);
-        self::assertSame('user.manager.', $config['route_name_prefix']);
-        self::assertSame('user.manager', $config['admin_route_segment']);
-        self::assertSame('user.manager.', $config['admin_route_name_prefix']);
-        self::assertSame('/user.manager/login', $config['login_path']);
+        self::assertSame(['login_path' => '/user/login'], $config);
     }
 
     #[Test]
@@ -173,7 +169,7 @@ final class ConfigProviderTest extends TestCase
             $deps['aliases'][UserRepositoryInterface::class],
         );
         self::assertSame(UserFactory::class, $deps['factories'][UserInterface::class]);
-        self::assertSame(User::class, $deps['factories'][User::class]);
+        self::assertArrayNotHasKey(User::class, $deps['factories']);
         self::assertArrayHasKey(User::class, $deps['invokables']);
         self::assertArrayHasKey(InitDbCommand::class, $deps['factories']);
     }

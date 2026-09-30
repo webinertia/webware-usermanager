@@ -6,6 +6,7 @@ namespace Webware\UserManager\Repository;
 
 use PhpDb\Adapter\AdapterInterface;
 use PhpDb\ResultSet\RowPrototypeResultSet;
+use PhpDb\SchemaFactory;
 use PhpDb\Sql\Exception\ExceptionInterface as SqlException;
 use PhpDb\TableGateway\Exception\ExceptionInterface as TableGatewayException;
 use PhpDb\TableGateway\TableGateway;
@@ -15,7 +16,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\Core\Exception;
-use Webware\Core\SchemaFactory;
 use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Entity\User;
 

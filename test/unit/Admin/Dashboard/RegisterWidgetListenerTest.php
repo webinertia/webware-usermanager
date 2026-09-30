@@ -45,7 +45,7 @@ final class RegisterWidgetListenerTest extends TestCase
             ]));
 
         $listener = new RegisterWidgetListener(
-            resourceId: 'user.manager',
+            resourceId: 'user',
             messageBus: $messageBus,
         );
 
@@ -59,7 +59,7 @@ final class RegisterWidgetListenerTest extends TestCase
         $widget = $widgets[0];
 
         self::assertInstanceOf(Widget::class, $widget);
-        self::assertSame('user.manager', $widget->getResourceId());
+        self::assertSame('user', $widget->getResourceId());
         self::assertSame(3, $widget->totalUsers);
         self::assertSame(2, $widget->activeUsers);
         self::assertSame(1, $widget->inactiveUsers);

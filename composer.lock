@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bd1f635e134b3e538c4f84561e19f18",
+    "content-hash": "921d16565e018f6fd183398e77eb659b",
     "packages": [
         {
             "name": "brick/math",
@@ -3477,12 +3477,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-admin.git",
-                "reference": "aeed15a72d6e3c744750b94018058fb5f7089e46"
+                "reference": "3c94b389ed59473d374f3417054fe3b35bb6bdca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/aeed15a72d6e3c744750b94018058fb5f7089e46",
-                "reference": "aeed15a72d6e3c744750b94018058fb5f7089e46",
+                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/3c94b389ed59473d374f3417054fe3b35bb6bdca",
+                "reference": "3c94b389ed59473d374f3417054fe3b35bb6bdca",
                 "shasum": ""
             },
             "require": {
@@ -3545,20 +3545,20 @@
                 "issues": "https://github.com/webinertia/webware-admin/issues",
                 "source": "https://github.com/webinertia/webware-admin/tree/1.0.x"
             },
-            "time": "2026-09-26T22:49:40+00:00"
+            "time": "2026-09-29T22:14:50+00:00"
         },
         {
             "name": "webware/webware-core",
-            "version": "1.0.0-alpha.6",
+            "version": "1.0.0-alpha.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-core.git",
-                "reference": "46b8325250b1d0852de2b7c293452fafccf7a729"
+                "reference": "61a98053658a233f8e8520c9339768e3ddcb2f68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/46b8325250b1d0852de2b7c293452fafccf7a729",
-                "reference": "46b8325250b1d0852de2b7c293452fafccf7a729",
+                "url": "https://api.github.com/repos/webinertia/webware-core/zipball/61a98053658a233f8e8520c9339768e3ddcb2f68",
+                "reference": "61a98053658a233f8e8520c9339768e3ddcb2f68",
                 "shasum": ""
             },
             "require": {
@@ -3568,7 +3568,6 @@
                 "mezzio/mezzio-authentication": "^1.13",
                 "php": "~8.4.1 || ~8.5.0",
                 "php-db/phpdb": "^0.6.x-dev",
-                "php-standard-library/type": "^6.2.1",
                 "psr/http-message": "^2.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0"
@@ -3578,9 +3577,6 @@
                 "laminas/laminas-diactoros": "^3.8",
                 "laminas/laminas-filter": "3.5.x-dev",
                 "php-db/phpdb": "^0.6.0",
-                "php-db/phpdb-mysql": "^0.5.x-dev",
-                "php-db/phpdb-pgsql": "^0.1.x-dev",
-                "php-db/phpdb-sqlite": "^0.3.x-dev",
                 "phpbench/phpbench": "^1.7",
                 "phpunit/phpunit": "^13.3",
                 "roave/backward-compatibility-check": "^8.21.0",
@@ -3612,9 +3608,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webinertia/webware-core/issues",
-                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.6"
+                "source": "https://github.com/webinertia/webware-core/tree/1.0.0-alpha.8"
             },
-            "time": "2026-09-21T03:09:42+00:00"
+            "time": "2026-09-30T16:58:43+00:00"
         },
         {
             "name": "webware/webware-event",
@@ -3966,6 +3962,72 @@
                 "source": "https://github.com/webinertia/webware-message/tree/1.0.0-beta.3"
             },
             "time": "2026-09-18T18:16:31+00:00"
+        },
+        {
+            "name": "webware/webware-phpdb",
+            "version": "1.0.0-alpha.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webinertia/webware-phpdb.git",
+                "reference": "12a8a3b4603aa4d6b3f050f38e60a47b17e7ef48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webinertia/webware-phpdb/zipball/12a8a3b4603aa4d6b3f050f38e60a47b17e7ef48",
+                "reference": "12a8a3b4603aa4d6b3f050f38e60a47b17e7ef48",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.4.1 || ~8.5.0",
+                "php-db/phpdb": "0.6.x-dev",
+                "psr/container": "^2.0"
+            },
+            "require-dev": {
+                "infection/infection": "^0.35.0",
+                "laminas/laminas-servicemanager": "^4.5",
+                "php-db/phpdb-mysql": "^0.5.x-dev",
+                "php-db/phpdb-pgsql": "^0.1.x-dev",
+                "php-db/phpdb-sqlite": "^0.3.x-dev",
+                "phpbench/phpbench": "^1.7",
+                "phpunit/phpunit": "^13.3",
+                "roave/backward-compatibility-check": "^8.21.0",
+                "roave/security-advisories": "dev-master",
+                "webware/webware-tools": "^1.0.0-beta.3"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "config-provider": "PhpDb\\WebwareProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpDb\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Joey Smith",
+                    "email": "jsmith@webinertia.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PhpDb bridge for the Webware stack: shadows the PhpDb root namespace so packages can replace individual php-db/phpdb classes.",
+            "keywords": [
+                "Bridge",
+                "mezzio",
+                "php-db",
+                "webware"
+            ],
+            "support": {
+                "issues": "https://github.com/webinertia/webware-phpdb/issues",
+                "source": "https://github.com/webinertia/webware-phpdb/tree/1.0.0-alpha.1"
+            },
+            "time": "2026-09-30T16:58:19+00:00"
         }
     ],
     "packages-dev": [

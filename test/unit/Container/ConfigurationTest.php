@@ -24,8 +24,7 @@ final class ConfigurationTest extends TestCase
     public function exposesConfigConstants(): void
     {
         self::assertSame(UserInterface::class, Configuration::CONFIG_KEY);
-        self::assertSame('user.manager', Configuration::ROUTE_SEGMENT_VALUE);
-        self::assertSame('user.manager.', Configuration::ROUTE_NAME_PREFIX_VALUE);
+        self::assertSame('user', Configuration::COMPONENT_NAME);
     }
 
     #[Test]

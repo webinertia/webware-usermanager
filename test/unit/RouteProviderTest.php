@@ -79,10 +79,10 @@ final class RouteProviderTest extends TestCase
             );
 
         $provider = new RouteProvider(
-            routeSegment        : 'user.manager',
-            routeNamePrefix     : 'user.manager.',
-            adminRouteSegment   : 'admin/user.manager',
-            adminRouteNamePrefix: 'admin.user.manager.',
+            routeSegment        : 'user',
+            routeNamePrefix     : 'user.',
+            adminRouteSegment   : 'admin/user',
+            adminRouteNamePrefix: 'admin.user.',
         );
 
         $provider->registerRoutes($collector, $factory);
@@ -148,41 +148,41 @@ final class RouteProviderTest extends TestCase
             );
 
         $provider = new RouteProvider(
-            routeSegment        : 'user.manager',
-            routeNamePrefix     : 'user.manager.',
-            adminRouteSegment   : 'admin/user.manager',
-            adminRouteNamePrefix: 'admin.user.manager.',
+            routeSegment        : 'user',
+            routeNamePrefix     : 'user.',
+            adminRouteSegment   : 'admin/user',
+            adminRouteNamePrefix: 'admin.user.',
         );
 
         $provider->registerRoutes($collector, $factory);
 
         self::assertSame(
             [
-                ['/user.manager/login',                'user.manager.session.read'],
-                ['/user.manager/register',             'user.manager.register.read'],
-                ['/user.manager/verify.email/{token}', 'user.manager.verify.email.read'],
-                ['/user.manager/resend.verification',  'user.manager.resend.verification.read'],
-                ['/user.manager/logout',               'user.manager.logout.read'],
-                ['/admin/user.manager',                'admin.user.manager'],
+                ['/user/login',                'user.session.read'],
+                ['/user/register',             'user.register.read'],
+                ['/user/verify.email/{token}', 'user.verify.email.read'],
+                ['/user/resend.verification',  'user.resend.verification.read'],
+                ['/user/logout',               'user.logout.read'],
+                ['/admin/user',                'admin.user'],
             ],
             $gets,
         );
 
         self::assertSame(
             [
-                ['/user.manager/login',                 'user.manager.session.create'],
-                ['/user.manager/register',              'user.manager.register.create'],
-                ['/user.manager/resend.verification',   'user.manager.resend.verification.create'],
-                ['/admin/user.manager/{id:\d+}/toggle', 'admin.user.manager.toggle.update'],
+                ['/user/login',                 'user.session.create'],
+                ['/user/register',              'user.register.create'],
+                ['/user/resend.verification',   'user.resend.verification.create'],
+                ['/admin/user/{id:\d+}/toggle', 'admin.user.toggle.update'],
             ],
             $posts,
         );
 
         self::assertSame(
             [
-                ['/admin/user.manager/create', ['GET', 'POST'], 'admin.user.manager.create'],
-                ['/admin/user.manager/update/{id:\d+}', ['PATCH'], 'admin.user.manager.update'],
-                ['/admin/user.manager/update/{id:\d+}', ['GET'], 'admin.user.manager.update.modal'],
+                ['/admin/user/create', ['GET', 'POST'], 'admin.user.create'],
+                ['/admin/user/update/{id:\d+}', ['PATCH'], 'admin.user.update'],
+                ['/admin/user/update/{id:\d+}', ['GET'], 'admin.user.update.modal'],
             ],
             $routes,
         );
