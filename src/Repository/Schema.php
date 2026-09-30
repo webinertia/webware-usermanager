@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Repository;
 
-use Webware\Core\SchemaInterface;
+use PhpDb\SchemaInterface;
 
 enum Schema: string implements SchemaInterface
 {

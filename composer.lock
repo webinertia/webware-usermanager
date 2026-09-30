@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bd1f635e134b3e538c4f84561e19f18",
+    "content-hash": "6e6c89b15caf388ae34a24c6f3626757",
     "packages": [
         {
             "name": "brick/math",
@@ -3966,6 +3966,72 @@
                 "source": "https://github.com/webinertia/webware-message/tree/1.0.0-beta.3"
             },
             "time": "2026-09-18T18:16:31+00:00"
+        },
+        {
+            "name": "webware/webware-phpdb",
+            "version": "1.0.0-alpha.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webinertia/webware-phpdb.git",
+                "reference": "12a8a3b4603aa4d6b3f050f38e60a47b17e7ef48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webinertia/webware-phpdb/zipball/12a8a3b4603aa4d6b3f050f38e60a47b17e7ef48",
+                "reference": "12a8a3b4603aa4d6b3f050f38e60a47b17e7ef48",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.4.1 || ~8.5.0",
+                "php-db/phpdb": "0.6.x-dev",
+                "psr/container": "^2.0"
+            },
+            "require-dev": {
+                "infection/infection": "^0.35.0",
+                "laminas/laminas-servicemanager": "^4.5",
+                "php-db/phpdb-mysql": "^0.5.x-dev",
+                "php-db/phpdb-pgsql": "^0.1.x-dev",
+                "php-db/phpdb-sqlite": "^0.3.x-dev",
+                "phpbench/phpbench": "^1.7",
+                "phpunit/phpunit": "^13.3",
+                "roave/backward-compatibility-check": "^8.21.0",
+                "roave/security-advisories": "dev-master",
+                "webware/webware-tools": "^1.0.0-beta.3"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "config-provider": "PhpDb\\WebwareProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpDb\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Joey Smith",
+                    "email": "jsmith@webinertia.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PhpDb bridge for the Webware stack: shadows the PhpDb root namespace so packages can replace individual php-db/phpdb classes.",
+            "keywords": [
+                "Bridge",
+                "mezzio",
+                "php-db",
+                "webware"
+            ],
+            "support": {
+                "issues": "https://github.com/webinertia/webware-phpdb/issues",
+                "source": "https://github.com/webinertia/webware-phpdb/tree/1.0.0-alpha.1"
+            },
+            "time": "2026-09-30T16:58:19+00:00"
         }
     ],
     "packages-dev": [

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace WebwareTest\UserManager\Repository;
 
 use PhpDb\Adapter\AdapterInterface;
+use PhpDb\SchemaFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Webware\Core\SchemaFactory;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\UserRepository;
 use Webware\UserManager\Repository\UserRepositoryFactory;
