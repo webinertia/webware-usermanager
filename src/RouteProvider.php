@@ -58,7 +58,13 @@ final readonly class RouteProvider implements RouteProviderInterface
                 LoginHandler::class,
             ]),
             "{$this->routeNamePrefix}session.read",
-        );
+        )->setOptions([
+            'navigation' => 'user',
+            'label'      => 'Login',
+            'icon'       => 'bi-box-arrow-in-right',
+            'parent'     => null,
+            'order'      => 10,
+        ]);
 
         $routeCollector->post(
             "/{$this->routeSegment}/login",
@@ -78,7 +84,13 @@ final readonly class RouteProvider implements RouteProviderInterface
                 RegistrationHandler::class,
             ]),
             "{$this->routeNamePrefix}register.read",
-        );
+        )->setOptions([
+            'navigation' => 'user',
+            'label'      => 'Register',
+            'icon'       => 'bi-person-plus',
+            'parent'     => null,
+            'order'      => 20,
+        ]);
 
         $routeCollector->post(
             "/{$this->routeSegment}/register",
