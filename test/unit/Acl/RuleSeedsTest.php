@@ -22,6 +22,8 @@ use Webware\UserManager\RouteProvider;
 use function array_diff;
 use function array_map;
 use function array_slice;
+use function array_unique;
+use function array_values;
 
 #[CoversClass(RuleSeeds::class)]
 #[CoversMethod(RuleSeeds::class, 'ruleSeeds')]
@@ -97,9 +99,9 @@ final class RuleSeedsTest extends TestCase
     {
         $seeds = $this->seeds('backoffice');
 
-        self::assertSame('backoffice.user', $seeds[4]->resourceId);
-        self::assertSame('backoffice.user.create', $seeds[5]->resourceId);
-        self::assertSame('backoffice.user', $seeds[5]->parentResourceId);
+        self::assertSame('backoffice.user', $seeds[18]->resourceId);
+        self::assertSame('backoffice.user.create', $seeds[19]->resourceId);
+        self::assertSame('backoffice.user', $seeds[19]->parentResourceId);
     }
 
     #[Test]
@@ -138,19 +140,19 @@ final class RuleSeedsTest extends TestCase
                 roleId    : Role::Administrator->value,
                 resourceId: 'admin.user',
             ),
-            $seeds[4],
+            $seeds[18],
         );
         self::assertSame(
             ['admin.user.create', 'admin.user.update', 'admin.user.update.modal', 'admin.user.toggle.update'],
             array_map(static fn(RuleSeed $seed): string => $seed->resourceId, array_slice(
                 array : $seeds,
-                offset: 5,
+                offset: 19,
             )),
         );
 
         foreach (array_slice(
             array : $seeds,
-            offset: 5,
+            offset: 19,
         ) as $child) {
             self::assertSame(RuleType::Allow, $child->type);
             self::assertSame(Role::Administrator->value, $child->roleId);
@@ -179,6 +181,38 @@ final class RuleSeedsTest extends TestCase
             ),
             $seeds[1],
         );
+    }
+
+    #[Test]
+    public function repeatsTheAnchorPairUnderEachRemainingPublicRoute(): void
+    {
+        $seeds = array_slice(
+            array : $this->seeds('admin'),
+            offset: 4,
+            length: 14,
+        );
+
+        self::assertSame(
+            [
+                'user.session.read',
+                'user.session.create',
+                'user.register.read',
+                'user.register.create',
+                'user.verify.email.read',
+                'user.resend.verification.read',
+                'user.resend.verification.create',
+            ],
+            array_values(array_unique(array_map(
+                static fn(RuleSeed $seed): string => $seed->resourceId,
+                $seeds,
+            ))),
+        );
+
+        foreach ($seeds as $index => $seed) {
+            self::assertSame('user', $seed->parentResourceId);
+            self::assertSame(0 === ($index % 2) ? RuleType::Allow : RuleType::Deny, $seed->type);
+            self::assertSame(0 === ($index % 2) ? Role::Guest->value : Role::Member->value, $seed->roleId);
+        }
     }
 
     /**

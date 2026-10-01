@@ -26,7 +26,7 @@ use function array_map;
 #[CoversMethod(RuleSeeds::class, 'ruleSeeds')]
 final class RuleSeedsLaminasAclTest extends TestCase
 {
-    private const array PUBLIC_ROUTES_WITHOUT_ROWS = [
+    private const array PUBLIC_ROUTES = [
         'user.session.read',
         'user.session.create',
         'user.register.read',
@@ -60,8 +60,8 @@ final class RuleSeedsLaminasAclTest extends TestCase
     public static function publicRoutes(): array
     {
         return array_combine(
-            self::PUBLIC_ROUTES_WITHOUT_ROWS,
-            array_map(static fn(string $route): array => [$route], self::PUBLIC_ROUTES_WITHOUT_ROWS),
+            self::PUBLIC_ROUTES,
+            array_map(static fn(string $route): array => [$route], self::PUBLIC_ROUTES),
         );
     }
 
@@ -108,7 +108,7 @@ final class RuleSeedsLaminasAclTest extends TestCase
     {
         return SeededAcl::from(
             seeds            : new RuleSeeds()->ruleSeeds('admin'),
-            routesWithoutRows: self::PUBLIC_ROUTES_WITHOUT_ROWS,
+            routesWithoutRows: [],
             anchor           : 'user',
         );
     }
