@@ -18,7 +18,9 @@ use function rtrim;
  *
  * Public routes hang from the `user` anchor: Guest may reach them all, Member
  * is denied them all, and the one route a Member needs (logout) carries its own
- * pair of rows, because a rule on the route itself beats the anchor's. The
+ * pair of rows, because a rule on the route itself beats the anchor's. Every other
+ * public route repeats the anchor's pair under its own name, since the ACL
+ * administration screens list a route without a row of its own as unprotected. The
  * admin routes hang from the `admin.user` anchor, which Administrator is
  * granted, with each child naming the anchor as its parent so it inherits from
  * it and nests beneath it in the ACL administration screens.
@@ -27,6 +29,16 @@ use function rtrim;
  */
 final readonly class RuleSeeds implements RuleSeedProviderInterface
 {
+    private const array PUBLIC_CHILDREN = [
+        'session.read',
+        'session.create',
+        'register.read',
+        'register.create',
+        'verify.email.read',
+        'resend.verification.read',
+        'resend.verification.create',
+    ];
+
     private const array ADMIN_CHILDREN = [
         'create',
         'update',
@@ -75,12 +87,28 @@ final readonly class RuleSeeds implements RuleSeedProviderInterface
                 resourceId      : $logout,
                 parentResourceId: $publicRoot,
             ),
-            new RuleSeed(
-                type      : RuleType::Allow,
-                roleId    : Role::Administrator->value,
-                resourceId: $adminRoot,
-            ),
         ];
+
+        foreach (self::PUBLIC_CHILDREN as $child) {
+            $seeds[] = new RuleSeed(
+                type            : RuleType::Allow,
+                roleId          : Role::Guest->value,
+                resourceId      : $public . $child,
+                parentResourceId: $publicRoot,
+            );
+            $seeds[] = new RuleSeed(
+                type            : RuleType::Deny,
+                roleId          : Role::Member->value,
+                resourceId      : $public . $child,
+                parentResourceId: $publicRoot,
+            );
+        }
+
+        $seeds[] = new RuleSeed(
+            type      : RuleType::Allow,
+            roleId    : Role::Administrator->value,
+            resourceId: $adminRoot,
+        );
 
         foreach (self::ADMIN_CHILDREN as $child) {
             $seeds[] = new RuleSeed(
