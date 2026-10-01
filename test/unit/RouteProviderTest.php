@@ -188,6 +188,100 @@ final class RouteProviderTest extends TestCase
         );
     }
 
+    #[Test]
+    public function tagsLoginRegisterAndLogoutForTheUserNavigation(): void
+    {
+        $middleware = $this->createStub(MiddlewareInterface::class);
+
+        $factory = $this->createStub(MiddlewareFactoryInterface::class);
+        $factory->method('prepare')->willReturn($middleware);
+
+        /** @var array<string, Route> $byName */
+        $byName = [];
+
+        $register = static function (
+            string $path,
+            MiddlewareInterface $mw,
+            ?string $name = null,
+            array $methods = [],
+        ) use (&$byName): Route {
+            return $byName[(string) $name] = new Route($path, $mw, $methods, $name);
+        };
+
+        $collector = $this->createStub(RouteCollectorInterface::class);
+        $collector->method('get')
+            ->willReturnCallback(
+                static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => $register(
+                    $path,
+                    $mw,
+                    $name,
+                    ['GET'],
+                ),
+            );
+        $collector->method('post')
+            ->willReturnCallback(
+                static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => $register(
+                    $path,
+                    $mw,
+                    $name,
+                    ['POST'],
+                ),
+            );
+        $collector->method('route')
+            ->willReturnCallback(
+                static fn(
+                    string $path,
+                    MiddlewareInterface $mw,
+                    ?array $methods = null,
+                    ?string $name = null,
+                ): Route => $register(
+                    $path,
+                    $mw,
+                    $name,
+                    $methods ?? [],
+                ),
+            );
+
+        new RouteProvider(
+            routeSegment        : 'user',
+            routeNamePrefix     : 'user.',
+            adminRouteSegment   : 'admin/user',
+            adminRouteNamePrefix: 'admin.user.',
+        )->registerRoutes($collector, $factory);
+
+        self::assertSame(
+            [
+                'navigation' => 'user',
+                'label'      => 'Login',
+                'icon'       => 'bi-box-arrow-in-right',
+                'parent'     => null,
+                'order'      => 10,
+            ],
+            $byName['user.session.read']->getOptions(),
+        );
+        self::assertSame(
+            [
+                'navigation' => 'user',
+                'label'      => 'Register',
+                'icon'       => 'bi-person-plus',
+                'parent'     => null,
+                'order'      => 20,
+            ],
+            $byName['user.register.read']->getOptions(),
+        );
+        self::assertSame(
+            [
+                'navigation' => 'user',
+                'label'      => 'Logout',
+                'icon'       => 'bi-box-arrow-right',
+                'parent'     => null,
+                'order'      => 10,
+            ],
+            $byName['user.logout.read']->getOptions(),
+        );
+        self::assertSame([], $byName['user.session.create']->getOptions());
+    }
+
     /**
      * Returns the middleware immediately following $process in the pipeline that
      * ends with $terminal, or null when that pipeline cannot be located.
