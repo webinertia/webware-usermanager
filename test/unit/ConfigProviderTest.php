@@ -27,8 +27,10 @@ use Webware\UserManager\ConfigProvider;
 use Webware\UserManager\Console\InitDbCommand;
 use Webware\UserManager\Container\UserFactory;
 use Webware\UserManager\Entity\User;
+use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
+use Webware\UserManager\Listener\SendVerificationEmailListener;
 use Webware\UserManager\Query\AuthenticateUserQuery;
 use Webware\UserManager\Query\CheckUserActiveQuery;
 use Webware\UserManager\Query\FetchUserByEmailQuery;
@@ -182,12 +184,15 @@ final class ConfigProviderTest extends TestCase
     }
 
     #[Test]
-    public function listenersRegisterWidgetListener(): void
+    public function listenersRegisterTheWidgetAndVerificationListeners(): void
     {
         self::assertSame(
             [
-                RegisterWidgetEvent::class => [
+                RegisterWidgetEvent::class        => [
                     ['listener' => RegisterWidgetListener::class, 'priority' => 1],
+                ],
+                SendVerificationEmailEvent::class => [
+                    ['listener' => SendVerificationEmailListener::class, 'priority' => 1],
                 ],
             ],
             $this->provider->getListeners(),

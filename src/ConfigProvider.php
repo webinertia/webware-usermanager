@@ -17,6 +17,8 @@ use Webware\UserManager\Admin\Dashboard\Container\RegisterWidgetListenerFactory;
 use Webware\UserManager\Admin\Dashboard\RegisterWidgetListener;
 use Webware\UserManager\Console\Container\InitDbCommandFactory;
 use Webware\UserManager\Console\InitDbCommand;
+use Webware\UserManager\Event\SendVerificationEmailEvent;
+use Webware\UserManager\Listener\SendVerificationEmailListener;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use Webware\UserManager\View\Helper\UserAdminUrl;
 use Webware\UserManager\View\Helper\UserAdminUrlFactory;
@@ -218,8 +220,11 @@ final class ConfigProvider
     public function getListeners(): array
     {
         return [
-            RegisterWidgetEvent::class => [
+            RegisterWidgetEvent::class        => [
                 ['listener' => RegisterWidgetListener::class, 'priority' => 1],
+            ],
+            SendVerificationEmailEvent::class => [
+                ['listener' => SendVerificationEmailListener::class, 'priority' => 1],
             ],
         ];
     }
