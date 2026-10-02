@@ -33,12 +33,14 @@ use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 use Webware\UserManager\Listener\SendVerificationEmailListener;
 use Webware\UserManager\Query\AuthenticateUserQuery;
 use Webware\UserManager\Query\CheckUserActiveQuery;
+use Webware\UserManager\Query\FetchAssignableRolesQuery;
 use Webware\UserManager\Query\FetchUserByEmailQuery;
 use Webware\UserManager\Query\FetchUserByIdQuery;
 use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
 use Webware\UserManager\Query\FetchUsersQuery;
 use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
 use Webware\UserManager\QueryHandler\CheckUserActiveHandler;
+use Webware\UserManager\QueryHandler\FetchAssignableRolesHandler;
 use Webware\UserManager\QueryHandler\FetchUserByEmailHandler;
 use Webware\UserManager\QueryHandler\FetchUserByIdHandler;
 use Webware\UserManager\QueryHandler\FetchUserByVerificationTokenHandler;
@@ -206,6 +208,7 @@ final class ConfigProviderTest extends TestCase
             [
                 AuthenticateUserQuery::class             => AuthenticateUserHandler::class,
                 CheckUserActiveQuery::class              => CheckUserActiveHandler::class,
+                FetchAssignableRolesQuery::class         => FetchAssignableRolesHandler::class,
                 FetchUserByEmailQuery::class             => FetchUserByEmailHandler::class,
                 FetchUserByIdQuery::class                => FetchUserByIdHandler::class,
                 FetchUserByVerificationTokenQuery::class => FetchUserByVerificationTokenHandler::class,

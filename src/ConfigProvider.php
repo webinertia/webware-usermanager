@@ -171,6 +171,7 @@ final class ConfigProvider
                 CommandHandler\SendVerificationEmailHandler::class             => CommandHandler\Container\SendVerificationEmailHandlerFactory::class,
                 QueryHandler\AuthenticateUserHandler::class                    => QueryHandler\Container\AuthenticateUserHandlerFactory::class,
                 QueryHandler\CheckUserActiveHandler::class                     => QueryHandler\Container\CheckUserActiveHandlerFactory::class,
+                QueryHandler\FetchAssignableRolesHandler::class                => QueryHandler\Container\FetchAssignableRolesHandlerFactory::class,
                 QueryHandler\FetchUserByEmailHandler::class                    => QueryHandler\Container\FetchUserByEmailHandlerFactory::class,
                 QueryHandler\FetchUserByIdHandler::class                       => QueryHandler\Container\FetchUserByIdHandlerFactory::class,
                 QueryHandler\FetchUserByVerificationTokenHandler::class        => QueryHandler\Container\FetchUserByVerificationTokenHandlerFactory::class,
@@ -235,6 +236,7 @@ final class ConfigProvider
         return [
             Query\AuthenticateUserQuery::class             => QueryHandler\AuthenticateUserHandler::class,
             Query\CheckUserActiveQuery::class              => QueryHandler\CheckUserActiveHandler::class,
+            Query\FetchAssignableRolesQuery::class         => QueryHandler\FetchAssignableRolesHandler::class,
             Query\FetchUserByEmailQuery::class             => QueryHandler\FetchUserByEmailHandler::class,
             Query\FetchUserByIdQuery::class                => QueryHandler\FetchUserByIdHandler::class,
             Query\FetchUserByVerificationTokenQuery::class => QueryHandler\FetchUserByVerificationTokenHandler::class,
