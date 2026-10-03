@@ -59,11 +59,11 @@ final readonly class Configuration extends Config
         $config = $container->get('config');
 
         if (! isset($config[self::MEZZIO_AUTH_KEY])) {
-            throw Exception\ContainerException::forMissingConfigKey(self::MEZZIO_AUTH_KEY, $callingFactory);
+            throw Exception\ConfigurationException::forMissingConfigKey(self::MEZZIO_AUTH_KEY, $callingFactory);
         }
 
         if (! is_array($config[self::MEZZIO_AUTH_KEY]) || [] === $config[self::MEZZIO_AUTH_KEY]) {
-            throw Exception\ContainerException::forInvalidConfigType(
+            throw Exception\ConfigurationException::forInvalidConfigType(
                 self::MEZZIO_AUTH_KEY,
                 'array',
                 get_debug_type(
@@ -119,7 +119,7 @@ final readonly class Configuration extends Config
         $value = self::read($container, $key, $callingFactory);
 
         if (! is_int($value) || $value < 1) {
-            throw Exception\ContainerException::forInvalidConfigType(
+            throw Exception\ConfigurationException::forInvalidConfigType(
                 $key,
                 'positive-int',
                 get_debug_type($value),
@@ -148,7 +148,7 @@ final readonly class Configuration extends Config
         $section = is_array($config) ? $config[self::CONFIG_KEY] ?? null : null;
 
         if (! is_array($section) || [] === $section) {
-            throw Exception\ContainerException::forMissingConfigKey(self::CONFIG_KEY, $callingFactory);
+            throw Exception\ConfigurationException::forMissingConfigKey(self::CONFIG_KEY, $callingFactory);
         }
 
         /** @var array<string, mixed> $section */
@@ -164,7 +164,7 @@ final readonly class Configuration extends Config
         $section = self::getSection($container, $callingFactory);
 
         if (! array_key_exists($key, $section)) {
-            throw Exception\ContainerException::forMissingConfigKey($key, $callingFactory);
+            throw Exception\ConfigurationException::forMissingConfigKey($key, $callingFactory);
         }
 
         return $section[$key];
@@ -183,7 +183,7 @@ final readonly class Configuration extends Config
         $value = self::read($container, $key, $callingFactory);
 
         if (! is_string($value)) {
-            throw Exception\ContainerException::forInvalidConfigType(
+            throw Exception\ConfigurationException::forInvalidConfigType(
                 $key,
                 'string',
                 get_debug_type($value),
@@ -192,7 +192,7 @@ final readonly class Configuration extends Config
         }
 
         if ('' === $value) {
-            throw Exception\ContainerException::forEmptyConfiguration($key, $callingFactory);
+            throw Exception\ConfigurationException::forEmptyConfiguration($key, $callingFactory);
         }
 
         return $value;
