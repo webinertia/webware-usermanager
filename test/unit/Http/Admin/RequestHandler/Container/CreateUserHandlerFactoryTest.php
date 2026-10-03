@@ -14,7 +14,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
-use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Admin\RequestHandler\Container\CreateUserHandlerFactory;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
@@ -47,8 +46,7 @@ final class CreateUserHandlerFactoryTest extends TestCase
                 [
                     UserListHandler::class,
                     new UserListHandler(
-                        template  : $this->createStub(TemplateRendererInterface::class),
-                        messageBus: $this->createStub(MessageBusInterface::class),
+                        template: $this->createStub(TemplateRendererInterface::class),
                     ),
                 ],
             ]);

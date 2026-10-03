@@ -10,7 +10,6 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\RequestHandler\Container\UserListHandlerFactory;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
 
@@ -25,7 +24,6 @@ final class UserListHandlerFactoryTest extends TestCase
         $container->method('get')
             ->willReturnMap([
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
-                [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
             ]);
 
         self::assertInstanceOf(UserListHandler::class, (new UserListHandlerFactory())($container));

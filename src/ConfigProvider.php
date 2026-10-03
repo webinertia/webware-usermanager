@@ -192,6 +192,7 @@ final class ConfigProvider
                 Http\Admin\Middleware\ProcessCreateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessCreateUserMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessUpdateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory::class,
                 Http\Middleware\RegistrationMiddleware::class                  => Http\Middleware\Container\RegistrationMiddlewareFactory::class,
+                Http\Middleware\UserListMiddleware::class                      => Http\Middleware\Container\UserListMiddlewareFactory::class,
                 Repository\UserRepository::class                               => Repository\UserRepositoryFactory::class,
                 InitDbCommand::class                                           => InitDbCommandFactory::class,
                 RouteProvider::class                                           => Container\RouteProviderFactory::class,

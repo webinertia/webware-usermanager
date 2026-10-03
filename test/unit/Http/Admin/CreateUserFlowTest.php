@@ -24,7 +24,6 @@ use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
 use Webware\UserManager\Query\FetchAssignableRolesQuery;
-use Webware\UserManager\Query\FetchUsersQuery;
 use WebwareTest\UserManager\Support\InputFilterHelper;
 
 /**
@@ -145,17 +144,10 @@ final class CreateUserFlowTest extends TestCase
         $listTemplate = $this->createStub(TemplateRendererInterface::class);
         $listTemplate->method('render')->willReturn('<list>');
 
-        $listBus = $this->createStub(MessageBusInterface::class);
-        $listBus->method('handle')
-            ->willReturn(
-                new QueryResult(new FetchUsersQuery(), MessageStatus::Success, []),
-            );
-
         $handler = new CreateUserHandler(
             template   : $template,
             listHandler: new UserListHandler(
-                template  : $listTemplate,
-                messageBus: $listBus,
+                template: $listTemplate,
             ),
             listUrl    : self::LIST_URL,
         );

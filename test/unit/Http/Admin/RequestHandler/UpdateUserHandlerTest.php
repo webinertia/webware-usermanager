@@ -11,47 +11,80 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\Htmx\Response\Header;
+use Webware\MessageBus\Command\CommandInterface;
+use Webware\MessageBus\Command\CommandResult;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
+use Webware\UserManager\Http\Middleware\UserListMiddleware;
+use Webware\UserManager\Http\RequestHandler\UserListHandler;
 
 #[CoversClass(UpdateUserHandler::class)]
 #[CoversMethod(UpdateUserHandler::class, '__construct')]
 #[CoversMethod(UpdateUserHandler::class, 'handle')]
 final class UpdateUserHandlerTest extends TestCase
 {
+    private const string LIST_URL = '/admin/user';
+
     #[Test]
-    public function rendersUserListWithEmptyUsersByDefault(): void
+    public function closesTheModalWhenTheCommandSucceeded(): void
     {
-        $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
-            ->method('render')
-            ->with('user::list-users', ['users' => []])
-            ->willReturn('<ul>');
+        $handler = $this->handler();
 
-        $handler = new UpdateUserHandler(template: $template);
+        $result = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Success, null);
 
-        $response = $handler->handle(new ServerRequest());
+        $response = $handler->handle(new ServerRequest()->withAttribute(CommandResult::class, $result));
 
-        self::assertInstanceOf(HtmlResponse::class, $response);
+        self::assertSame('{"closeModal":null}', $response->getHeaderLine(Header::Trigger->value));
+        self::assertSame(self::LIST_URL, $response->getHeaderLine(Header::PushUrl->value));
     }
 
     #[Test]
-    public function rendersUserListWithUpdatedUsers(): void
+    public function doesNotCloseTheModalWhenTheCommandFailed(): void
     {
-        $updatedUsers = [new User(id: 1)];
+        $handler = $this->handler();
+
+        $result = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Failure, null);
+
+        $response = $handler->handle(new ServerRequest()->withAttribute(CommandResult::class, $result));
+
+        self::assertFalse($response->hasHeader(Header::Trigger->value));
+    }
+
+    #[Test]
+    public function rendersTheListAndPushesTheListUrl(): void
+    {
+        $users = [new User(id: 1)];
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
             ->method('render')
-            ->with('user::list-users', ['users' => $updatedUsers])
+            ->with('user::list-users', ['users' => $users])
             ->willReturn('<ul>');
 
-        $handler = new UpdateUserHandler(template: $template);
+        $handler = new UpdateUserHandler(
+            listHandler: new UserListHandler(template: $template),
+            listUrl    : self::LIST_URL,
+        );
 
-        $request = new ServerRequest()->withAttribute('updatedUsers', $updatedUsers);
+        $request = new ServerRequest()->withAttribute(UserListMiddleware::class, ['users' => $users]);
 
         $response = $handler->handle($request);
 
         self::assertInstanceOf(HtmlResponse::class, $response);
+        self::assertSame(self::LIST_URL, $response->getHeaderLine(Header::PushUrl->value));
+        self::assertFalse($response->hasHeader(Header::Trigger->value));
+    }
+
+    private function handler(): UpdateUserHandler
+    {
+        $template = $this->createStub(TemplateRendererInterface::class);
+        $template->method('render')->willReturn('<ul>');
+
+        return new UpdateUserHandler(
+            listHandler: new UserListHandler(template: $template),
+            listUrl    : self::LIST_URL,
+        );
     }
 }

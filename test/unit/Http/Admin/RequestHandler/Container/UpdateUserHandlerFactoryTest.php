@@ -4,47 +4,58 @@ declare(strict_types=1);
 
 namespace WebwareTest\UserManager\Http\Admin\RequestHandler\Container;
 
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\HelperPluginManager;
+use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\Container\ContainerInterface;
+use ReflectionProperty;
 use Webware\UserManager\Http\Admin\RequestHandler\Container\UpdateUserHandlerFactory;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
+use Webware\UserManager\Http\RequestHandler\UserListHandler;
+use Webware\UserManager\View\Helper\UserAdminUrl;
 
 #[CoversClass(UpdateUserHandlerFactory::class)]
 #[CoversMethod(UpdateUserHandlerFactory::class, '__invoke')]
 final class UpdateUserHandlerFactoryTest extends TestCase
 {
     #[Test]
-    public function invokeBuildsHandler(): void
+    public function invokeBuildsHandlerWithTheListHandlerAndListUrl(): void
     {
-        $template = $this->createStub(TemplateRendererInterface::class);
+        $urlHelper = $this->createStub(UrlHelper::class);
+        $urlHelper->method('__invoke')->willReturn('/backoffice/user');
+
+        $helperManager = new HelperPluginManager(new ServiceManager());
+        $helperManager->setService(
+            UserAdminUrl::class,
+            new UserAdminUrl(
+                urlHelper      : $urlHelper,
+                routeNamePrefix: 'backoffice.user.',
+            ),
+        );
 
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')
             ->willReturnMap([
-                [TemplateRendererInterface::class, $template],
+                [HelperPluginManager::class, $helperManager],
+                [
+                    UserListHandler::class,
+                    new UserListHandler(
+                        template: $this->createStub(TemplateRendererInterface::class),
+                    ),
+                ],
             ]);
 
-        self::assertInstanceOf(UpdateUserHandler::class, (new UpdateUserHandlerFactory())($container));
-    }
+        $handler = (new UpdateUserHandlerFactory())($container);
 
-    /**
-     * The factory asserts the resolved service really is a template renderer
-     * before handing it to the handler, so a wrong service is reported as a
-     * assertion failure rather than surfacing later as a TypeError.
-     */
-    #[Test]
-    public function invokeThrowsWhenTheResolvedServiceIsNotATemplateRenderer(): void
-    {
-        $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')->willReturn('not-a-renderer');
-
-        $this->expectException(PslTypeException::class);
-
-        (new UpdateUserHandlerFactory())($container);
+        self::assertInstanceOf(UpdateUserHandler::class, $handler);
+        self::assertSame(
+            '/backoffice/user',
+            new ReflectionProperty(UpdateUserHandler::class, 'listUrl')->getValue($handler),
+        );
     }
 }

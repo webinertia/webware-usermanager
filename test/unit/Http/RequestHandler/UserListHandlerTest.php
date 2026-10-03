@@ -14,12 +14,10 @@ use PHPUnit\Framework\TestCase;
 use Webware\Htmx\Response\Header;
 use Webware\MessageBus\Command\CommandInterface;
 use Webware\MessageBus\Command\CommandResult;
-use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
-use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
+use Webware\UserManager\Http\Middleware\UserListMiddleware;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
-use Webware\UserManager\Query\FetchUsersQuery;
 
 #[CoversClass(UserListHandler::class)]
 #[CoversMethod(UserListHandler::class, '__construct')]
@@ -29,20 +27,14 @@ final class UserListHandlerTest extends TestCase
     #[Test]
     public function addsCloseModalTriggerOnSuccess(): void
     {
-        $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, []));
-
         $template = $this->createStub(TemplateRendererInterface::class);
         $template->method('render')->willReturn('<ul>');
 
-        $handler = new UserListHandler(
-            template  : $template,
-            messageBus: $messageBus,
-        );
+        $handler = new UserListHandler(template: $template);
 
         $result  = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Success, null);
-        $request = new ServerRequest()->withAttribute(CommandResult::class, $result);
+        $request = new ServerRequest()->withAttribute(UserListMiddleware::class, ['users' => []])
+            ->withAttribute(CommandResult::class, $result);
 
         $response = $handler->handle($request);
 
@@ -51,25 +43,53 @@ final class UserListHandlerTest extends TestCase
     }
 
     #[Test]
-    public function rendersUserListWithoutTrigger(): void
+    public function doesNotAddTheTriggerWhenTheCommandFailed(): void
     {
-        $user       = new User(id: 1);
-        $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, [$user]));
+        $template = $this->createStub(TemplateRendererInterface::class);
+        $template->method('render')->willReturn('<ul>');
+
+        $handler = new UserListHandler(template: $template);
+
+        $result  = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Failure, null);
+        $request = new ServerRequest()->withAttribute(CommandResult::class, $result);
+
+        $response = $handler->handle($request);
+
+        self::assertFalse($response->hasHeader(Header::Trigger->value));
+    }
+
+    #[Test]
+    public function rendersAnEmptyListWhenTheMiddlewareDidNotRun(): void
+    {
+        $template = $this->createMock(TemplateRendererInterface::class);
+        $template->expects($this->once())
+            ->method('render')
+            ->with('user::list-users', ['users' => []])
+            ->willReturn('<ul>');
+
+        $handler = new UserListHandler(template: $template);
+
+        $response = $handler->handle(new ServerRequest());
+
+        self::assertInstanceOf(HtmlResponse::class, $response);
+    }
+
+    #[Test]
+    public function rendersTheViewModelAttachedByTheMiddleware(): void
+    {
+        $users = [new User(id: 1)];
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
             ->method('render')
-            ->with('user::list-users', ['users' => [$user]])
+            ->with('user::list-users', ['users' => $users])
             ->willReturn('<ul>');
 
-        $handler = new UserListHandler(
-            template  : $template,
-            messageBus: $messageBus,
-        );
+        $handler = new UserListHandler(template: $template);
 
-        $response = $handler->handle(new ServerRequest());
+        $request = new ServerRequest()->withAttribute(UserListMiddleware::class, ['users' => $users]);
+
+        $response = $handler->handle($request);
 
         self::assertInstanceOf(HtmlResponse::class, $response);
         self::assertFalse($response->hasHeader(Header::Trigger->value));
