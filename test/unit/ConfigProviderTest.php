@@ -92,6 +92,7 @@ final class ConfigProviderTest extends TestCase
                     'user.account.read'               => true,
                     'admin.user'                      => true,
                     'admin.user.create'               => true,
+                    'admin.user.create.modal'         => true,
                     'admin.user.update'               => true,
                     'admin.user.toggle.update'        => true,
                 ],

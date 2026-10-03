@@ -13,8 +13,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\MiddlewareInterface;
 use Webware\Message\Http\Middleware\NotificationMiddleware;
+use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessToggleUserActiveMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
+use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
 use Webware\UserManager\RouteProvider;
@@ -94,6 +96,14 @@ final class RouteProviderTest extends TestCase
         self::assertSame(
             NotificationMiddleware::class,
             $this->middlewareAfter(
+                ProcessCreateUserMiddleware::class,
+                CreateUserHandler::class,
+                $prepared,
+            ),
+        );
+        self::assertSame(
+            NotificationMiddleware::class,
+            $this->middlewareAfter(
                 ProcessToggleUserActiveMiddleware::class,
                 ToggleUserActiveHandler::class,
                 $prepared,
@@ -123,7 +133,7 @@ final class RouteProviderTest extends TestCase
                     return new Route($path, $mw, ['GET'], $name);
                 },
             );
-        $collector->expects($this->exactly(4))
+        $collector->expects($this->exactly(5))
             ->method('post')
             ->willReturnCallback(
                 static function (string $path, MiddlewareInterface $mw, ?string $name = null) use (&$posts): Route {
@@ -173,6 +183,7 @@ final class RouteProviderTest extends TestCase
                 ['/user/login',                 'user.session.create'],
                 ['/user/register',              'user.register.create'],
                 ['/user/resend.verification',   'user.resend.verification.create'],
+                ['/admin/user/create',          'admin.user.create'],
                 ['/admin/user/{id:\d+}/toggle', 'admin.user.toggle.update'],
             ],
             $posts,
@@ -180,7 +191,7 @@ final class RouteProviderTest extends TestCase
 
         self::assertSame(
             [
-                ['/admin/user/create', ['GET', 'POST'], 'admin.user.create'],
+                ['/admin/user/create/modal', ['GET'], 'admin.user.create.modal'],
                 ['/admin/user/update/{id:\d+}', ['PATCH'], 'admin.user.update'],
                 ['/admin/user/update/{id:\d+}', ['GET'], 'admin.user.update.modal'],
             ],

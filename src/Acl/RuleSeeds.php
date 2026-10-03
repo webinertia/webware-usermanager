@@ -41,6 +41,7 @@ final readonly class RuleSeeds implements RuleSeedProviderInterface
 
     private const array ADMIN_CHILDREN = [
         'create',
+        'create.modal',
         'update',
         'update.modal',
         'toggle.update',

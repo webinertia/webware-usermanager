@@ -74,12 +74,29 @@ final class CreateUserHandlerTest extends TestCase
         static::assertSame(1, $result->getResult());
     }
 
+    #[Test]
+    public function successfulSaveOfAnActiveUserSkipsTheVerificationEmail(): void
+    {
+        $command = $this->createCommand(active: true);
+
+        $users = $this->createStub(UserRepositoryInterface::class);
+        $users->method('save')->willReturn(1);
+
+        $this->dispatcher->expects($this->never())->method('dispatch');
+
+        $handler = new CreateUserHandler($users, $this->dispatcher);
+
+        $result = $handler->handle($command);
+
+        static::assertSame(MessageStatus::Success, $result->getStatus());
+    }
+
     protected function setUp(): void
     {
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
     }
 
-    private function createCommand(): CreateUserCommand
+    private function createCommand(bool $active = false): CreateUserCommand
     {
         return new CreateUserCommand(
             firstName        : 'Jane',
@@ -88,6 +105,7 @@ final class CreateUserHandlerTest extends TestCase
             email            : 'JANE@EXAMPLE.COM',
             roleId           : 'Member',
             verificationToken: bin2hex(random_bytes(16)),
+            active           : $active,
         );
     }
 }
