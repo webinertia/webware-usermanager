@@ -2,7 +2,7 @@
 
 > **Partly superseded (2026-09-17):** this document describes a role array and a
 > `Webware\Acl\Role\SingleRoleUserProxy` presenting it. See
-> [`roleid-single-role-direction.md`](roleid-single-role-direction.md) — `roleId` becomes a hard
+> [`roleid-single-role-direction.md`](../plan/roleid-single-role-direction.md) — `roleId` becomes a hard
 > `string`, `getRoles()` wraps it, and the proxy is not needed.
 >
 > **Also superseded (2026-09-18):** `withId(int|string|null $id): static` shown below was replaced

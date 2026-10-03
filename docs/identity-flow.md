@@ -2,7 +2,7 @@
 
 > **Partly superseded (2026-09-17):** rows below showing `roleId` as an array (`['Member']`,
 > `['roleId' => 'Guest']`) describe the current storage, not the target. See
-> [`roleid-single-role-direction.md`](roleid-single-role-direction.md) — `roleId` becomes a hard
+> [`roleid-single-role-direction.md`](../plan/roleid-single-role-direction.md) — `roleId` becomes a hard
 > `string` and `getRoles()` wraps it.
 
 ## Overview
