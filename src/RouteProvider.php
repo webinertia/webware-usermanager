@@ -13,9 +13,11 @@ use Mezzio\Router\RouteProviderInterface;
 use Override;
 use Webware\Htmx\Http\Middleware\DisableBodyMiddleware;
 use Webware\Message\Http\Middleware\NotificationMiddleware;
+use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessToggleUserActiveMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
+use Webware\UserManager\Http\Admin\RequestHandler\CreateUserModalHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
@@ -164,24 +166,27 @@ final readonly class RouteProvider implements RouteProviderInterface
             'order'      => 20,
         ]);
 
+        // Return the htmx modal for creating a user
         $routeCollector->route(
+            "/{$this->adminRouteSegment}/create/modal",
+            $middlewareFactory->prepare([
+                DisableBodyMiddleware::class,
+                CreateUserModalHandler::class,
+            ]),
+            ['GET'],
+            "{$this->adminRouteNamePrefix}create.modal",
+        );
+
+        // Create the user (POST) — re-renders the user list (mirrors the update route)
+        $routeCollector->post(
             "/{$this->adminRouteSegment}/create",
             $middlewareFactory->prepare([
+                ProcessCreateUserMiddleware::class,
+                NotificationMiddleware::class,
                 CreateUserHandler::class,
             ]),
-            ['GET', 'POST'],
             "{$this->adminRouteNamePrefix}create",
-        )
-            ->setOptions([
-                'navigation' => 'admin',
-                'label'      => 'Create User',
-                'icon'       => 'bi-person-plus-fill',
-                'parent'     => rtrim(
-                    string    : $this->adminRouteNamePrefix,
-                    characters: '.',
-                ),
-                'order'      => 10,
-            ]);
+        );
 
         // Update the user (PATCH) — re-renders the user list (mirrors webware-acl's role.update route)
         $routeCollector->route(

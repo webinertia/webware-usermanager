@@ -7,6 +7,7 @@ namespace Webware\UserManager\Command;
 use DateTimeImmutable;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
+use Webware\Message\NotificationCapableInterface;
 use Webware\MessageBus\Command\NamedCommandInterface;
 use Webware\MessageBus\Command\NamedCommandTrait;
 
@@ -14,9 +15,13 @@ use function password_get_info;
 use function password_hash;
 use function strtolower;
 
-final class CreateUserCommand implements NamedCommandInterface
+final class CreateUserCommand implements NamedCommandInterface, NotificationCapableInterface
 {
     use NamedCommandTrait;
+
+    public readonly string $successMessage;
+
+    public readonly string $failureMessage;
 
     // @mago-expect lint:excessive-parameter-list - accepted: the promoted properties are the row shape; splitting the list changes every call site.
     public function __construct(
@@ -84,5 +89,8 @@ final class CreateUserCommand implements NamedCommandInterface
                 }
             }
         },
-    ) {}
+    ) {
+        $this->successMessage = 'User created.';
+        $this->failureMessage = 'User could not be created. Please try again.';
+    }
 }

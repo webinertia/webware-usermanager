@@ -23,10 +23,15 @@ $this->headTitle('Users');
         </div>
         <p class="text-secondary small mb-0">Manage user accounts, roles, and active status.</p>
     </div>
-    <a href="<?= $this->escapeHtmlAttr($this->userAdminUrl('create')) ?>"
-       class="btn btn-primary btn-sm">
+    <button type="button"
+       class="btn btn-primary btn-sm"
+       hx-get="<?= $this->escapeHtmlAttr($this->userAdminUrl('create.modal')) ?>"
+       hx-target="#sharedModalDialog"
+       hx-swap="innerHTML"
+       hx-push-url="false"
+       hx-on::after-request="if(event.detail.successful) bootstrap.Modal.getOrCreateInstance(document.getElementById('sharedModal')).show()">
         <i class="bi bi-plus-lg me-1"></i> Add User
-    </a>
+    </button>
 </div>
 
 <div class="card">

@@ -143,7 +143,13 @@ final class RuleSeedsTest extends TestCase
             $seeds[18],
         );
         self::assertSame(
-            ['admin.user.create', 'admin.user.update', 'admin.user.update.modal', 'admin.user.toggle.update'],
+            [
+                'admin.user.create',
+                'admin.user.create.modal',
+                'admin.user.update',
+                'admin.user.update.modal',
+                'admin.user.toggle.update',
+            ],
             array_map(static fn(RuleSeed $seed): string => $seed->resourceId, array_slice(
                 array : $seeds,
                 offset: 19,

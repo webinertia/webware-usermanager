@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\Message\NotificationCapableInterface;
 use Webware\UserManager\Command\CreateUserCommand;
 
 use function bin2hex;
@@ -42,6 +43,16 @@ final class CreateUserCommandTest extends TestCase
     public function defaultsActiveToFalse(): void
     {
         static::assertFalse($this->command()->active);
+    }
+
+    #[Test]
+    public function exposesTheNotificationMessages(): void
+    {
+        $command = $this->command();
+
+        static::assertInstanceOf(NotificationCapableInterface::class, $command);
+        static::assertSame('User created.', $command->successMessage);
+        static::assertSame('User could not be created. Please try again.', $command->failureMessage);
     }
 
     #[Test]
