@@ -75,8 +75,9 @@ final class InputFilterHelper
 
         // NoRecordExists needs the container's database adapter, so a permissive
         // stand-in takes its place here; CreateUserDataFilterTest wires the real
-        // validator for the duplicate-email path.
-        $validators->setService(NoRecordExists::class, self::passingValidator());
+        // validator for the duplicate-email path. It is a FACTORY because the filter
+        // passes `messages` options, which a pre-built service cannot accept.
+        $validators->setFactory(NoRecordExists::class, self::passingValidator(...));
         $validators->setService(AssignableRoleValidator::class, new AssignableRoleValidator());
 
         $container->setService(FilterPluginManager::class, new FilterPluginManager($container));

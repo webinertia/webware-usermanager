@@ -19,6 +19,7 @@ use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageInterface;
 use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
@@ -160,9 +161,10 @@ final class CreateUserFlowTest extends TestCase
         );
 
         $middleware = new ProcessCreateUserMiddleware(
-            messageBus: $bus,
-            filter    : InputFilterHelper::createUserDataFilter(),
-            logger    : $this->createStub(LoggerInterface::class),
+            messageBus     : $bus,
+            filter         : InputFilterHelper::createUserDataFilter(),
+            logger         : $this->createStub(LoggerInterface::class),
+            assignableRoles: new AssignableRolesProvider($bus),
         );
 
         return $middleware->processPost($request, $handler);

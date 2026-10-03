@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * Role select shared by the create and edit user modals.
+ *
+ * @var string       $id
+ * @var list<string> $roles
+ * @var string       $selected
+ */
+?>
+<select
+    id="<?= $this->escapeHtmlAttr($id) ?>"
+    name="roleId"
+    class="form-select form-select-sm"
+    autocomplete="off"
+    required
+>
+    <option value="">Select a role</option>
+    <?php foreach ($roles as $roleId): ?>
+        <option
+            value="<?= $this->escapeHtmlAttr($roleId) ?>"
+            <?= $selected === $roleId ? 'selected' : '' ?>
+        ><?= $this->escapeHtml($roleId) ?></option>
+    <?php endforeach; ?>
+</select>

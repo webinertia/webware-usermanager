@@ -6,8 +6,11 @@
  * Rendered by EditUserModalHandler and swapped into #sharedModalDialog.
  *
  * @var \Webware\Core\UserInterface $user
+ * @var list<string>                $assignableRoles
  */
-$patchUrl = $this->escapeHtmlAttr($this->userAdminUrl('update', ['id' => $user->id]));
+$patchUrl     = $this->escapeHtmlAttr($this->userAdminUrl('update', ['id' => $user->id]));
+$roles        = [...$user->getRoles()];
+$selectedRole = array_shift($roles) ?? '';
 ?>
 <div class="modal-dialog modal-sm">
 <div class="modal-content">
@@ -69,17 +72,11 @@ $patchUrl = $this->escapeHtmlAttr($this->userAdminUrl('update', ['id' => $user->
             <label class="form-label small fw-semibold" for="edit_role_id">
                 Role <span class="text-danger">*</span>
             </label>
-            <select id="edit_role_id" name="roleId[]" multiple class="form-select form-select-sm">
-                <option value="Sales">Sales</option>
-                <option value="Warehouse">Warehouse</option>
-                <option value="DC Warehouse">DC Warehouse</option>
-                <option value="Credit Manager">Credit Manager</option>
-                <option value="Warehouse Supervisor">Warehouse Supervisor</option>
-                <option value="Manager">Manager</option>
-                <option value="Administrator">Administrator</option>
-                <option value="Developer">Developer</option>
-            </select>
-            <div class="form-text">Hold Ctrl/Cmd to select multiple roles.</div>
+            <?= $this->partial('user::partials/role-select', [
+                'id'       => 'edit_role_id',
+                'roles'    => $assignableRoles,
+                'selected' => $selectedRole,
+            ]) ?>
         </div>
         <div class="mb-0">
             <div class="form-check form-switch">

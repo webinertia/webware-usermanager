@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\RequestHandler\Container\CreateUserModalHandlerFactory;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserModalHandler;
 
@@ -26,6 +27,10 @@ final class CreateUserModalHandlerFactoryTest extends TestCase
             ->willReturnMap([
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
+                [
+                    AssignableRolesProvider::class,
+                    new AssignableRolesProvider($this->createStub(MessageBusInterface::class)),
+                ],
             ]);
 
         self::assertInstanceOf(

@@ -21,6 +21,7 @@ use Webware\MessageBus\MessageInterface;
 use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Command\CreateUserCommand;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\CreateUserState;
 use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\Query\FetchAssignableRolesQuery;
@@ -326,9 +327,10 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
     private function middleware(MessageBusInterface $bus, LoggerInterface $logger): ProcessCreateUserMiddleware
     {
         return new ProcessCreateUserMiddleware(
-            messageBus: $bus,
-            filter    : InputFilterHelper::createUserDataFilter(),
-            logger    : $logger,
+            messageBus     : $bus,
+            filter         : InputFilterHelper::createUserDataFilter(),
+            logger         : $logger,
+            assignableRoles: new AssignableRolesProvider($bus),
         );
     }
 

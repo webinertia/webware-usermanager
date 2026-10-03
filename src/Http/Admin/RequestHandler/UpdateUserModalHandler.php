@@ -8,12 +8,14 @@ use Laminas\Diactoros\Exception\ExceptionInterface as DiactorosException;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
 use Override;
+use Psl\Type\Exception\AssertException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Query\FetchUserByIdQuery;
 
 use function filter_var;
@@ -23,9 +25,11 @@ final class UpdateUserModalHandler implements RequestHandlerInterface
     public function __construct(
         private readonly TemplateRendererInterface $template,
         private readonly MessageBusInterface $messageBus,
+        private readonly AssignableRolesProvider $assignableRoles,
     ) {}
 
     /**
+     * @throws AssertException
      * @throws DiactorosException
      */
     #[Override]
@@ -47,9 +51,10 @@ final class UpdateUserModalHandler implements RequestHandlerInterface
         $user = $result->getResult();
 
         return new HtmlResponse($this->template->render('user::update-user-modal', [
-            'user'   => $user,
-            'layout' => false,
-            'body'   => false,
+            'user'            => $user,
+            'assignableRoles' => $this->assignableRoles->forRequest($request),
+            'layout'          => false,
+            'body'            => false,
         ]));
     }
 }

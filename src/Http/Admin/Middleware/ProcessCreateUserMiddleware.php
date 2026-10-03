@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\Admin\Middleware;
 
-use Psl\Type;
 use Psl\Type\Exception\AssertException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,15 +17,13 @@ use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
-use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Command\CreateUserCommand;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\CreateUserState;
 use Webware\UserManager\InputFilter\CreateUserDataFilter;
-use Webware\UserManager\Query\FetchAssignableRolesQuery;
 
 use function array_filter;
 use function array_map;
-use function array_shift;
 use function array_values;
 use function bin2hex;
 use function in_array;
@@ -56,6 +53,7 @@ final readonly class ProcessCreateUserMiddleware implements MiddlewareInterface
         private MessageBusInterface $messageBus,
         private CreateUserDataFilter $filter,
         private LoggerInterface $logger,
+        private AssignableRolesProvider $assignableRoles,
     ) {}
 
     /**
@@ -66,7 +64,7 @@ final readonly class ProcessCreateUserMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler,
     ): ResponseInterface {
-        $assignableRoles = $this->assignableRoles($request);
+        $assignableRoles = $this->assignableRoles->forRequest($request);
         $body            = $request->getParsedBody();
 
         /** @var array<string, mixed> $posted */
@@ -146,46 +144,6 @@ final readonly class ProcessCreateUserMiddleware implements MiddlewareInterface
         $actor = $request->getAttribute(UserInterface::class);
 
         return $actor instanceof UserInterface ? $actor->getIdentity() : null;
-    }
-
-    /**
-     * The actor's role, read through the component's own user contract.
-     */
-    private function actorRoleId(ServerRequestInterface $request): ?string
-    {
-        /** @var UserInterface|null $actor */
-        $actor = $request->getAttribute(UserInterface::class);
-
-        if (! $actor instanceof UserInterface) {
-            return null;
-        }
-
-        $roles = [...$actor->getRoles()];
-
-        return array_shift($roles);
-    }
-
-    /**
-     * The roles the actor may assign; an actor with no role gets none.
-     *
-     * @throws AssertException
-     *
-     * @return list<string>
-     */
-    private function assignableRoles(ServerRequestInterface $request): array
-    {
-        $actorRoleId = $this->actorRoleId($request);
-
-        if (null === $actorRoleId) {
-            return [];
-        }
-
-        /** @var QueryResult $result */
-        $result = $this->messageBus->handle(
-            new FetchAssignableRolesQuery(actorRoleId: $actorRoleId),
-        );
-
-        return Type\vec(Type\string())->assert($result->getResult());
     }
 
     /**

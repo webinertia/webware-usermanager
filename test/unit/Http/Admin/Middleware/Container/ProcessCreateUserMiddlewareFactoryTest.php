@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\Middleware\Container\ProcessCreateUserMiddlewareFactory;
 use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use WebwareTest\UserManager\Support\InputFilterHelper;
@@ -29,6 +30,10 @@ final class ProcessCreateUserMiddlewareFactoryTest extends TestCase
                 [InputFilterPluginManager::class, InputFilterHelper::inputFilterPluginManager()],
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [LoggerInterface::class, $this->createStub(LoggerInterface::class)],
+                [
+                    AssignableRolesProvider::class,
+                    new AssignableRolesProvider($this->createStub(MessageBusInterface::class)),
+                ],
             ]);
 
         self::assertInstanceOf(

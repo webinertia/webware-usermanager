@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\Http\Admin\Middleware;
 
+use Psl\Type\Exception\AssertException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -14,6 +15,7 @@ use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Command\UpdateUserCommand;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 
 use function is_array;
@@ -25,9 +27,11 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
     public function __construct(
         private MessageBusInterface $messageBus,
         private UpdateUserDataFilter $filter,
+        private AssignableRolesProvider $assignableRoles,
     ) {}
 
     /**
+     * @throws AssertException
      * @throws InvalidHopsValueException
      */
     public function processPatch(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -35,7 +39,14 @@ final readonly class ProcessUpdateUserMiddleware implements MiddlewareInterface
         /** @var SystemMessengerInterface|null $messenger */
         $messenger = $request->getAttribute(SystemMessengerInterface::class);
         $body      = $request->getParsedBody();
-        $data      = [...(is_array($body) ? $body : []), 'id' => $request->getAttribute('id')];
+
+        // The server-controlled key goes after the spread: the client's own list
+        // must never be the one the validator reads.
+        $data = [
+            ...(is_array($body) ? $body : []),
+            'id'              => $request->getAttribute('id'),
+            'assignableRoles' => $this->assignableRoles->forRequest($request),
+        ];
 
         $filterResult = $this->filter->validate($data);
 

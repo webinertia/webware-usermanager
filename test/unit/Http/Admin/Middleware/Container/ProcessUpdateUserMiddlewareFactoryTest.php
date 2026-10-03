@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
 use WebwareTest\UserManager\Support\InputFilterHelper;
@@ -27,6 +28,10 @@ final class ProcessUpdateUserMiddlewareFactoryTest extends TestCase
             ->willReturnMap([
                 [InputFilterPluginManager::class, InputFilterHelper::inputFilterPluginManager()],
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
+                [
+                    AssignableRolesProvider::class,
+                    new AssignableRolesProvider($this->createStub(MessageBusInterface::class)),
+                ],
             ]);
 
         self::assertInstanceOf(

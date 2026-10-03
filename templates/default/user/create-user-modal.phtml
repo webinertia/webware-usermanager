@@ -84,21 +84,11 @@ $selectedRole = $old['roleId'] ?? '';
             <label class="form-label small fw-semibold" for="create_role_id">
                 Role <span class="text-danger">*</span>
             </label>
-            <select
-                id="create_role_id"
-                name="roleId"
-                class="form-select form-select-sm"
-                autocomplete="off"
-                required
-            >
-                <option value="">Select a role</option>
-                <?php foreach ($assignableRoles as $roleId): ?>
-                    <option
-                        value="<?= $this->escapeHtmlAttr($roleId) ?>"
-                        <?= $selectedRole === $roleId ? 'selected' : '' ?>
-                    ><?= $this->escapeHtml($roleId) ?></option>
-                <?php endforeach; ?>
-            </select>
+            <?= $this->partial('user::partials/role-select', [
+                'id'       => 'create_role_id',
+                'roles'    => $assignableRoles,
+                'selected' => $selectedRole,
+            ]) ?>
             <div class="form-text">The account is created inactive; the user sets a password from the email.</div>
         </div>
     </form>
