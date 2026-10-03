@@ -14,6 +14,7 @@ use Override;
 use PhpDb\Validator\NoRecordExists;
 use Webware\UserManager\InputFilter\CreateUserDataFilter;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
+use Webware\UserManager\InputFilter\SetPasswordDataFilter;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 use Webware\UserManager\Validator\AssignableRoleValidator;
 
@@ -37,6 +38,7 @@ final class InputFilterHelper
         $manager->setService(RegistrationDataFilter::class, self::registrationDataFilter());
         $manager->setService(UpdateUserDataFilter::class, self::updateUserDataFilter());
         $manager->setService(CreateUserDataFilter::class, self::createUserDataFilter());
+        $manager->setService(SetPasswordDataFilter::class, self::setPasswordDataFilter());
 
         return $manager;
     }
@@ -44,6 +46,14 @@ final class InputFilterHelper
     public static function registrationDataFilter(): RegistrationDataFilter
     {
         $filter = new RegistrationDataFilter(self::factory());
+        $filter->init();
+
+        return $filter;
+    }
+
+    public static function setPasswordDataFilter(): SetPasswordDataFilter
+    {
+        $filter = new SetPasswordDataFilter(self::factory());
         $filter->init();
 
         return $filter;

@@ -124,7 +124,7 @@ final class RouteProviderTest extends TestCase
         $routes = [];
 
         $collector = $this->createMock(RouteCollectorInterface::class);
-        $collector->expects($this->exactly(6))
+        $collector->expects($this->exactly(7))
             ->method('get')
             ->willReturnCallback(
                 static function (string $path, MiddlewareInterface $mw, ?string $name = null) use (&$gets): Route {
@@ -133,7 +133,7 @@ final class RouteProviderTest extends TestCase
                     return new Route($path, $mw, ['GET'], $name);
                 },
             );
-        $collector->expects($this->exactly(5))
+        $collector->expects($this->exactly(6))
             ->method('post')
             ->willReturnCallback(
                 static function (string $path, MiddlewareInterface $mw, ?string $name = null) use (&$posts): Route {
@@ -171,6 +171,7 @@ final class RouteProviderTest extends TestCase
                 ['/user/login',                'user.session.read'],
                 ['/user/register',             'user.register.read'],
                 ['/user/verify.email/{token}', 'user.verify.email.read'],
+                ['/user/set.password/{token}', 'user.set.password.read'],
                 ['/user/resend.verification',  'user.resend.verification.read'],
                 ['/user/logout',               'user.logout.read'],
                 ['/admin/user',                'admin.user'],
@@ -182,6 +183,7 @@ final class RouteProviderTest extends TestCase
             [
                 ['/user/login',                 'user.session.create'],
                 ['/user/register',              'user.register.create'],
+                ['/user/set.password/{token}',  'user.set.password.create'],
                 ['/user/resend.verification',   'user.resend.verification.create'],
                 ['/admin/user/create',          'admin.user.create'],
                 ['/admin/user/{id:\d+}/toggle', 'admin.user.toggle.update'],

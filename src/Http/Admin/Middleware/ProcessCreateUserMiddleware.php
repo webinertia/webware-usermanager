@@ -102,15 +102,18 @@ final readonly class ProcessCreateUserMiddleware implements MiddlewareInterface
 
         /** @var CommandResult $result */
         $result = $this->messageBus->handle(new CreateUserCommand(
-            firstName        : $values['firstName'],
-            lastName         : $values['lastName'],
+            firstName          : $values['firstName'],
+            lastName           : $values['lastName'],
             // An unusable random hash: the account is inactive and the user sets
             // their own password from the verification email.
-            passwordHash     : password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT),
-            email            : $values['email'],
-            roleId           : $values['roleId'],
-            verificationToken: Uuid::uuid7()->toString(),
-            active           : false,
+            passwordHash       : password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT),
+            email              : $values['email'],
+            roleId             : $values['roleId'],
+            verificationToken  : Uuid::uuid7()->toString(),
+            active             : false,
+            // The account has no password of its own yet: the user sets one from
+            // the activation link before the account can be used.
+            passwordSetRequired: 1,
         ));
 
         if (MessageStatus::Success === $result->getStatus()) {

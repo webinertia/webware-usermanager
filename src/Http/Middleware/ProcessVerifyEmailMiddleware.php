@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Webware\UserManager\Http\Middleware;
 
 use DateTimeImmutable;
+use InvalidArgumentException;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
 use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,6 +22,7 @@ use Webware\UserManager\Command\ActivateUserCommand;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
 use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
+use Webware\UserManager\View\Helper\UserUrl;
 
 /**
  * Resolves the verification token and activates the account before delegating
@@ -28,10 +32,13 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
+        private UserUrl $userUrl,
         private int $tokenTtl,
     ) {}
 
     /**
+     * @throws HelperException
+     * @throws InvalidArgumentException
      * @throws InvalidHopsValueException
      */
     #[Override]
@@ -70,6 +77,14 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
                     ['error' => 'Your verification link has expired.', 'expired' => true],
                 ));
             }
+        }
+
+        if ($user->passwordSetRequired) {
+            // Created without a password: send the user to set one rather than
+            // activating an account nobody can sign in to.
+            return new RedirectResponse(
+                ($this->userUrl)('set.password.read', ['token' => $token]),
+            );
         }
 
         $commandResult = $this->messageBus->handle(new ActivateUserCommand(id: (int) $user->id));

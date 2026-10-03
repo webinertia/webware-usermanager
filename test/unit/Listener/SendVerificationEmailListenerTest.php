@@ -9,8 +9,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\Command\CommandResultInterface;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Command\SendVerificationEmailCommand;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
@@ -64,15 +66,48 @@ final class SendVerificationEmailListenerTest extends TestCase
         static::assertSame('Verify your email', $dispatched->subject);
     }
 
-    private function event(): SendVerificationEmailEvent
+    #[Test]
+    public function linksToTheSetPasswordPageWhenTheAccountHasNoPasswordYet(): void
+    {
+        $dispatched = null;
+        $event      = $this->event(passwordSetRequired: 1);
+
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('handle')
+            ->willReturnCallback(static function (object $message) use (&$dispatched): CommandResultInterface {
+                $dispatched = $message;
+
+                return new CommandResult($message, MessageStatus::Success, 1);
+            });
+
+        $urlHelper = $this->createMock(UrlHelper::class);
+        $urlHelper->expects($this->once())
+            ->method('__invoke')
+            ->with('user.set.password.read', ['token' => $event->getToken()])
+            ->willReturn('/user/set-password');
+
+        $this->listener(
+            messageBus: $messageBus,
+            urlHelper : $urlHelper,
+        )($event);
+
+        if (! $dispatched instanceof SendVerificationEmailCommand) {
+            static::fail('Expected a SendVerificationEmailCommand to be dispatched.');
+        }
+
+        static::assertSame('https://example.com/user/set-password', $dispatched->verificationUrl);
+    }
+
+    private function event(int $passwordSetRequired = 0): SendVerificationEmailEvent
     {
         $command = new CreateUserCommand(
-            firstName        : 'Jane',
-            lastName         : 'Doe',
-            passwordHash     : bin2hex(random_bytes(16)),
-            email            : 'jane@example.com',
-            roleId           : 'Member',
-            verificationToken: bin2hex(random_bytes(16)),
+            firstName          : 'Jane',
+            lastName           : 'Doe',
+            passwordHash       : bin2hex(random_bytes(16)),
+            email              : 'jane@example.com',
+            roleId             : 'Member',
+            verificationToken  : bin2hex(random_bytes(16)),
+            passwordSetRequired: $passwordSetRequired,
         );
 
         return new SendVerificationEmailEvent($command);

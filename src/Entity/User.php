@@ -58,6 +58,12 @@ class User implements UserInterface
                 $this->active = (bool) $value;
             }
         },
+        public private(set) int|bool|null $passwordSetRequired = null {
+            get => $this->passwordSetRequired ?? false;
+            set(int|bool|null $value) {
+                $this->passwordSetRequired = (bool) $value;
+            }
+        },
         /** @var DateTimeImmutable|array<array-key, mixed>|string|null */
         public private(set) DateTimeImmutable|array|string|null $createdAt = null {
             get => $this->createdAt ?? new DateTimeImmutable();

@@ -131,6 +131,7 @@ final class ConfigProvider
             Command\RegenerateVerificationTokenCommand::class => CommandHandler\RegenerateVerificationTokenHandler::class,
             Command\ResendVerificationEmailCommand::class     => CommandHandler\ResendVerificationEmailHandler::class,
             Command\SendVerificationEmailCommand::class       => CommandHandler\SendVerificationEmailHandler::class,
+            Command\SetPasswordCommand::class                 => CommandHandler\SetPasswordHandler::class,
             Command\ToggleUserActiveCommand::class            => CommandHandler\ToggleUserActiveHandler::class,
             Command\UpdateUserCommand::class                  => CommandHandler\UpdateUserHandler::class,
         ];
@@ -173,6 +174,7 @@ final class ConfigProvider
                 CommandHandler\RegenerateVerificationTokenHandler::class       => CommandHandler\Container\RegenerateVerificationTokenHandlerFactory::class,
                 CommandHandler\ResendVerificationEmailHandler::class           => CommandHandler\Container\ResendVerificationEmailHandlerFactory::class,
                 CommandHandler\SendVerificationEmailHandler::class             => CommandHandler\Container\SendVerificationEmailHandlerFactory::class,
+                CommandHandler\SetPasswordHandler::class                       => CommandHandler\Container\SetPasswordHandlerFactory::class,
                 QueryHandler\AuthenticateUserHandler::class                    => QueryHandler\Container\AuthenticateUserHandlerFactory::class,
                 QueryHandler\CheckUserActiveHandler::class                     => QueryHandler\Container\CheckUserActiveHandlerFactory::class,
                 QueryHandler\FetchAssignableRolesHandler::class                => QueryHandler\Container\FetchAssignableRolesHandlerFactory::class,
@@ -183,6 +185,7 @@ final class ConfigProvider
                 Http\Middleware\IdentityMiddleware::class                      => Http\Middleware\Container\IdentityMiddlewareFactory::class,
                 Http\Middleware\LoginMiddleware::class                         => Http\Middleware\Container\LoginMiddlewareFactory::class,
                 Http\Middleware\ProcessVerifyEmailMiddleware::class            => Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory::class,
+                Http\Middleware\ProcessSetPasswordMiddleware::class            => Http\Middleware\Container\ProcessSetPasswordMiddlewareFactory::class,
                 Http\Middleware\ProcessResendVerificationMiddleware::class     => Http\Middleware\Container\ProcessResendVerificationMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessToggleUserActiveMiddleware::class => Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessCreateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessCreateUserMiddlewareFactory::class,
@@ -197,6 +200,7 @@ final class ConfigProvider
                 Http\RequestHandler\ResendVerificationHandler::class           => Http\RequestHandler\Container\ResendVerificationHandlerFactory::class,
                 Http\RequestHandler\UserListHandler::class                     => Http\RequestHandler\Container\UserListHandlerFactory::class,
                 Http\RequestHandler\VerifyEmailHandler::class                  => Http\RequestHandler\Container\VerifyEmailHandlerFactory::class,
+                Http\RequestHandler\SetPasswordHandler::class                  => Http\RequestHandler\Container\SetPasswordHandlerFactory::class,
                 Listener\SendVerificationEmailListener::class                  => Listener\Container\SendVerificationEmailListenerFactory::class,
                 RegisterWidgetListener::class                                  => RegisterWidgetListenerFactory::class,
             ],
@@ -217,6 +221,7 @@ final class ConfigProvider
                 InputFilter\CreateUserDataFilter::class   => InputFilterFactory::class,
                 InputFilter\UpdateUserDataFilter::class   => InputFilterFactory::class,
                 InputFilter\RegistrationDataFilter::class => InputFilterFactory::class,
+                InputFilter\SetPasswordDataFilter::class  => InputFilterFactory::class,
             ],
         ];
     }
