@@ -100,6 +100,7 @@ final readonly class ProcessCreateUserMiddleware implements MiddlewareInterface
         /** @var array{firstName: string, lastName: string, email: string, roleId: string} $values */
         $values = $filterResult->value();
 
+        /** @var CommandResult $result */
         $result = $this->messageBus->handle(new CreateUserCommand(
             firstName        : $values['firstName'],
             lastName         : $values['lastName'],
@@ -120,9 +121,20 @@ final readonly class ProcessCreateUserMiddleware implements MiddlewareInterface
             ]);
         }
 
-        // The success/failure notification is sent centrally by
-        // NotificationMiddleware from this result; the middleware only stores it.
-        return $handler->handle($request->withAttribute(CommandResult::class, $result));
+        // The success/failure notification is sent centrally by NotificationMiddleware
+        // from the CommandResult below. The handler reads the outcome from the state,
+        // so both attributes are attached.
+        return $handler->handle(
+            $request->withAttribute(CommandResult::class, $result)
+                ->withAttribute(
+                    CreateUserState::class,
+                    new CreateUserState(
+                        assignableRoles: $assignableRoles,
+                        old            : $old,
+                        result         : $result,
+                    ),
+                ),
+        );
     }
 
     private function actorIdentity(ServerRequestInterface $request): ?string

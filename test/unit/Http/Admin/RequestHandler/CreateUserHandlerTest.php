@@ -45,6 +45,7 @@ final class CreateUserHandlerTest extends TestCase
         self::assertSame('<list>', (string) $response->getBody());
         self::assertSame(self::LIST_URL, $response->getHeaderLine(Header::PushUrl->value));
         self::assertSame('{"closeModal":null}', $response->getHeaderLine(Header::Trigger->value));
+        self::assertFalse($response->hasHeader(Header::Retarget->value));
     }
 
     #[Test]
@@ -54,6 +55,8 @@ final class CreateUserHandlerTest extends TestCase
             'assignableRoles' => ['Member'],
             'errors'          => ['roleId' => ['The selected role is not one you may assign.']],
             'old'             => ['email' => 'jane@example.com', 'roleId' => 'Developer'],
+            'layout'          => false,
+            'body'            => false,
         ]);
 
         $response = $this->handler($template)->handle(
@@ -68,6 +71,8 @@ final class CreateUserHandlerTest extends TestCase
         );
 
         self::assertSame(422, $response->getStatusCode());
+        self::assertSame('#sharedModalDialog', $response->getHeaderLine(Header::Retarget->value));
+        self::assertSame('innerHTML', $response->getHeaderLine(Header::Reswap->value));
     }
 
     #[Test]
@@ -77,6 +82,8 @@ final class CreateUserHandlerTest extends TestCase
             'assignableRoles' => ['Member'],
             'errors'          => [],
             'old'             => ['email' => 'jane@example.com'],
+            'layout'          => false,
+            'body'            => false,
         ]);
 
         $response = $this->handler($template)->handle(
@@ -95,6 +102,8 @@ final class CreateUserHandlerTest extends TestCase
         );
 
         self::assertSame(500, $response->getStatusCode());
+        self::assertSame('#sharedModalDialog', $response->getHeaderLine(Header::Retarget->value));
+        self::assertSame('innerHTML', $response->getHeaderLine(Header::Reswap->value));
     }
 
     #[Test]
@@ -104,12 +113,15 @@ final class CreateUserHandlerTest extends TestCase
             'assignableRoles' => [],
             'errors'          => [],
             'old'             => [],
+            'layout'          => false,
+            'body'            => false,
         ]);
 
         $response = $this->handler($template)->handle(new ServerRequest());
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('<form>', (string) $response->getBody());
+        self::assertFalse($response->hasHeader(Header::Retarget->value));
     }
 
     #[Test]
@@ -119,6 +131,8 @@ final class CreateUserHandlerTest extends TestCase
             'assignableRoles' => ['Member', 'Administrator'],
             'errors'          => [],
             'old'             => [],
+            'layout'          => false,
+            'body'            => false,
         ]);
 
         $response = $this->handler($template)->handle(

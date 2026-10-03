@@ -34,29 +34,6 @@ use function assert;
 final class ProcessCreateUserMiddlewareTest extends TestCase
 {
     #[Test]
-    public function attachesOnlyTheCommandResultOnSuccess(): void
-    {
-        $bus = $this->createStub(MessageBusInterface::class);
-        $bus->method('handle')->willReturnCallback(
-            static fn(MessageInterface $message): QueryResult|CommandResult => (
-                $message instanceof FetchAssignableRolesQuery
-                    ? new QueryResult($message, MessageStatus::Success, ['Member'])
-                    : new CommandResult($message, MessageStatus::Success, 7)
-            ),
-        );
-
-        $capturedRequest = null;
-
-        $this->middleware($bus, $this->createStub(LoggerInterface::class))->processPost(
-            $this->postRequest(['roleId' => 'Member']),
-            $this->capturingHandler($capturedRequest),
-        );
-
-        self::assertNull($capturedRequest?->getAttribute(CreateUserState::class));
-        self::assertInstanceOf(CommandResult::class, $capturedRequest?->getAttribute(CommandResult::class));
-    }
-
-    #[Test]
     public function attachesTheOldInputWithoutAWarningWhenAFieldIsMissing(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
@@ -84,6 +61,34 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
         self::assertInstanceOf(CreateUserState::class, $state);
         self::assertArrayHasKey('email', $state->errors);
         self::assertArrayNotHasKey('roleId', $state->errors);
+    }
+
+    #[Test]
+    public function attachesTheStateAndTheCommandResultOnSuccess(): void
+    {
+        $bus = $this->createStub(MessageBusInterface::class);
+        $bus->method('handle')->willReturnCallback(
+            static fn(MessageInterface $message): QueryResult|CommandResult => (
+                $message instanceof FetchAssignableRolesQuery
+                    ? new QueryResult($message, MessageStatus::Success, ['Member'])
+                    : new CommandResult($message, MessageStatus::Success, 7)
+            ),
+        );
+
+        $capturedRequest = null;
+
+        $this->middleware($bus, $this->createStub(LoggerInterface::class))->processPost(
+            $this->postRequest(['roleId' => 'Member']),
+            $this->capturingHandler($capturedRequest),
+        );
+
+        $state = $capturedRequest?->getAttribute(CreateUserState::class);
+        self::assertInstanceOf(CreateUserState::class, $state);
+        self::assertSame(['Member'], $state->assignableRoles);
+        self::assertSame([], $state->errors);
+        self::assertSame('Member', $state->old['roleId']);
+        self::assertInstanceOf(CommandResult::class, $state->result);
+        self::assertInstanceOf(CommandResult::class, $capturedRequest?->getAttribute(CommandResult::class));
     }
 
     #[Test]
@@ -133,7 +138,10 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
         self::assertNotSame('', $captured->verificationToken);
 
         $state = $capturedRequest?->getAttribute(CreateUserState::class);
-        self::assertNull($state);
+        self::assertInstanceOf(CreateUserState::class, $state);
+        self::assertSame(['Member', 'Administrator'], $state->assignableRoles);
+        self::assertInstanceOf(CommandResult::class, $state->result);
+        self::assertSame([], $state->errors);
         self::assertInstanceOf(CommandResult::class, $capturedRequest?->getAttribute(CommandResult::class));
     }
 
@@ -244,6 +252,11 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
         $result = $capturedRequest?->getAttribute(CommandResult::class);
         self::assertInstanceOf(CommandResult::class, $result);
         self::assertSame(MessageStatus::Failure, $result->getStatus());
+
+        $state = $capturedRequest?->getAttribute(CreateUserState::class);
+        self::assertInstanceOf(CreateUserState::class, $state);
+        self::assertSame($result, $state->result);
+        self::assertSame(['Member'], $state->assignableRoles);
     }
 
     #[Test]

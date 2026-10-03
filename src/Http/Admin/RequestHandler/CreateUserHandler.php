@@ -59,15 +59,26 @@ final class CreateUserHandler implements RequestHandlerInterface
         $assignableRoles = $state instanceof CreateUserState ? $state->assignableRoles : [];
         $errors          = $state instanceof CreateUserState ? $state->errors : [];
         $old             = $state instanceof CreateUserState ? $state->old : [];
+        $status          = $this->statusFor($state);
 
-        return new HtmlResponse(
+        $response = new HtmlResponse(
             $this->template->render('user::create-user-modal', [
                 'assignableRoles' => $assignableRoles,
                 'errors'          => $errors,
                 'old'             => $old,
+                'layout'          => false,
+                'body'            => false,
             ]),
-            $this->statusFor($state),
+            $status,
         );
+
+        // The form posts into `main`, so a failure render has to be aimed back at
+        // the modal it came from.
+        return match ($status) {
+            422, 500 => $response->withHeader(Header::Retarget->value, '#sharedModalDialog')
+                ->withHeader(Header::Reswap->value, 'innerHTML'),
+            default  => $response,
+        };
     }
 
     private function statusFor(?CreateUserState $state): int
