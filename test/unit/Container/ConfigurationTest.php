@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Webware\Core\Exception\ConfigurationException;
 use Webware\Core\Exception\ContainerException;
 use Webware\Core\UserInterface;
 use Webware\UserManager\Container\Configuration;
@@ -137,7 +138,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenAuthenticationConfigEmpty(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getCredentialConfig($this->containerWith(['authentication' => []]), 'TestFactory');
     }
@@ -145,7 +146,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenAuthenticationConfigNotArray(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getCredentialConfig($this->containerWith(['authentication' => 'nope']), 'TestFactory');
     }
@@ -153,7 +154,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenAuthenticationKeyMissing(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getCredentialConfig($this->containerWith([]), 'TestFactory');
     }
@@ -161,7 +162,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenBaseUrlIsEmpty(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getBaseUrl(
             $this->containerWith([UserInterface::class => ['base_url' => '']]),
@@ -172,7 +173,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenBaseUrlIsNotAString(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getBaseUrl(
             $this->containerWith([UserInterface::class => ['base_url' => 8080]]),
@@ -183,7 +184,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenBaseUrlMissing(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessageMatches('/base_url/');
 
         Configuration::getBaseUrl(
@@ -195,7 +196,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenComponentSectionIsEmpty(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getBaseUrl($this->containerWith([UserInterface::class => []]), 'TestFactory');
     }
@@ -203,7 +204,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenComponentSectionMissing(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessageMatches('/UserInterface/');
 
         Configuration::getBaseUrl($this->containerWith([]), 'TestFactory');
@@ -226,7 +227,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenVerificationEmailSubjectMissing(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessageMatches('/verification_email_subject/');
 
         Configuration::getVerificationEmailSubject(
@@ -238,7 +239,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenVerificationTokenTtlIsNotAnInt(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getVerificationTokenTtl(
             $this->containerWith([UserInterface::class => ['verification_token_ttl' => '3600']]),
@@ -249,7 +250,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenVerificationTokenTtlIsNotPositive(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
 
         Configuration::getVerificationTokenTtl(
             $this->containerWith([UserInterface::class => ['verification_token_ttl' => 0]]),
@@ -260,7 +261,7 @@ final class ConfigurationTest extends TestCase
     #[Test]
     public function throwsWhenVerificationTokenTtlMissing(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessageMatches('/verification_token_ttl/');
 
         Configuration::getVerificationTokenTtl(
