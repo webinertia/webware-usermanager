@@ -208,9 +208,9 @@ final class UserRepository implements UserRepositoryInterface
     {
         $data = is_array($commandOrRow) ? $commandOrRow : (array) $commandOrRow;
 
-        // NamedCommandTrait exposes a public command name, so the cast carries it into the
-        // row; it is not a column and neither insert() nor update() accepts it.
-        unset($data['commandName']);
+        // The cast carries every public property into the row. The command name (NamedCommandTrait)
+        // and the notification messages (NotificationCapableInterface) are not columns.
+        unset($data['commandName'], $data['successMessage'], $data['failureMessage']);
 
         if (! isset($data['id'])) {
             $this->gateway->insert($data);
