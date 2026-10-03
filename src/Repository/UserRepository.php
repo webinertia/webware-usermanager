@@ -11,7 +11,6 @@ use PhpDb\Exception\ExceptionInterface;
 use PhpDb\ResultSet\ResultSetInterface;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
-use PhpDb\Sql\Exception\ExceptionInterface as SqlException;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use PhpDb\TableGateway\TableGateway;
 use Psl\Type;
@@ -40,7 +39,7 @@ final class UserRepository implements UserRepositoryInterface
     ) {}
 
     /**
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     public function authenticate(
@@ -87,7 +86,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     public function checkStatus(int $id): bool
@@ -105,7 +104,7 @@ final class UserRepository implements UserRepositoryInterface
      * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
      * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      * @throws PslTypeException
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     // @mago-expect lint:excessive-parameter-list - accepted: the parameter list mirrors the SQL select this method builds.
@@ -151,7 +150,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     public function findByEmail(string $email): ?UserInterface
@@ -162,7 +161,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     public function findById(int $id): ?UserInterface
@@ -174,7 +173,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     public function findByVerificationToken(#[SensitiveParameter] string $token): ?UserInterface
@@ -187,7 +186,7 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * @param array<string, mixed> $data
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     public function insert(array $data): int
@@ -223,7 +222,7 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * @param array<string, mixed> $data
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     #[Override]
     public function update(int $id, array $data): int
@@ -236,7 +235,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws SqlException
+     * @throws ExceptionInterface
      */
     private function findByConfiguredCredential(string $column, string $credential): ?User
     {
