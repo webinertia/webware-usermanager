@@ -26,6 +26,7 @@ use Webware\UserManager\Http\Middleware\ProcessResendVerificationMiddleware;
 use Webware\UserManager\Http\Middleware\ProcessSetPasswordMiddleware;
 use Webware\UserManager\Http\Middleware\ProcessVerifyEmailMiddleware;
 use Webware\UserManager\Http\Middleware\RegistrationMiddleware;
+use Webware\UserManager\Http\Middleware\UserListMiddleware;
 use Webware\UserManager\Http\RequestHandler\LoginHandler;
 use Webware\UserManager\Http\RequestHandler\LogoutHandler;
 use Webware\UserManager\Http\RequestHandler\RegistrationHandler;
@@ -174,6 +175,7 @@ final readonly class RouteProvider implements RouteProviderInterface
         $routeCollector->get(
             "/{$this->adminRouteSegment}",
             $middlewareFactory->prepare([
+                UserListMiddleware::class,
                 UserListHandler::class,
             ]),
             rtrim(
@@ -204,6 +206,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             "/{$this->adminRouteSegment}/create",
             $middlewareFactory->prepare([
                 ProcessCreateUserMiddleware::class,
+                UserListMiddleware::class,
                 NotificationMiddleware::class,
                 CreateUserHandler::class,
             ]),
@@ -216,6 +219,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             $middlewareFactory->prepare([
                 BodyParamsMiddleware::class,
                 ProcessUpdateUserMiddleware::class,
+                UserListMiddleware::class,
                 NotificationMiddleware::class,
                 UpdateUserHandler::class,
             ]),

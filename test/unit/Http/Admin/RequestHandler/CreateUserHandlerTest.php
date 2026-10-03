@@ -12,14 +12,11 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\Htmx\Response\Header;
 use Webware\MessageBus\Command\CommandResult;
-use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
-use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Http\Admin\CreateUserState;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
-use Webware\UserManager\Query\FetchUsersQuery;
 
 use function bin2hex;
 use function random_bytes;
@@ -176,17 +173,10 @@ final class CreateUserHandlerTest extends TestCase
         $listTemplate = $this->createStub(TemplateRendererInterface::class);
         $listTemplate->method('render')->willReturn('<list>');
 
-        $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
-            ->willReturn(
-                new QueryResult(new FetchUsersQuery(), MessageStatus::Success, []),
-            );
-
         return new CreateUserHandler(
             template   : $template,
             listHandler: new UserListHandler(
-                template  : $listTemplate,
-                messageBus: $messageBus,
+                template: $listTemplate,
             ),
             listUrl    : self::LIST_URL,
         );

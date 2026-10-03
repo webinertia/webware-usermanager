@@ -19,6 +19,8 @@ use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
+use Webware\UserManager\Http\Middleware\UserListMiddleware;
+use Webware\UserManager\Http\RequestHandler\UserListHandler;
 use Webware\UserManager\RouteProvider;
 
 use function array_search;
@@ -89,14 +91,33 @@ final class RouteProviderTest extends TestCase
 
         $provider->registerRoutes($collector, $factory);
 
+        // UserListMiddleware supplies the view model the list handlers render, and
+        // has to run after the Process* middleware so the list it fetches includes the
+        // command that has just run.
+        self::assertContains(
+            [UserListMiddleware::class, UserListHandler::class],
+            $prepared,
+        );
         self::assertSame(
-            NotificationMiddleware::class,
+            UserListMiddleware::class,
             $this->middlewareAfter(ProcessUpdateUserMiddleware::class, UpdateUserHandler::class, $prepared),
         );
         self::assertSame(
             NotificationMiddleware::class,
+            $this->middlewareAfter(UserListMiddleware::class, UpdateUserHandler::class, $prepared),
+        );
+        self::assertSame(
+            UserListMiddleware::class,
             $this->middlewareAfter(
                 ProcessCreateUserMiddleware::class,
+                CreateUserHandler::class,
+                $prepared,
+            ),
+        );
+        self::assertSame(
+            NotificationMiddleware::class,
+            $this->middlewareAfter(
+                UserListMiddleware::class,
                 CreateUserHandler::class,
                 $prepared,
             ),
