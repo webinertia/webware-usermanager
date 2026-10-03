@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "921d16565e018f6fd183398e77eb659b",
+    "content-hash": "75ad13f7ce384cdca4b641078d5c2fed",
     "packages": [
         {
             "name": "brick/math",
@@ -2226,6 +2226,103 @@
                 "source": "https://github.com/php-db/phpdb-mysql"
             },
             "time": "2026-09-04T04:45:13+00:00"
+        },
+        {
+            "name": "php-db/phpdb-validator",
+            "version": "0.1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-db/phpdb-validator.git",
+                "reference": "d15bba45b38fcda2259abf778b3986c087e78afd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-db/phpdb-validator/zipball/d15bba45b38fcda2259abf778b3986c087e78afd",
+                "reference": "d15bba45b38fcda2259abf778b3986c087e78afd",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-servicemanager": "^3.12 || ^4.1",
+                "laminas/laminas-translator": "^2.0",
+                "laminas/laminas-validator": "^2.28 || ^3.0",
+                "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
+                "php-db/phpdb": "^0.6.0",
+                "psr/container": "^1.1 || ^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.5.0"
+            },
+            "suggest": {
+                "laminas/laminas-i18n": "Laminas\\I18n component to allow translation of validation error messages",
+                "laminas/laminas-i18n-resources": "Translations of validator messages",
+                "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "component": "PhpDb\\Validator",
+                    "config-provider": "PhpDb\\Validator\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpDb\\Validator\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PhpDbTest\\Validator\\Unit\\": "test/unit/",
+                    "PhpDbTest\\Validator\\Integration\\": "test/integration/",
+                    "PhpDbTestAsset\\Validator\\": "test/asset/"
+                }
+            },
+            "scripts": {
+                "check": [
+                    "@cs-check",
+                    "@static-analysis",
+                    "@test"
+                ],
+                "cs-check": [
+                    "mago format --check",
+                    "mago lint"
+                ],
+                "cs-fix": [
+                    "mago format",
+                    "mago lint --fix"
+                ],
+                "test": [
+                    "phpunit --colors=always --testsuite \"unit test\""
+                ],
+                "test-coverage": [
+                    "phpunit --colors=always --coverage-clover clover.xml"
+                ],
+                "test-integration": [
+                    "phpunit --colors=always --testsuite \"integration test\""
+                ],
+                "static-analysis": [
+                    "mago analyze"
+                ],
+                "upload-coverage": [
+                    "coveralls -v"
+                ]
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "phpdb validators for laminas-validator.",
+            "homepage": "https://github.com/php-db/phpdb-validator",
+            "keywords": [
+                "db",
+                "phpdb",
+                "validator"
+            ],
+            "support": {
+                "issues": "https://github.com/php-db/phpdb-validator/issues",
+                "source": "https://github.com/php-db/phpdb-validator",
+                "forum": "https://github.com/php-db/phpdb-validator/discussions"
+            },
+            "time": "2026-10-03T00:56:20+00:00"
         },
         {
             "name": "php-standard-library/collection",
@@ -13068,16 +13165,16 @@
         },
         {
             "name": "webware/webware-tools",
-            "version": "1.0.0-beta.5",
+            "version": "1.0.0-beta.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-tools.git",
-                "reference": "fa188188a6a755e91ea1bac9c9f22cda6b7b019c"
+                "reference": "62915c9befc68458bb9140bbc419a1e6d33aad01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/fa188188a6a755e91ea1bac9c9f22cda6b7b019c",
-                "reference": "fa188188a6a755e91ea1bac9c9f22cda6b7b019c",
+                "url": "https://api.github.com/repos/webinertia/webware-tools/zipball/62915c9befc68458bb9140bbc419a1e6d33aad01",
+                "reference": "62915c9befc68458bb9140bbc419a1e6d33aad01",
                 "shasum": ""
             },
             "require": {
@@ -13106,9 +13203,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webinertia/webware-tools/issues",
-                "source": "https://github.com/webinertia/webware-tools/tree/1.0.0-beta.5"
+                "source": "https://github.com/webinertia/webware-tools/tree/1.0.0-beta.8"
             },
-            "time": "2026-09-26T22:50:13+00:00"
+            "time": "2026-10-02T22:00:36+00:00"
         }
     ],
     "aliases": [],
@@ -13116,6 +13213,7 @@
     "stability-flags": {
         "laminas/laminas-inputfilter": 20,
         "php-db/phpdb-mysql": 20,
+        "php-db/phpdb-validator": 20,
         "roave/security-advisories": 20,
         "webware/webware-admin": 20,
         "webware/webware-console": 20,

@@ -30,7 +30,9 @@ final class RegisterWidgetListenerFactoryTest extends TestCase
     {
         self::assertInstanceOf(
             RegisterWidgetListener::class,
-            (new RegisterWidgetListenerFactory())($this->configuredContainer($this->createStub(MessageBusInterface::class))),
+            (new RegisterWidgetListenerFactory())($this->configuredContainer($this->createStub(
+                MessageBusInterface::class,
+            ))),
         );
     }
 

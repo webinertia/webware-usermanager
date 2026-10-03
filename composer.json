@@ -15,6 +15,12 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/php-db/phpdb-validator"
+        }
+    ],
     "require": {
         "php": "~8.4.1 || ~8.5.0",
         "fig/http-message-util": "^1.1",
@@ -31,6 +37,7 @@
         "mezzio/mezzio-template": "^2.8 || ^3.0",
         "monolog/monolog": "^3.4",
         "php-db/phpdb-mysql": "^0.5.x-dev",
+        "php-db/phpdb-validator": "0.1.x-dev",
         "php-standard-library/type": "^6.2",
         "psr/container": "^2.0",
         "psr/event-dispatcher": "^1.0",
@@ -57,7 +64,7 @@
         "roave/backward-compatibility-check": "^8.21.0",
         "roave/security-advisories": "dev-master",
         "webware/webware-console": "1.0.x-dev",
-        "webware/webware-tools": "^1.0.0-beta.2"
+        "webware/webware-tools": "^1.0.0-beta.8"
     },
     "autoload": {
         "psr-4": {

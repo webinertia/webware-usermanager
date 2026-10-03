@@ -52,6 +52,7 @@ use function rtrim;
  *     command_map: array<class-string, class-string>,
  *     query_map: array<class-string, class-string>
  * }
+ * @import-type ValidatorConfig from Validator\ConfigProvider
  * @type ProviderConfig = array{
  *     dependencies: Dependencies,
  *     input_filters: InputFilterConfig,
@@ -63,7 +64,8 @@ use function rtrim;
  *     listeners: ListenerConfig,
  *     Webware\Core\UserInterface: DefaultConfig,
  *     Webware\Core\AclInterface: AclConfig,
- *     Webware\Console\ConsoleInterface: array{commands: array<string, class-string>}
+ *     Webware\Console\ConsoleInterface: array{commands: array<string, class-string>},
+ *     validators: ValidatorConfig
  * }
  */
 // @mago-expect lint:too-many-methods - accepted: one getter per config section, which keeps each section independently testable.
@@ -209,6 +211,7 @@ final class ConfigProvider
     {
         return [
             'factories' => [
+                InputFilter\CreateUserDataFilter::class   => InputFilterFactory::class,
                 InputFilter\UpdateUserDataFilter::class   => InputFilterFactory::class,
                 InputFilter\RegistrationDataFilter::class => InputFilterFactory::class,
             ],
@@ -309,6 +312,7 @@ final class ConfigProvider
                     'user:init-db' => InitDbCommand::class,
                 ],
             ],
+            'validators'               => (new Validator\ConfigProvider())()['validators'],
         ];
     }
 }

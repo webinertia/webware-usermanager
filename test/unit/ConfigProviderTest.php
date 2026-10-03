@@ -28,6 +28,7 @@ use Webware\UserManager\Console\InitDbCommand;
 use Webware\UserManager\Container\UserFactory;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
+use Webware\UserManager\InputFilter\CreateUserDataFilter;
 use Webware\UserManager\InputFilter\RegistrationDataFilter;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 use Webware\UserManager\Listener\SendVerificationEmailListener;
@@ -151,10 +152,11 @@ final class ConfigProviderTest extends TestCase
     }
 
     #[Test]
-    public function inputFilterConfigRegistersBothFilters(): void
+    public function inputFilterConfigRegistersEveryDataFilter(): void
     {
         $config = $this->provider->getInputFilterConfig();
 
+        self::assertArrayHasKey(CreateUserDataFilter::class, $config['factories']);
         self::assertArrayHasKey(UpdateUserDataFilter::class, $config['factories']);
         self::assertArrayHasKey(RegistrationDataFilter::class, $config['factories']);
     }
@@ -174,6 +176,7 @@ final class ConfigProviderTest extends TestCase
         self::assertArrayHasKey('listeners', $config);
         self::assertArrayHasKey(UserInterface::class, $config);
         self::assertArrayHasKey(AclInterface::class, $config);
+        self::assertArrayHasKey('validators', $config);
         self::assertSame(InitDbCommand::class, $config[ConsoleInterface::class]['commands']['user:init-db']);
         self::assertSame(
             $this->provider->getCommandMap(),
