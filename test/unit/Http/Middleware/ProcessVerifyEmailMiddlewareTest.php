@@ -6,7 +6,9 @@ namespace WebwareTest\UserManager\Http\Middleware;
 
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Laminas\Diactoros\ServerRequest;
+use Mezzio\Helper\UrlHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,9 +28,11 @@ use Webware\UserManager\Entity\User;
 use Webware\UserManager\Http\Middleware\ProcessVerifyEmailMiddleware;
 use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
 use Webware\UserManager\Query\FetchUserByVerificationTokenQuery;
+use Webware\UserManager\View\Helper\UserUrl;
 
 use function bin2hex;
 use function random_bytes;
+use function str_replace;
 
 #[CoversClass(ProcessVerifyEmailMiddleware::class)]
 #[CoversMethod(ProcessVerifyEmailMiddleware::class, '__construct')]
@@ -63,6 +67,41 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         );
 
         static::assertSame($commandResult, $request->getAttribute(CommandResult::class));
+    }
+
+    #[Test]
+    public function redirectsToTheSetPasswordPageWhenTheAccountHasNoPasswordYet(): void
+    {
+        $token = bin2hex(random_bytes(16));
+        $user  = new User(
+            id                 : 3,
+            passwordSetRequired: 1,
+        );
+
+        $bus = $this->createMock(MessageBusInterface::class);
+        $bus->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(
+                static fn(MessageInterface $message): ResultInterface => new QueryResult(
+                    $message,
+                    MessageStatus::Success,
+                    $user,
+                ),
+            );
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects($this->never())->method('handle');
+
+        $response = $this->middleware(bus: $bus)->process(
+            new ServerRequest()->withAttribute('token', $token),
+            $handler,
+        );
+
+        static::assertInstanceOf(RedirectResponse::class, $response);
+        static::assertSame(
+            "/user/set.password.read?token={$token}",
+            $response->getHeaderLine('Location'),
+        );
     }
 
     #[Test]
@@ -157,6 +196,30 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         static::assertSame($commandResult, $request->getAttribute(CommandResult::class));
     }
 
+    private function middleware(MessageBusInterface $bus, int $tokenTtl = 3600): ProcessVerifyEmailMiddleware
+    {
+        $urlHelper = $this->createStub(UrlHelper::class);
+        $urlHelper->method('__invoke')
+            ->willReturnCallback(
+                static fn(string $routeName, array $params = []): string => (
+                    '/user/'
+                    . str_replace(
+                        search : 'user.',
+                        replace: '',
+                        subject: $routeName,
+                    )
+                    . '?token='
+                    . (string) ($params['token'] ?? '')
+                ),
+            );
+
+        return new ProcessVerifyEmailMiddleware(
+            messageBus: $bus,
+            userUrl   : new UserUrl($urlHelper, 'user.'),
+            tokenTtl  : $tokenTtl,
+        );
+    }
+
     private function process(
         MessageBusInterface $bus,
         ServerRequestInterface $request,
@@ -174,9 +237,9 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
                 return new EmptyResponse();
             });
 
-        new ProcessVerifyEmailMiddleware(
-            messageBus: $bus,
-            tokenTtl  : $tokenTtl,
+        $this->middleware(
+            bus     : $bus,
+            tokenTtl: $tokenTtl,
         )->process($request, $handler);
 
         return $capturedRequest;

@@ -7,6 +7,7 @@ namespace Webware\UserManager\Listener;
 use InvalidArgumentException;
 use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Command\SendVerificationEmailCommand;
 use Webware\UserManager\Event\SendVerificationEmailEvent;
 use Webware\UserManager\View\Helper\UserUrl;
@@ -23,6 +24,15 @@ final class SendVerificationEmailListener
     ) {}
 
     /**
+     * An account created without a password gets the set-password link instead,
+     * so the link and the page agree on what happens next.
+     */
+    private function routeName(CreateUserCommand $command): string
+    {
+        return 0 === $command->passwordSetRequired ? 'verify.email.read' : 'set.password.read';
+    }
+
+    /**
      * @throws HelperException
      * @throws InvalidArgumentException
      */
@@ -34,7 +44,7 @@ final class SendVerificationEmailListener
             string    : $this->baseUrl,
             characters: '/',
         )
-        . ($this->userUrl)('verify.email.read', ['token' => $token]);
+        . ($this->userUrl)($this->routeName($command), ['token' => $token]);
 
         $this->messageBus->handle(new SendVerificationEmailCommand(
             to             : $event->getEmail(),

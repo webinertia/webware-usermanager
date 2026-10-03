@@ -49,7 +49,7 @@ final class UserSchemaTest extends TestCase
         self::assertTrue($table->getIfNotExists());
 
         $columns = $this->columns($table);
-        self::assertCount(11, $columns);
+        self::assertCount(12, $columns);
 
         self::assertInstanceOf(Integer::class, $columns[0]);
         self::assertSame('id', $columns[0]->getName());
@@ -86,23 +86,28 @@ final class UserSchemaTest extends TestCase
         self::assertFalse($columns[6]->isNullable());
         self::assertSame(0, $columns[6]->getDefault());
 
-        self::assertInstanceOf(Varchar::class, $columns[7]);
-        self::assertSame('verificationToken', $columns[7]->getName());
-        self::assertSame(36, $columns[7]->getLength());
-        self::assertTrue($columns[7]->isNullable());
+        self::assertInstanceOf(TinyInteger::class, $columns[7]);
+        self::assertSame('passwordSetRequired', $columns[7]->getName());
+        self::assertFalse($columns[7]->isNullable());
+        self::assertSame(0, $columns[7]->getDefault());
 
-        self::assertInstanceOf(Datetime::class, $columns[8]);
-        self::assertSame('tokenCreatedAt', $columns[8]->getName());
+        self::assertInstanceOf(Varchar::class, $columns[8]);
+        self::assertSame('verificationToken', $columns[8]->getName());
+        self::assertSame(36, $columns[8]->getLength());
         self::assertTrue($columns[8]->isNullable());
 
         self::assertInstanceOf(Datetime::class, $columns[9]);
-        self::assertSame('createdAt', $columns[9]->getName());
-        self::assertFalse($columns[9]->isNullable());
+        self::assertSame('tokenCreatedAt', $columns[9]->getName());
+        self::assertTrue($columns[9]->isNullable());
 
-        self::assertInstanceOf(Json::class, $columns[10]);
-        self::assertSame('details', $columns[10]->getName());
-        self::assertTrue($columns[10]->isNullable());
-        self::assertSame(['comment' => 'Plugin extension data - storeId, etc. as JSON'], $columns[10]->getOptions());
+        self::assertInstanceOf(Datetime::class, $columns[10]);
+        self::assertSame('createdAt', $columns[10]->getName());
+        self::assertFalse($columns[10]->isNullable());
+
+        self::assertInstanceOf(Json::class, $columns[11]);
+        self::assertSame('details', $columns[11]->getName());
+        self::assertTrue($columns[11]->isNullable());
+        self::assertSame(['comment' => 'Plugin extension data - storeId, etc. as JSON'], $columns[11]->getOptions());
 
         $constraints = $this->constraints($table);
         self::assertCount(2, $constraints);

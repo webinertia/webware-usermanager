@@ -82,6 +82,11 @@ final class UserSchema
             nullable: false,
             default : 0,
         ));
+        $table->addColumn(new TinyInteger(
+            name    : 'passwordSetRequired',
+            nullable: false,
+            default : 0,
+        ));
         $table->addColumn(new Varchar(
             name    : 'verificationToken',
             length  : 36,

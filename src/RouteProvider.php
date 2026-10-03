@@ -23,12 +23,14 @@ use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
 use Webware\UserManager\Http\Middleware\LoginMiddleware;
 use Webware\UserManager\Http\Middleware\ProcessResendVerificationMiddleware;
+use Webware\UserManager\Http\Middleware\ProcessSetPasswordMiddleware;
 use Webware\UserManager\Http\Middleware\ProcessVerifyEmailMiddleware;
 use Webware\UserManager\Http\Middleware\RegistrationMiddleware;
 use Webware\UserManager\Http\RequestHandler\LoginHandler;
 use Webware\UserManager\Http\RequestHandler\LogoutHandler;
 use Webware\UserManager\Http\RequestHandler\RegistrationHandler;
 use Webware\UserManager\Http\RequestHandler\ResendVerificationHandler;
+use Webware\UserManager\Http\RequestHandler\SetPasswordHandler;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
 use Webware\UserManager\Http\RequestHandler\VerifyEmailHandler;
 
@@ -112,6 +114,26 @@ final readonly class RouteProvider implements RouteProviderInterface
                 VerifyEmailHandler::class,
             ]),
             "{$this->routeNamePrefix}verify.email.read",
+        );
+
+        $routeCollector->get(
+            "/{$this->routeSegment}/set.password/{token}",
+            $middlewareFactory->prepare([
+                DisableBodyMiddleware::class,
+                ProcessSetPasswordMiddleware::class,
+                SetPasswordHandler::class,
+            ]),
+            "{$this->routeNamePrefix}set.password.read",
+        );
+
+        $routeCollector->post(
+            "/{$this->routeSegment}/set.password/{token}",
+            $middlewareFactory->prepare([
+                DisableBodyMiddleware::class,
+                ProcessSetPasswordMiddleware::class,
+                SetPasswordHandler::class,
+            ]),
+            "{$this->routeNamePrefix}set.password.create",
         );
 
         $routeCollector->get(

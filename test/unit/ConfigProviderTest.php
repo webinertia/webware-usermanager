@@ -21,6 +21,7 @@ use Webware\UserManager\Command\CreateUserCommand;
 use Webware\UserManager\Command\RegenerateVerificationTokenCommand;
 use Webware\UserManager\Command\ResendVerificationEmailCommand;
 use Webware\UserManager\Command\SendVerificationEmailCommand;
+use Webware\UserManager\Command\SetPasswordCommand;
 use Webware\UserManager\Command\ToggleUserActiveCommand;
 use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\ConfigProvider;
@@ -118,12 +119,13 @@ final class ConfigProviderTest extends TestCase
     {
         $map = $this->provider->getCommandMap();
 
-        self::assertCount(7, $map);
+        self::assertCount(8, $map);
         self::assertArrayHasKey(ActivateUserCommand::class, $map);
         self::assertArrayHasKey(CreateUserCommand::class, $map);
         self::assertArrayHasKey(RegenerateVerificationTokenCommand::class, $map);
         self::assertArrayHasKey(ResendVerificationEmailCommand::class, $map);
         self::assertArrayHasKey(SendVerificationEmailCommand::class, $map);
+        self::assertArrayHasKey(SetPasswordCommand::class, $map);
         self::assertArrayHasKey(ToggleUserActiveCommand::class, $map);
         self::assertArrayHasKey(UpdateUserCommand::class, $map);
     }

@@ -69,6 +69,12 @@ final class CreateUserCommand implements NamedCommandInterface, NotificationCapa
                 $this->active = $value;
             }
         },
+        public private(set) int $passwordSetRequired = 0 {
+            get => $this->passwordSetRequired;
+            set(int $value) {
+                $this->passwordSetRequired = $value;
+            }
+        },
         public private(set) DateTimeImmutable|string $tokenCreatedAt = new DateTimeImmutable() {
             get => $this->tokenCreatedAt;
             set(DateTimeImmutable|string $value) {
