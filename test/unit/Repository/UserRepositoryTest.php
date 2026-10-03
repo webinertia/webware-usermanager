@@ -293,11 +293,14 @@ final class UserRepositoryTest extends TestCase
 
         self::assertSame(99, $this->repository($adapter)->save($command));
 
-        // The command's trait exposes a public name; it must not become an insert column.
+        // The command's trait exposes a public name and the notification interface two messages;
+        // none of them is a column, so none may reach the insert.
         /** @var array{table: string, columns: list<string>} $state */
         $state = (array) $this->preparedSqlObjects[0]->getRawState();
         self::assertContains('firstName', $state['columns']);
         self::assertNotContains('commandName', $state['columns']);
+        self::assertNotContains('successMessage', $state['columns']);
+        self::assertNotContains('failureMessage', $state['columns']);
     }
 
     #[Test]
