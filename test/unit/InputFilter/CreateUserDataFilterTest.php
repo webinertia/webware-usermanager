@@ -101,8 +101,9 @@ final class CreateUserDataFilterTest extends TestCase
     {
         $options = null;
 
-        $this->filter(capturedOptions: $options)->validate($this->validData());
+        $result = $this->filter(capturedOptions: $options)->validate($this->validData());
 
+        self::assertTrue($result->valid());
         self::assertSame(
             [
                 'messages' => [
