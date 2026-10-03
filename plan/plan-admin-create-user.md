@@ -10,7 +10,7 @@
 **Scope:** `webware-usermanager` (owner of the feature), with the contracts it consumes from `webware-core`,
 `webware-message`, `webware-htmx`, `webware-admin`, `webware-acl` and `webware-mailer`.
 **Replaces:** the "Admin create-user POST processing (stub exists but no middleware)" exclusion in
-[`plan-admin-edit-user.md`](plan-admin-edit-user.md).
+[`plan-admin-edit-user.md`](../docs/plan-admin-edit-user.md).
 
 How to read this: every statement under **Measured** was read from the code or run against the app on
 2026-10-02; the evidence is named. **Proposed** is design. **Not verified** says what I could not check.
