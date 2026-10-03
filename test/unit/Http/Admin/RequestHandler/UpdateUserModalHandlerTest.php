@@ -11,12 +11,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\MessageBus\MessageInterface;
 use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
+use Webware\UserManager\Query\FetchAssignableRolesQuery;
 use Webware\UserManager\Query\FetchUserByIdQuery;
+
+use function assert;
 
 #[CoversClass(UpdateUserModalHandler::class)]
 #[CoversMethod(UpdateUserModalHandler::class, '__construct')]
@@ -32,27 +38,40 @@ final class UpdateUserModalHandlerTest extends TestCase
         );
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus->expects($this->exactly(2))
             ->method('handle')
-            ->with(
-                static::callback(
-                    static fn(FetchUserByIdQuery $query): bool => 5 === $query->id,
-                ),
-            )
-            ->willReturn(new QueryResult(new FetchUserByIdQuery(id: 5), MessageStatus::Success, $user));
+            ->willReturnCallback(static function (MessageInterface $message) use ($user): QueryResult {
+                if ($message instanceof FetchUserByIdQuery) {
+                    return new QueryResult($message, MessageStatus::Success, $user);
+                }
+
+                assert($message instanceof FetchAssignableRolesQuery, description: 'Expected the roles query');
+
+                return new QueryResult($message, MessageStatus::Success, ['Member']);
+            });
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
             ->method('render')
-            ->with('user::update-user-modal', ['user' => $user, 'layout' => false, 'body' => false])
+            ->with('user::update-user-modal', [
+                'user'            => $user,
+                'assignableRoles' => ['Member'],
+                'layout'          => false,
+                'body'            => false,
+            ])
             ->willReturn('<form>');
 
         $handler = new UpdateUserModalHandler(
-            template  : $template,
-            messageBus: $messageBus,
+            template       : $template,
+            messageBus     : $messageBus,
+            assignableRoles: new AssignableRolesProvider($messageBus),
         );
 
-        $request = new ServerRequest()->withAttribute('id', '5');
+        $actor = $this->createStub(UserInterface::class);
+        $actor->method('getRoles')->willReturn(['Administrator']);
+
+        $request = new ServerRequest()->withAttribute('id', '5')
+            ->withAttribute(UserInterface::class, $actor);
 
         $response = $handler->handle($request);
 
@@ -64,8 +83,9 @@ final class UpdateUserModalHandlerTest extends TestCase
     public function returnsNotFoundWhenIdIsInvalid(): void
     {
         $handler = new UpdateUserModalHandler(
-            template  : $this->createStub(TemplateRendererInterface::class),
-            messageBus: $this->createStub(MessageBusInterface::class),
+            template       : $this->createStub(TemplateRendererInterface::class),
+            messageBus     : $this->createStub(MessageBusInterface::class),
+            assignableRoles: new AssignableRolesProvider($this->createStub(MessageBusInterface::class)),
         );
 
         $request = new ServerRequest()->withAttribute('id', 'not-a-number');
@@ -83,8 +103,9 @@ final class UpdateUserModalHandlerTest extends TestCase
             ->willReturn(new QueryResult(new FetchUserByIdQuery(id: 99), MessageStatus::Failure, null));
 
         $handler = new UpdateUserModalHandler(
-            template  : $this->createStub(TemplateRendererInterface::class),
-            messageBus: $messageBus,
+            template       : $this->createStub(TemplateRendererInterface::class),
+            messageBus     : $messageBus,
+            assignableRoles: new AssignableRolesProvider($messageBus),
         );
 
         $request = new ServerRequest()->withAttribute('id', '99');

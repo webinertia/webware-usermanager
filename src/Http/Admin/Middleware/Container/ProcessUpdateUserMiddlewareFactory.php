@@ -9,6 +9,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 
@@ -22,8 +23,9 @@ final class ProcessUpdateUserMiddlewareFactory
     {
         $manager = $container->get(InputFilterPluginManager::class);
         return new ProcessUpdateUserMiddleware(
-            messageBus: $container->get(MessageBusInterface::class),
-            filter    : $manager->get(UpdateUserDataFilter::class),
+            messageBus     : $container->get(MessageBusInterface::class),
+            filter         : $manager->get(UpdateUserDataFilter::class),
+            assignableRoles: $container->get(AssignableRolesProvider::class),
         );
     }
 }

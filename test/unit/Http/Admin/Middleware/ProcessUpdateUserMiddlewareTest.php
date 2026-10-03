@@ -13,13 +13,17 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Core\UserInterface;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageInterface;
 use Webware\MessageBus\MessageStatus;
+use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Command\UpdateUserCommand;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
+use Webware\UserManager\Query\FetchAssignableRolesQuery;
 use WebwareTest\UserManager\Support\InputFilterHelper;
 
 use function assert;
@@ -33,55 +37,97 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
     #[Test]
     public function dispatchesCommandAndStoresResult(): void
     {
+        $capturedCommand = null;
+
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus->expects($this->exactly(2))
             ->method('handle')
-            ->with($this->callback(
-                static fn($command): bool => (
-                    $command instanceof UpdateUserCommand
-                    && 42 === $command->id
-                    && 'Jane' === $command->firstName
-                    && 'Member' === $command->roleId
-                    && true === $command->active
-                ),
-            ))
-            ->willReturnCallback(static function (MessageInterface $message): CommandResult {
+            ->willReturnCallback(static function (MessageInterface $message) use (
+                &$capturedCommand,
+            ): QueryResult|CommandResult {
+                if ($message instanceof FetchAssignableRolesQuery) {
+                    return new QueryResult($message, MessageStatus::Success, ['Member']);
+                }
+
                 assert($message instanceof UpdateUserCommand, description: 'Expected an UpdateUserCommand');
+                $capturedCommand = $message;
 
                 return new CommandResult($message, MessageStatus::Success, null);
             });
 
         $capturedRequest = null;
-        $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
-            ->method('handle')
-            ->willReturnCallback(static function (ServerRequestInterface $request) use (
-                &$capturedRequest,
-            ): ResponseInterface {
-                $capturedRequest = $request;
+        $handler         = $this->capturingHandler($capturedRequest);
 
-                return new EmptyResponse();
-            });
+        $request = $this->patchRequest($bus, $handler, [
+            'firstName' => 'Jane',
+            'lastName'  => 'Doe',
+            'email'     => 'jane@example.com',
+            'roleId'    => 'Member',
+            'active'    => '1',
+        ]);
 
-        $middleware = new ProcessUpdateUserMiddleware(
-            messageBus: $bus,
-            filter    : InputFilterHelper::updateUserDataFilter(),
-        );
-
-        $request = new ServerRequest()->withMethod('PATCH')
-            ->withAttribute('id', '42')
-            ->withParsedBody([
-                'firstName' => 'Jane',
-                'lastName'  => 'Doe',
-                'email'     => 'jane@example.com',
-                'roleId'    => 'Member',
-                'active'    => '1',
-            ]);
-
-        $response = $middleware->processPatch($request, $handler);
+        $response = $this->middleware($bus)->processPatch($request, $handler);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
         self::assertInstanceOf(CommandResult::class, $capturedRequest?->getAttribute(CommandResult::class));
+        self::assertInstanceOf(UpdateUserCommand::class, $capturedCommand);
+        self::assertSame(42, $capturedCommand->id);
+        self::assertSame('Jane', $capturedCommand->firstName);
+        self::assertSame('Member', $capturedCommand->roleId);
+        self::assertTrue($capturedCommand->active);
+    }
+
+    #[Test]
+    public function ignoresAClientSuppliedAssignableRoleList(): void
+    {
+        $bus = $this->createMock(MessageBusInterface::class);
+        $bus->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(static function (MessageInterface $message): QueryResult {
+                assert($message instanceof FetchAssignableRolesQuery, description: 'Expected the roles query');
+
+                return new QueryResult($message, MessageStatus::Success, ['Member']);
+            });
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects($this->once())->method('handle')->willReturn(new EmptyResponse());
+
+        $request = $this->patchRequest($bus, $handler, [
+            'roleId'          => 'Administrator',
+            'assignableRoles' => ['Administrator'],
+        ]);
+
+        $this->middleware($bus)->processPatch($request, $handler);
+    }
+
+    #[Test]
+    public function rejectsARoleOutsideTheAssignableSetWithoutDispatching(): void
+    {
+        $capturedCommand = null;
+
+        $bus = $this->createMock(MessageBusInterface::class);
+        $bus->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(static function (MessageInterface $message): QueryResult {
+                assert($message instanceof FetchAssignableRolesQuery, description: 'Expected the roles query');
+
+                return new QueryResult($message, MessageStatus::Success, ['Member']);
+            });
+
+        $messenger = $this->createMock(SystemMessengerInterface::class);
+        $messenger->expects($this->once())
+            ->method('warning')
+            ->with($this->callback(is_string(...)));
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects($this->once())->method('handle')->willReturn(new EmptyResponse());
+
+        $request = $this->patchRequest($bus, $handler, ['roleId' => 'Administrator'])
+            ->withAttribute(SystemMessengerInterface::class, $messenger);
+
+        $this->middleware($bus)->processPatch($request, $handler);
+
+        self::assertNull($capturedCommand);
     }
 
     #[Test]
@@ -89,7 +135,11 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
     {
         $bus = $this->createStub(MessageBusInterface::class);
         $bus->method('handle')->willReturnCallback(
-            static function (MessageInterface $message): CommandResult {
+            static function (MessageInterface $message): QueryResult|CommandResult {
+                if ($message instanceof FetchAssignableRolesQuery) {
+                    return new QueryResult($message, MessageStatus::Success, ['Member']);
+                }
+
                 assert($message instanceof UpdateUserCommand, description: 'Expected an UpdateUserCommand');
 
                 return new CommandResult($message, MessageStatus::Failure, null);
@@ -102,34 +152,17 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         $messenger->expects($this->never())->method('warning');
 
         $capturedRequest = null;
-        $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
-            ->method('handle')
-            ->willReturnCallback(static function (ServerRequestInterface $request) use (
-                &$capturedRequest,
-            ): ResponseInterface {
-                $capturedRequest = $request;
+        $handler         = $this->capturingHandler($capturedRequest);
 
-                return new EmptyResponse();
-            });
+        $request = $this->patchRequest($bus, $handler, [
+            'firstName' => 'Jane',
+            'lastName'  => 'Doe',
+            'email'     => 'jane@example.com',
+            'roleId'    => 'Member',
+            'active'    => '1',
+        ])->withAttribute(SystemMessengerInterface::class, $messenger);
 
-        $middleware = new ProcessUpdateUserMiddleware(
-            messageBus: $bus,
-            filter    : InputFilterHelper::updateUserDataFilter(),
-        );
-
-        $request = new ServerRequest()->withMethod('PATCH')
-            ->withAttribute(SystemMessengerInterface::class, $messenger)
-            ->withAttribute('id', '42')
-            ->withParsedBody([
-                'firstName' => 'Jane',
-                'lastName'  => 'Doe',
-                'email'     => 'jane@example.com',
-                'roleId'    => 'Member',
-                'active'    => '1',
-            ]);
-
-        $response = $middleware->processPatch($request, $handler);
+        $response = $this->middleware($bus)->processPatch($request, $handler);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
         $result = $capturedRequest?->getAttribute(CommandResult::class);
@@ -148,18 +181,73 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->expects($this->once())->method('handle')->willReturn(new EmptyResponse());
 
-        $middleware = new ProcessUpdateUserMiddleware(
-            messageBus: $this->createStub(MessageBusInterface::class),
-            filter    : InputFilterHelper::updateUserDataFilter(),
+        $bus = $this->createStub(MessageBusInterface::class);
+        $bus->method('handle')->willReturnCallback(
+            static fn(MessageInterface $message): QueryResult => new QueryResult(
+                $message,
+                MessageStatus::Success,
+                ['Member'],
+            ),
         );
 
-        $request = new ServerRequest()->withMethod('PATCH')
-            ->withAttribute(SystemMessengerInterface::class, $messenger)
-            ->withAttribute('id', '42')
-            ->withParsedBody(['email' => 'not-an-email']);
+        $request = $this->patchRequest($bus, $handler, ['email' => 'not-an-email'])
+            ->withAttribute(SystemMessengerInterface::class, $messenger);
 
-        $response = $middleware->processPatch($request, $handler);
+        $response = $this->middleware($bus)->processPatch($request, $handler);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
+    }
+
+    private function actor(): UserInterface
+    {
+        $actor = $this->createStub(UserInterface::class);
+        $actor->method('getRoles')->willReturn(['Administrator']);
+
+        return $actor;
+    }
+
+    private function capturingHandler(?ServerRequestInterface &$capturedRequest): RequestHandlerInterface
+    {
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(static function (ServerRequestInterface $request) use (
+                &$capturedRequest,
+            ): ResponseInterface {
+                $capturedRequest = $request;
+
+                return new EmptyResponse();
+            });
+
+        return $handler;
+    }
+
+    private function middleware(MessageBusInterface $bus): ProcessUpdateUserMiddleware
+    {
+        return new ProcessUpdateUserMiddleware(
+            messageBus     : $bus,
+            filter         : InputFilterHelper::updateUserDataFilter(),
+            assignableRoles: new AssignableRolesProvider($bus),
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $overrides
+     */
+    private function patchRequest(
+        MessageBusInterface $bus,
+        RequestHandlerInterface $handler,
+        array $overrides,
+    ): ServerRequest {
+        return new ServerRequest()->withMethod('PATCH')
+            ->withAttribute(UserInterface::class, $this->actor())
+            ->withAttribute('id', '42')
+            ->withParsedBody([
+                'firstName' => 'Jane',
+                'lastName'  => 'Doe',
+                'email'     => 'jane@example.com',
+                'roleId'    => 'Member',
+                ...$overrides,
+            ]);
     }
 }

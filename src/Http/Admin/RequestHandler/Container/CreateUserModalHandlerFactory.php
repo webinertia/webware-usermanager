@@ -8,7 +8,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserModalHandler;
 
 final class CreateUserModalHandlerFactory
@@ -20,8 +20,8 @@ final class CreateUserModalHandlerFactory
     public function __invoke(ContainerInterface $container): CreateUserModalHandler
     {
         return new CreateUserModalHandler(
-            template  : $container->get(TemplateRendererInterface::class),
-            messageBus: $container->get(MessageBusInterface::class),
+            template       : $container->get(TemplateRendererInterface::class),
+            assignableRoles: $container->get(AssignableRolesProvider::class),
         );
     }
 }

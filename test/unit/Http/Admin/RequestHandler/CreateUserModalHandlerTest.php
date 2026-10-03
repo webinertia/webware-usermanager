@@ -14,6 +14,7 @@ use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\MessageBus\MessageStatus;
 use Webware\MessageBus\Query\QueryResult;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserModalHandler;
 use Webware\UserManager\Query\FetchAssignableRolesQuery;
 
@@ -31,8 +32,8 @@ final class CreateUserModalHandlerTest extends TestCase
         $template = $this->expectingEmptyRoles();
 
         $handler = new CreateUserModalHandler(
-            template  : $template,
-            messageBus: $messageBus,
+            template       : $template,
+            assignableRoles: new AssignableRolesProvider($messageBus),
         );
 
         self::assertSame(200, $handler->handle(new ServerRequest())->getStatusCode());
@@ -47,8 +48,8 @@ final class CreateUserModalHandlerTest extends TestCase
         $template = $this->expectingEmptyRoles();
 
         $handler = new CreateUserModalHandler(
-            template  : $template,
-            messageBus: $messageBus,
+            template       : $template,
+            assignableRoles: new AssignableRolesProvider($messageBus),
         );
 
         $response = $handler->handle($this->requestWithActor(null));
@@ -84,8 +85,8 @@ final class CreateUserModalHandlerTest extends TestCase
             ->willReturn('<form>');
 
         $handler = new CreateUserModalHandler(
-            template  : $template,
-            messageBus: $messageBus,
+            template       : $template,
+            assignableRoles: new AssignableRolesProvider($messageBus),
         );
 
         $response = $handler->handle($this->requestWithActor('Administrator'));

@@ -6,15 +6,43 @@ namespace WebwareTest\UserManager\InputFilter;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\UserManager\InputFilter\UpdateUserDataFilter;
 use WebwareTest\UserManager\Support\InputFilterHelper;
 
+use function str_repeat;
+
 #[CoversClass(UpdateUserDataFilter::class)]
 #[CoversMethod(UpdateUserDataFilter::class, 'init')]
 final class UpdateUserDataFilterTest extends TestCase
 {
+    /**
+     * @return array<string, array{field: string}>
+     */
+    public static function arrayFieldProvider(): array
+    {
+        return [
+            'firstName' => ['field' => 'firstName'],
+            'lastName'  => ['field' => 'lastName'],
+            'email'     => ['field' => 'email'],
+            'roleId'    => ['field' => 'roleId'],
+        ];
+    }
+
+    /**
+     * @return array<string, array{field: string, length: int}>
+     */
+    public static function overLongFieldProvider(): array
+    {
+        return [
+            'firstName' => ['field' => 'firstName', 'length' => 76],
+            'lastName'  => ['field' => 'lastName', 'length' => 76],
+            'roleId'    => ['field' => 'roleId', 'length' => 51],
+        ];
+    }
+
     #[Test]
     public function acceptsEmptyIdAsNull(): void
     {
@@ -31,12 +59,13 @@ final class UpdateUserDataFilterTest extends TestCase
     public function acceptsValidUpdateData(): void
     {
         $result = $this->filter()->validate([
-            'id'        => '42',
-            'firstName' => ' Jane ',
-            'lastName'  => ' Doe ',
-            'email'     => ' jane@example.com ',
-            'roleId'    => 'Member',
-            'active'    => '1',
+            'id'              => '42',
+            'firstName'       => ' Jane ',
+            'lastName'        => ' Doe ',
+            'email'           => ' jane@example.com ',
+            'roleId'          => 'Member',
+            'active'          => '1',
+            'assignableRoles' => ['Member'],
         ]);
 
         self::assertTrue($result->valid());
@@ -57,6 +86,61 @@ final class UpdateUserDataFilterTest extends TestCase
 
         self::assertTrue($result->valid());
         self::assertFalse($result->value()['active']);
+    }
+
+    /**
+     * A non-string field must stop at the length guard: `StringTrim` returns an array
+     * unchanged, and the fields after it would otherwise see one.
+     */
+    #[Test]
+    #[DataProvider('arrayFieldProvider')]
+    public function rejectsAnArrayForEveryStringField(string $field): void
+    {
+        $data         = $this->validData();
+        $data[$field] = ['nope'];
+
+        $result = $this->filter()->validate($data);
+
+        self::assertFalse($result->valid());
+        self::assertArrayHasKey($field, $result->getMessages());
+        self::assertIsArray($result->value()[$field] ?? null);
+    }
+
+    #[Test]
+    public function rejectsARoleOutsideTheAssignableSet(): void
+    {
+        $data           = $this->validData();
+        $data['roleId'] = 'Developer';
+
+        $result = $this->filter()->validate($data);
+
+        self::assertFalse($result->valid());
+        self::assertArrayHasKey('roleId', $result->getMessages());
+    }
+
+    #[Test]
+    #[DataProvider('overLongFieldProvider')]
+    public function rejectsAStringLongerThanTheColumn(string $field, int $length): void
+    {
+        $data         = $this->validData();
+        $data[$field] = str_repeat('a', $length);
+
+        $result = $this->filter()->validate($data);
+
+        self::assertFalse($result->valid());
+        self::assertArrayHasKey($field, $result->getMessages());
+    }
+
+    #[Test]
+    public function rejectsEveryRoleWhenTheContextCarriesNoAssignableRoles(): void
+    {
+        $data = $this->validData();
+        unset($data['assignableRoles']);
+
+        $result = $this->filter()->validate($data);
+
+        self::assertFalse($result->valid());
+        self::assertArrayHasKey('roleId', $result->getMessages());
     }
 
     #[Test]
@@ -164,12 +248,13 @@ final class UpdateUserDataFilterTest extends TestCase
     private function validData(): array
     {
         return [
-            'id'        => '42',
-            'firstName' => 'Jane',
-            'lastName'  => 'Doe',
-            'email'     => 'jane@example.com',
-            'roleId'    => 'Member',
-            'active'    => '1',
+            'id'              => '42',
+            'firstName'       => 'Jane',
+            'lastName'        => 'Doe',
+            'email'           => 'jane@example.com',
+            'roleId'          => 'Member',
+            'active'          => '1',
+            'assignableRoles' => ['Member', 'Administrator'],
         ];
     }
 }

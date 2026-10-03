@@ -19,10 +19,37 @@ use PHPUnit\Framework\TestCase;
 use Webware\UserManager\InputFilter\CreateUserDataFilter;
 use Webware\UserManager\Validator\AssignableRoleValidator;
 
+use function str_repeat;
+
 #[CoversClass(CreateUserDataFilter::class)]
 #[CoversMethod(CreateUserDataFilter::class, 'init')]
 final class CreateUserDataFilterTest extends TestCase
 {
+    /**
+     * @return array<string, array{field: string}>
+     */
+    public static function arrayFieldProvider(): array
+    {
+        return [
+            'firstName' => ['field' => 'firstName'],
+            'lastName'  => ['field' => 'lastName'],
+            'email'     => ['field' => 'email'],
+            'roleId'    => ['field' => 'roleId'],
+        ];
+    }
+
+    /**
+     * @return array<string, array{field: string, length: int}>
+     */
+    public static function overLongFieldProvider(): array
+    {
+        return [
+            'firstName' => ['field' => 'firstName', 'length' => 76],
+            'lastName'  => ['field' => 'lastName', 'length' => 76],
+            'roleId'    => ['field' => 'roleId', 'length' => 51],
+        ];
+    }
+
     /**
      * @return array<string, array{field: string}>
      */
@@ -70,6 +97,24 @@ final class CreateUserDataFilterTest extends TestCase
     }
 
     #[Test]
+    public function asksTheUniquenessValidatorForTheExistingAccountMessage(): void
+    {
+        $options = null;
+
+        $result = $this->filter(capturedOptions: $options)->validate($this->validData());
+
+        self::assertTrue($result->valid());
+        self::assertSame(
+            [
+                'messages' => [
+                    NoRecordExists::ERROR_RECORD_FOUND => 'An account with this email already exists.',
+                ],
+            ],
+            $options,
+        );
+    }
+
+    #[Test]
     public function ignoresServerControlledFields(): void
     {
         $result = $this->filter()->validate([
@@ -94,6 +139,24 @@ final class CreateUserDataFilterTest extends TestCase
 
         self::assertFalse($result->valid());
         self::assertArrayHasKey($field, $result->getMessages());
+    }
+
+    /**
+     * A non-string field must stop at the length guard: without it a posted `email[]`
+     * reaches `NoRecordExists`, which throws instead of reporting the field invalid.
+     */
+    #[Test]
+    #[DataProvider('arrayFieldProvider')]
+    public function rejectsAnArrayForEveryStringField(string $field): void
+    {
+        $data         = $this->validData();
+        $data[$field] = ['nope'];
+
+        $result = $this->filter()->validate($data);
+
+        self::assertFalse($result->valid());
+        self::assertArrayHasKey($field, $result->getMessages());
+        self::assertIsArray($result->value()[$field] ?? null);
     }
 
     #[Test]
@@ -131,6 +194,19 @@ final class CreateUserDataFilterTest extends TestCase
     }
 
     #[Test]
+    #[DataProvider('overLongFieldProvider')]
+    public function rejectsAStringLongerThanTheColumn(string $field, int $length): void
+    {
+        $data         = $this->validData();
+        $data[$field] = str_repeat('a', $length);
+
+        $result = $this->filter()->validate($data);
+
+        self::assertFalse($result->valid());
+        self::assertArrayHasKey($field, $result->getMessages());
+    }
+
+    #[Test]
     public function rejectsEveryRoleWhenTheContextCarriesNoAssignableRoles(): void
     {
         $data = $this->validData();
@@ -142,8 +218,14 @@ final class CreateUserDataFilterTest extends TestCase
         self::assertArrayHasKey('roleId', $result->getMessages());
     }
 
-    private function filter(?ValidatorInterface $uniqueness = null): CreateUserDataFilter
-    {
+    /**
+     * @param array<string, mixed>|null $capturedOptions by-ref sink for the options the
+     *        filter passes to the uniqueness validator
+     */
+    private function filter(
+        ?ValidatorInterface $uniqueness = null,
+        ?array &$capturedOptions = null,
+    ): CreateUserDataFilter {
         $container = new ServiceManager(new ValidatorConfigProvider()->getDependencyConfig());
 
         $validators = new ValidatorPluginManager($container);
@@ -158,7 +240,18 @@ final class CreateUserDataFilterTest extends TestCase
         $defaultUniqueness = $this->createStub(ValidatorInterface::class);
         $defaultUniqueness->method('isValid')->willReturn(true);
 
-        $validators->setService(NoRecordExists::class, $uniqueness ?? $defaultUniqueness);
+        $validators->setFactory(
+            NoRecordExists::class,
+            static function (mixed $unused, string $name = NoRecordExists::class, ?array $options = null) use (
+                $uniqueness,
+                $defaultUniqueness,
+                &$capturedOptions,
+            ): ValidatorInterface {
+                $capturedOptions = $options;
+
+                return $uniqueness ?? $defaultUniqueness;
+            },
+        );
         $validators->setService(AssignableRoleValidator::class, new AssignableRoleValidator());
 
         $filter = new CreateUserDataFilter(InputFilter\Factory::new($container));

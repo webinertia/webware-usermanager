@@ -167,6 +167,7 @@ final class ConfigProvider
                 Http\Admin\RequestHandler\UpdateUserHandler::class             => Http\Admin\RequestHandler\Container\UpdateUserHandlerFactory::class,
                 Http\Admin\RequestHandler\UpdateUserModalHandler::class        => Http\Admin\RequestHandler\Container\UpdateUserModalHandlerFactory::class,
                 Http\Admin\RequestHandler\CreateUserModalHandler::class        => Http\Admin\RequestHandler\Container\CreateUserModalHandlerFactory::class,
+                Http\Admin\AssignableRolesProvider::class                      => Http\Admin\Container\AssignableRolesProviderFactory::class,
                 CommandHandler\CreateUserHandler::class                        => CommandHandler\Container\CreateUserHandlerFactory::class,
                 CommandHandler\ToggleUserActiveHandler::class                  => CommandHandler\Container\ToggleUserActiveHandlerFactory::class,
                 CommandHandler\UpdateUserHandler::class                        => CommandHandler\Container\UpdateUserHandlerFactory::class,

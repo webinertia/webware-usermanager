@@ -10,6 +10,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Webware\MessageBus\MessageBusInterface;
+use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\InputFilter\CreateUserDataFilter;
 
@@ -24,9 +25,10 @@ final class ProcessCreateUserMiddlewareFactory
         $manager = $container->get(InputFilterPluginManager::class);
 
         return new ProcessCreateUserMiddleware(
-            messageBus: $container->get(MessageBusInterface::class),
-            filter    : $manager->get(CreateUserDataFilter::class),
-            logger    : $container->get(LoggerInterface::class),
+            messageBus     : $container->get(MessageBusInterface::class),
+            filter         : $manager->get(CreateUserDataFilter::class),
+            logger         : $container->get(LoggerInterface::class),
+            assignableRoles: $container->get(AssignableRolesProvider::class),
         );
     }
 }
