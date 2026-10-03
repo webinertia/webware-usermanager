@@ -2104,12 +2104,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-db/phpdb.git",
-                "reference": "253bc2c8e4f60b2e10ede69a7966394f504e46e2"
+                "reference": "ed4a407c2f51b951e0261da0bf93baacb23d2e98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-db/phpdb/zipball/253bc2c8e4f60b2e10ede69a7966394f504e46e2",
-                "reference": "253bc2c8e4f60b2e10ede69a7966394f504e46e2",
+                "url": "https://api.github.com/repos/php-db/phpdb/zipball/ed4a407c2f51b951e0261da0bf93baacb23d2e98",
+                "reference": "ed4a407c2f51b951e0261da0bf93baacb23d2e98",
                 "shasum": ""
             },
             "require": {
@@ -2163,7 +2163,7 @@
                 "issues": "https://github.com/php-db/phpdb/issues",
                 "source": "https://github.com/php-db/phpdb"
             },
-            "time": "2026-09-28T01:41:04+00:00"
+            "time": "2026-09-29T05:27:19+00:00"
         },
         {
             "name": "php-db/phpdb-mysql",
