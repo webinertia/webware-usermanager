@@ -11,18 +11,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Webware\Core\UserInterface;
-use Webware\MessageBus\MessageBusInterface;
-use Webware\MessageBus\MessageInterface;
-use Webware\MessageBus\MessageStatus;
-use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Entity\User;
-use Webware\UserManager\Http\Admin\AssignableRolesProvider;
+use Webware\UserManager\Http\Admin\Middleware\UpdateUserModalMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
-use Webware\UserManager\Query\FetchAssignableRolesQuery;
-use Webware\UserManager\Query\FetchUserByIdQuery;
-
-use function assert;
 
 #[CoversClass(UpdateUserModalHandler::class)]
 #[CoversMethod(UpdateUserModalHandler::class, '__construct')]
@@ -30,25 +21,12 @@ use function assert;
 final class UpdateUserModalHandlerTest extends TestCase
 {
     #[Test]
-    public function rendersModalForExistingUser(): void
+    public function rendersModalFromTheAttachedViewModel(): void
     {
         $user = new User(
             id   : 5,
             email: 'jane@example.com',
         );
-
-        $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->exactly(2))
-            ->method('handle')
-            ->willReturnCallback(static function (MessageInterface $message) use ($user): QueryResult {
-                if ($message instanceof FetchUserByIdQuery) {
-                    return new QueryResult($message, MessageStatus::Success, $user);
-                }
-
-                assert($message instanceof FetchAssignableRolesQuery, description: 'Expected the roles query');
-
-                return new QueryResult($message, MessageStatus::Success, ['Member']);
-            });
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template->expects($this->once())
@@ -61,54 +39,45 @@ final class UpdateUserModalHandlerTest extends TestCase
             ])
             ->willReturn('<form>');
 
-        $handler = new UpdateUserModalHandler(
-            template       : $template,
-            messageBus     : $messageBus,
-            assignableRoles: new AssignableRolesProvider($messageBus),
-        );
+        $handler = new UpdateUserModalHandler(template: $template);
 
-        $actor = $this->createStub(UserInterface::class);
-        $actor->method('getRoles')->willReturn(['Administrator']);
-
-        $request = new ServerRequest()->withAttribute('id', '5')
-            ->withAttribute(UserInterface::class, $actor);
+        $request = new ServerRequest()->withAttribute(UpdateUserModalMiddleware::class, [
+            'user'            => $user,
+            'assignableRoles' => ['Member'],
+        ]);
 
         $response = $handler->handle($request);
 
         self::assertInstanceOf(HtmlResponse::class, $response);
         self::assertSame(200, $response->getStatusCode());
+        self::assertSame('<form>', (string) $response->getBody());
     }
 
     #[Test]
-    public function returnsNotFoundWhenIdIsInvalid(): void
+    public function returnsNotFoundWhenNoViewModelIsAttached(): void
     {
-        $handler = new UpdateUserModalHandler(
-            template       : $this->createStub(TemplateRendererInterface::class),
-            messageBus     : $this->createStub(MessageBusInterface::class),
-            assignableRoles: new AssignableRolesProvider($this->createStub(MessageBusInterface::class)),
-        );
+        $template = $this->createMock(TemplateRendererInterface::class);
+        $template->expects($this->never())->method('render');
 
-        $request = new ServerRequest()->withAttribute('id', 'not-a-number');
+        $handler = new UpdateUserModalHandler(template: $template);
 
-        $response = $handler->handle($request);
+        $response = $handler->handle(new ServerRequest());
 
         self::assertSame(404, $response->getStatusCode());
     }
 
     #[Test]
-    public function returnsNotFoundWhenUserMissing(): void
+    public function returnsNotFoundWhenTheViewModelCarriesNoUser(): void
     {
-        $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUserByIdQuery(id: 99), MessageStatus::Failure, null));
+        $template = $this->createMock(TemplateRendererInterface::class);
+        $template->expects($this->never())->method('render');
 
-        $handler = new UpdateUserModalHandler(
-            template       : $this->createStub(TemplateRendererInterface::class),
-            messageBus     : $messageBus,
-            assignableRoles: new AssignableRolesProvider($messageBus),
-        );
+        $handler = new UpdateUserModalHandler(template: $template);
 
-        $request = new ServerRequest()->withAttribute('id', '99');
+        $request = new ServerRequest()->withAttribute(UpdateUserModalMiddleware::class, [
+            'user'            => null,
+            'assignableRoles' => [],
+        ]);
 
         $response = $handler->handle($request);
 

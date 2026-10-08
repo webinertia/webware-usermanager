@@ -12,16 +12,12 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\UserManager\Auth\AuthenticationStatus;
-use Webware\UserManager\Command\CreateUserCommand;
-use Webware\UserManager\Command\UpdateUserCommand;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\UserRepository;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 use WebwareTest\UserManager\Support\PhpDbAdapterMockTrait;
 
-use function bin2hex;
 use function password_hash;
-use function random_bytes;
 
 use const PASSWORD_DEFAULT;
 
@@ -259,71 +255,35 @@ final class UserRepositoryTest extends TestCase
     }
 
     #[Test]
-    public function saveDropsCommandNameFromArrayInput(): void
+    public function saveInsertsARowAndReturnsGeneratedId(): void
     {
         $adapter = $this->createAdapter([[]], affectedRows: [1], lastGeneratedValue: 99);
 
         self::assertSame(99, $this->repository($adapter)->save([
-            'firstName'   => 'Jane',
-            'lastName'    => 'Doe',
-            'email'       => 'jane@example.com',
-            'commandName' => 'supplied-by-the-caller',
+            'firstName' => 'Jane',
+            'lastName'  => 'Doe',
+            'email'     => 'jane@example.com',
         ]));
 
-        // A caller-supplied array can carry the same key, so the unset covers both paths.
         /** @var array{table: string, columns: list<string>} $state */
         $state = (array) $this->preparedSqlObjects[0]->getRawState();
         self::assertContains('firstName', $state['columns']);
-        self::assertNotContains('commandName', $state['columns']);
+        self::assertContains('email', $state['columns']);
     }
 
     #[Test]
-    public function saveInsertsNewCommandAndReturnsGeneratedId(): void
-    {
-        $adapter = $this->createAdapter([[]], affectedRows: [1], lastGeneratedValue: 99);
-
-        $command = new CreateUserCommand(
-            firstName        : 'Jane',
-            lastName         : 'Doe',
-            passwordHash     : bin2hex(random_bytes(16)),
-            email            : 'jane@example.com',
-            roleId           : 'Member',
-            verificationToken: bin2hex(random_bytes(16)),
-        );
-
-        self::assertSame(99, $this->repository($adapter)->save($command));
-
-        // The command's trait exposes a public name and the notification interface two messages;
-        // none of them is a column, so none may reach the insert.
-        /** @var array{table: string, columns: list<string>} $state */
-        $state = (array) $this->preparedSqlObjects[0]->getRawState();
-        self::assertContains('firstName', $state['columns']);
-        self::assertNotContains('commandName', $state['columns']);
-        self::assertNotContains('successMessage', $state['columns']);
-        self::assertNotContains('failureMessage', $state['columns']);
-    }
-
-    #[Test]
-    public function saveUpdatesCommandWithId(): void
+    public function saveUpdatesARowCarryingAnId(): void
     {
         $adapter = $this->createAdapter([[]], affectedRows: [1]);
 
-        $command = new UpdateUserCommand(
-            id       : 7,
-            firstName: 'Jane',
-            lastName : 'Doe',
-            email    : 'jane@example.com',
-            roleId   : 'Member',
-            active   : true,
-        );
+        self::assertSame(1, $this->repository($adapter)->save([
+            'id'        => 7,
+            'firstName' => 'Jane',
+        ]));
 
-        self::assertSame(1, $this->repository($adapter)->save($command));
-
-        // Same on the update path: the name must not become a SET column.
         /** @var array{table: string, set: array<string, mixed>} $state */
         $state = (array) $this->preparedSqlObjects[0]->getRawState();
         self::assertArrayHasKey('firstName', $state['set']);
-        self::assertArrayNotHasKey('commandName', $state['set']);
     }
 
     #[Test]

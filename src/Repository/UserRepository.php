@@ -20,16 +20,13 @@ use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\Log\Event\LogEvent;
 use Webware\Log\LogChannel;
-use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Entity\User;
 
-use function is_array;
 use function password_verify;
 
 // @mago-expect lint:too-many-methods - accepted: the repository's public surface mirrors UserRepositoryInterface.
-// @mago-expect lint:cyclomatic-complexity - accepted: every branch is a load-bearing guard (nullable credential hash, optional SQL clauses); splitting the class would only relocate them.
 final class UserRepository implements UserRepositoryInterface
 {
     public function __construct(
@@ -200,18 +197,12 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param CommandInterface|array<string, mixed> $commandOrRow
+     * @param array<string, mixed> $data
      * @throws ExceptionInterface
      */
     #[Override]
-    public function save(CommandInterface|array $commandOrRow): int
+    public function save(array $data): int
     {
-        $data = is_array($commandOrRow) ? $commandOrRow : (array) $commandOrRow;
-
-        // The cast carries every public property into the row. The command name (NamedCommandTrait)
-        // and the notification messages (NotificationCapableInterface) are not columns.
-        unset($data['commandName'], $data['successMessage'], $data['failureMessage']);
-
         if (! isset($data['id'])) {
             $this->gateway->insert($data);
 

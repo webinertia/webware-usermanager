@@ -191,6 +191,7 @@ final class ConfigProvider
                 Http\Admin\Middleware\ProcessToggleUserActiveMiddleware::class => Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessCreateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessCreateUserMiddlewareFactory::class,
                 Http\Admin\Middleware\ProcessUpdateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory::class,
+                Http\Admin\Middleware\UpdateUserModalMiddleware::class         => Http\Admin\Middleware\Container\UpdateUserModalMiddlewareFactory::class,
                 Http\Middleware\RegistrationMiddleware::class                  => Http\Middleware\Container\RegistrationMiddlewareFactory::class,
                 Http\Middleware\UserListMiddleware::class                      => Http\Middleware\Container\UserListMiddlewareFactory::class,
                 Repository\UserRepository::class                               => Repository\UserRepositoryFactory::class,

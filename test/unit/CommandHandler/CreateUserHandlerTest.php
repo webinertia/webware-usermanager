@@ -51,8 +51,22 @@ final class CreateUserHandlerTest extends TestCase
     {
         $command = $this->createCommand();
 
-        $users = $this->createStub(UserRepositoryInterface::class);
-        $users->method('save')->willReturn(1);
+        $users = $this->createMock(UserRepositoryInterface::class);
+        $users->expects($this->once())
+            ->method('save')
+            ->with([
+                'firstName'           => $command->firstName,
+                'lastName'            => $command->lastName,
+                'passwordHash'        => $command->passwordHash,
+                'email'               => $command->email,
+                'roleId'              => $command->roleId,
+                'verificationToken'   => $command->verificationToken,
+                'active'              => $command->active,
+                'passwordSetRequired' => $command->passwordSetRequired,
+                'tokenCreatedAt'      => $command->tokenCreatedAt,
+                'createdAt'           => $command->createdAt,
+            ])
+            ->willReturn(1);
 
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
