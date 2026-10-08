@@ -19,12 +19,6 @@ message = "Avoid `else` clauses."
 count = 3
 
 [[issues]]
-file = "src/CommandHandler/CreateUserHandler.php"
-code = "no-assign-in-condition"
-message = "Avoid assignments in conditions."
-count = 1
-
-[[issues]]
 file = "src/ConfigProvider.php"
 code = "no-literal-password"
 message = "Literal passwords or sensitive data should not be stored in code."
@@ -58,18 +52,6 @@ count = 2
 file = "src/Entity/User.php"
 code = "no-negated-ternary"
 message = "Negated ternary condition."
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/Middleware/ProcessUpdateUserMiddleware.php"
-code = "no-else-clause"
-message = "Avoid `else` clauses."
-count = 1
-
-[[issues]]
-file = "src/Http/Admin/RequestHandler/UpdateUserModalHandler.php"
-code = "ambiguous-constant-access"
-message = "Ambiguous constant access detected."
 count = 1
 
 [[issues]]

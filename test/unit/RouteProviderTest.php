@@ -12,13 +12,16 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\MiddlewareInterface;
+use Webware\Htmx\Http\Middleware\DisableBodyMiddleware;
 use Webware\Message\Http\Middleware\NotificationMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessToggleUserActiveMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
+use Webware\UserManager\Http\Admin\Middleware\UpdateUserModalMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserHandler;
+use Webware\UserManager\Http\Admin\RequestHandler\UpdateUserModalHandler;
 use Webware\UserManager\Http\Middleware\UserListMiddleware;
 use Webware\UserManager\Http\RequestHandler\UserListHandler;
 use Webware\UserManager\RouteProvider;
@@ -97,6 +100,15 @@ final class RouteProviderTest extends TestCase
         self::assertContains(
             [UserListMiddleware::class, UserListHandler::class],
             $prepared,
+        );
+        // UpdateUserModalMiddleware supplies the view model UpdateUserModalHandler renders.
+        self::assertSame(
+            UpdateUserModalMiddleware::class,
+            $this->middlewareAfter(
+                DisableBodyMiddleware::class,
+                UpdateUserModalHandler::class,
+                $prepared,
+            ),
         );
         self::assertSame(
             UserListMiddleware::class,

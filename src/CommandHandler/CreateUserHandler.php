@@ -21,7 +21,20 @@ final class CreateUserHandler implements CommandHandlerInterface
 
     public function handle(CreateUserCommand $command): CommandResult
     {
-        if ($result = $this->users->save($command)) {
+        $result = $this->users->save([
+            'firstName'           => $command->firstName,
+            'lastName'            => $command->lastName,
+            'passwordHash'        => $command->passwordHash,
+            'email'               => $command->email,
+            'roleId'              => $command->roleId,
+            'verificationToken'   => $command->verificationToken,
+            'active'              => $command->active,
+            'passwordSetRequired' => $command->passwordSetRequired,
+            'tokenCreatedAt'      => $command->tokenCreatedAt,
+            'createdAt'           => $command->createdAt,
+        ]);
+
+        if ($result) {
             if (! $command->active) {
                 $this->eventDispatcher->dispatch(new SendVerificationEmailEvent($command));
             }

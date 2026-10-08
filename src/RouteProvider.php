@@ -16,6 +16,7 @@ use Webware\Message\Http\Middleware\NotificationMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessCreateUserMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessToggleUserActiveMiddleware;
 use Webware\UserManager\Http\Admin\Middleware\ProcessUpdateUserMiddleware;
+use Webware\UserManager\Http\Admin\Middleware\UpdateUserModalMiddleware;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserModalHandler;
 use Webware\UserManager\Http\Admin\RequestHandler\ToggleUserActiveHandler;
@@ -232,6 +233,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             "/{$this->adminRouteSegment}/update/{id:\d+}",
             $middlewareFactory->prepare([
                 DisableBodyMiddleware::class,
+                UpdateUserModalMiddleware::class,
                 UpdateUserModalHandler::class,
             ]),
             ['GET'],

@@ -11,7 +11,6 @@ use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
-use Webware\MessageBus\Command\CommandInterface;
 use Webware\UserManager\Auth\AuthenticationResult;
 
 interface UserRepositoryInterface
@@ -73,11 +72,11 @@ interface UserRepositoryInterface
     public function insert(array $data): int;
 
     /**
-     * Persist a user row, given either a command carrying the row or the row itself.
+     * Persist a user row and return the affected row count.
      *
-     * @param CommandInterface|array<string, mixed> $commandOrRow
+     * @param array<string, mixed> $data
      */
-    public function save(CommandInterface|array $commandOrRow): int;
+    public function save(array $data): int;
 
     /**
      * Update an existing user row.
