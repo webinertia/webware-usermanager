@@ -99,9 +99,9 @@ final class RuleSeedsTest extends TestCase
     {
         $seeds = $this->seeds('backoffice');
 
-        self::assertSame('backoffice.user', $seeds[18]->resourceId);
-        self::assertSame('backoffice.user.create', $seeds[19]->resourceId);
-        self::assertSame('backoffice.user', $seeds[19]->parentResourceId);
+        self::assertSame('backoffice.user', $seeds[22]->resourceId);
+        self::assertSame('backoffice.user.create', $seeds[23]->resourceId);
+        self::assertSame('backoffice.user', $seeds[23]->parentResourceId);
     }
 
     #[Test]
@@ -140,7 +140,7 @@ final class RuleSeedsTest extends TestCase
                 roleId    : Role::Administrator->value,
                 resourceId: 'admin.user',
             ),
-            $seeds[18],
+            $seeds[22],
         );
         self::assertSame(
             [
@@ -152,13 +152,13 @@ final class RuleSeedsTest extends TestCase
             ],
             array_map(static fn(RuleSeed $seed): string => $seed->resourceId, array_slice(
                 array : $seeds,
-                offset: 19,
+                offset: 23,
             )),
         );
 
         foreach (array_slice(
             array : $seeds,
-            offset: 19,
+            offset: 23,
         ) as $child) {
             self::assertSame(RuleType::Allow, $child->type);
             self::assertSame(Role::Administrator->value, $child->roleId);
@@ -195,7 +195,7 @@ final class RuleSeedsTest extends TestCase
         $seeds = array_slice(
             array : $this->seeds('admin'),
             offset: 4,
-            length: 14,
+            length: 18,
         );
 
         self::assertSame(
@@ -205,6 +205,8 @@ final class RuleSeedsTest extends TestCase
                 'user.register.read',
                 'user.register.create',
                 'user.verify.email.read',
+                'user.set.password.read',
+                'user.set.password.create',
                 'user.resend.verification.read',
                 'user.resend.verification.create',
             ],
