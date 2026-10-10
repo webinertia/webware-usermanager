@@ -28,6 +28,6 @@ final class CreateUserHandlerFactoryTest extends TestCase
                 [EventDispatcherInterface::class, $this->createStub(EventDispatcherInterface::class)],
             ]);
 
-        self::assertInstanceOf(CreateUserHandler::class, (new CreateUserHandlerFactory())($container));
+        self::assertInstanceOf(CreateUserHandler::class, new CreateUserHandlerFactory()($container));
     }
 }

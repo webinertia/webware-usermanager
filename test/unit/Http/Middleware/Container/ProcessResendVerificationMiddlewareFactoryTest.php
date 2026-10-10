@@ -46,7 +46,7 @@ final class ProcessResendVerificationMiddlewareFactoryTest extends TestCase
 
         static::assertInstanceOf(
             ProcessResendVerificationMiddleware::class,
-            (new ProcessResendVerificationMiddlewareFactory())($container),
+            new ProcessResendVerificationMiddlewareFactory()($container),
         );
     }
 }

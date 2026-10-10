@@ -51,7 +51,7 @@ final class CreateUserHandlerFactoryTest extends TestCase
                 ],
             ]);
 
-        $handler = (new CreateUserHandlerFactory())($container);
+        $handler = new CreateUserHandlerFactory()($container);
 
         self::assertInstanceOf(CreateUserHandler::class, $handler);
         self::assertSame(

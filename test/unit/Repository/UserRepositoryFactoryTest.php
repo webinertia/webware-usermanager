@@ -39,6 +39,6 @@ final class UserRepositoryFactoryTest extends TestCase
                 [EventDispatcherInterface::class, $this->createStub(EventDispatcherInterface::class)],
             ]);
 
-        self::assertInstanceOf(UserRepository::class, (new UserRepositoryFactory())($container));
+        self::assertInstanceOf(UserRepository::class, new UserRepositoryFactory()($container));
     }
 }

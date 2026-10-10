@@ -38,7 +38,7 @@ final class ProcessSetPasswordMiddlewareFactoryTest extends TestCase
 
         static::assertInstanceOf(
             ProcessSetPasswordMiddleware::class,
-            (new ProcessSetPasswordMiddlewareFactory())($container),
+            new ProcessSetPasswordMiddlewareFactory()($container),
         );
     }
 

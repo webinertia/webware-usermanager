@@ -24,6 +24,6 @@ final class InitDbCommandFactoryTest extends TestCase
                 [AdapterInterface::class, $this->createStub(AdapterInterface::class)],
             ]);
 
-        self::assertInstanceOf(InitDbCommand::class, (new InitDbCommandFactory())($container));
+        self::assertInstanceOf(InitDbCommand::class, new InitDbCommandFactory()($container));
     }
 }

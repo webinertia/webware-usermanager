@@ -26,6 +26,6 @@ final class UpdateUserModalHandlerFactoryTest extends TestCase
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
             ]);
 
-        self::assertInstanceOf(UpdateUserModalHandler::class, (new UpdateUserModalHandlerFactory())($container));
+        self::assertInstanceOf(UpdateUserModalHandler::class, new UpdateUserModalHandlerFactory()($container));
     }
 }

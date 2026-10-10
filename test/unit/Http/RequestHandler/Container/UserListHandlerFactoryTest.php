@@ -26,6 +26,6 @@ final class UserListHandlerFactoryTest extends TestCase
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
             ]);
 
-        self::assertInstanceOf(UserListHandler::class, (new UserListHandlerFactory())($container));
+        self::assertInstanceOf(UserListHandler::class, new UserListHandlerFactory()($container));
     }
 }

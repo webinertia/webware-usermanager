@@ -38,7 +38,7 @@ final class ProcessCreateUserMiddlewareFactoryTest extends TestCase
 
         self::assertInstanceOf(
             ProcessCreateUserMiddleware::class,
-            (new ProcessCreateUserMiddlewareFactory())($container),
+            new ProcessCreateUserMiddlewareFactory()($container),
         );
     }
 }

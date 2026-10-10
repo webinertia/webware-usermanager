@@ -22,7 +22,7 @@ final class NoRecordExistsFactoryTest extends TestCase
     {
         $adapter = $this->createStub(AdapterInterface::class);
 
-        $validator = (new NoRecordExistsFactory())(
+        $validator = new NoRecordExistsFactory()(
             container     : $this->containerReturning($adapter),
             _requestedName: NoRecordExists::class,
         );
@@ -37,7 +37,7 @@ final class NoRecordExistsFactoryTest extends TestCase
     {
         $adapter = $this->createStub(AdapterInterface::class);
 
-        $validator = (new NoRecordExistsFactory())(
+        $validator = new NoRecordExistsFactory()(
             container     : $this->containerReturning($adapter),
             _requestedName: NoRecordExists::class,
             options       : [

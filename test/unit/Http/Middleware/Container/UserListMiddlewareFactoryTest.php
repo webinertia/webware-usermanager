@@ -26,6 +26,6 @@ final class UserListMiddlewareFactoryTest extends TestCase
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
             ]);
 
-        self::assertInstanceOf(UserListMiddleware::class, (new UserListMiddlewareFactory())($container));
+        self::assertInstanceOf(UserListMiddleware::class, new UserListMiddlewareFactory()($container));
     }
 }

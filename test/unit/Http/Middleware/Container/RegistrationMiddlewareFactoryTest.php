@@ -31,6 +31,6 @@ final class RegistrationMiddlewareFactoryTest extends TestCase
                 [InputFilterPluginManager::class, InputFilterHelper::inputFilterPluginManager()],
             ]);
 
-        self::assertInstanceOf(RegistrationMiddleware::class, (new RegistrationMiddlewareFactory())($container));
+        self::assertInstanceOf(RegistrationMiddleware::class, new RegistrationMiddlewareFactory()($container));
     }
 }

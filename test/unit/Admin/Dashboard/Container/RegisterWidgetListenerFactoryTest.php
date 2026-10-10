@@ -30,7 +30,7 @@ final class RegisterWidgetListenerFactoryTest extends TestCase
     {
         self::assertInstanceOf(
             RegisterWidgetListener::class,
-            (new RegisterWidgetListenerFactory())($this->configuredContainer($this->createStub(
+            new RegisterWidgetListenerFactory()($this->configuredContainer($this->createStub(
                 MessageBusInterface::class,
             ))),
         );
@@ -51,7 +51,7 @@ final class RegisterWidgetListenerFactoryTest extends TestCase
 
         $event = new RegisterWidgetEvent();
 
-        (new RegisterWidgetListenerFactory())($this->configuredContainer($bus))($event);
+        new RegisterWidgetListenerFactory()($this->configuredContainer($bus))($event);
 
         $widgets = iterator_to_array($event->getWidgetContainer());
 

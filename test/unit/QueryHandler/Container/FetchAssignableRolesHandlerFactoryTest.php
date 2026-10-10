@@ -25,7 +25,7 @@ final class FetchAssignableRolesHandlerFactoryTest extends TestCase
 
         self::assertInstanceOf(
             FetchAssignableRolesHandler::class,
-            (new FetchAssignableRolesHandlerFactory())($container),
+            new FetchAssignableRolesHandlerFactory()($container),
         );
     }
 }

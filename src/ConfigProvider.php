@@ -323,7 +323,7 @@ final class ConfigProvider
                     'user:init-db' => InitDbCommand::class,
                 ],
             ],
-            'validators'               => (new Validator\ConfigProvider())()['validators'],
+            'validators'               => new Validator\ConfigProvider()()['validators'],
         ];
     }
 }

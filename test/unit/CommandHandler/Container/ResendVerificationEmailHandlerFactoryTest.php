@@ -28,7 +28,7 @@ final class ResendVerificationEmailHandlerFactoryTest extends TestCase
 
         self::assertInstanceOf(
             ResendVerificationEmailHandler::class,
-            (new ResendVerificationEmailHandlerFactory())($container),
+            new ResendVerificationEmailHandlerFactory()($container),
         );
     }
 }

@@ -26,7 +26,7 @@ final class UserFactoryTest extends TestCase
                 [User::class, new User()],
             ]);
 
-        $factory = (new UserFactory())($container);
+        $factory = new UserFactory()($container);
 
         $this->expectException(ExceptionInterface::class);
 
@@ -42,7 +42,7 @@ final class UserFactoryTest extends TestCase
                 [User::class, new User()],
             ]);
 
-        $factory = (new UserFactory())($container);
+        $factory = new UserFactory()($container);
 
         $user = $factory(['id' => 1, 'email' => 'jane@example.com']);
 

@@ -23,6 +23,6 @@ final class FetchUserByEmailHandlerFactoryTest extends TestCase
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')->willReturn($this->createStub(UserRepositoryInterface::class));
 
-        self::assertInstanceOf(FetchUserByEmailHandler::class, (new FetchUserByEmailHandlerFactory())($container));
+        self::assertInstanceOf(FetchUserByEmailHandler::class, new FetchUserByEmailHandlerFactory()($container));
     }
 }

@@ -29,6 +29,6 @@ final class LogoutHandlerFactoryTest extends TestCase
                 [HelperPluginManager::class, $this->userUrlHelperManager()],
             ]);
 
-        self::assertInstanceOf(LogoutHandler::class, (new LogoutHandlerFactory())($container));
+        self::assertInstanceOf(LogoutHandler::class, new LogoutHandlerFactory()($container));
     }
 }

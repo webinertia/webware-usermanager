@@ -128,12 +128,6 @@ count = 1
 
 [[issues]]
 file = "src/Repository/UserRepository.php"
-code = "invalid-type-cast"
-message = 'Object of type `Webware\MessageBus\Command\CommandInterface` cast to `array`. Property visibility (public, protected, private) affects the resulting array.'
-count = 1
-
-[[issues]]
-file = "src/Repository/UserRepository.php"
 code = "mixed-operand"
 message = "Casting `mixed` to `bool`."
 count = 1

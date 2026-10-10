@@ -26,6 +26,6 @@ final class ToggleUserActiveHandlerFactoryTest extends TestCase
                 [UserRepositoryInterface::class, $this->createStub(UserRepositoryInterface::class)],
             ]);
 
-        self::assertInstanceOf(ToggleUserActiveHandler::class, (new ToggleUserActiveHandlerFactory())($container));
+        self::assertInstanceOf(ToggleUserActiveHandler::class, new ToggleUserActiveHandlerFactory()($container));
     }
 }

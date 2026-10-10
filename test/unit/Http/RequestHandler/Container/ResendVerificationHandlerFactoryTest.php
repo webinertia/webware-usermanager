@@ -33,7 +33,7 @@ final class ResendVerificationHandlerFactoryTest extends TestCase
 
         static::assertInstanceOf(
             ResendVerificationHandler::class,
-            (new ResendVerificationHandlerFactory())($container),
+            new ResendVerificationHandlerFactory()($container),
         );
     }
 }

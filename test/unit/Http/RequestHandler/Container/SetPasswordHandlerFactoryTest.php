@@ -33,7 +33,7 @@ final class SetPasswordHandlerFactoryTest extends TestCase
 
         static::assertInstanceOf(
             SetPasswordHandler::class,
-            (new SetPasswordHandlerFactory())($container),
+            new SetPasswordHandlerFactory()($container),
         );
     }
 }

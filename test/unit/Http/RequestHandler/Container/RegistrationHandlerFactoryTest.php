@@ -31,6 +31,6 @@ final class RegistrationHandlerFactoryTest extends TestCase
                 [HelperPluginManager::class, $this->userUrlHelperManager()],
             ]);
 
-        self::assertInstanceOf(RegistrationHandler::class, (new RegistrationHandlerFactory())($container));
+        self::assertInstanceOf(RegistrationHandler::class, new RegistrationHandlerFactory()($container));
     }
 }

@@ -29,6 +29,6 @@ final class IdentityMiddlewareFactoryTest extends TestCase
                 [UserInterface::class, static fn(): User => new User()],
             ]);
 
-        self::assertInstanceOf(IdentityMiddleware::class, (new IdentityMiddlewareFactory())($container));
+        self::assertInstanceOf(IdentityMiddleware::class, new IdentityMiddlewareFactory()($container));
     }
 }

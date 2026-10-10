@@ -28,7 +28,7 @@ final class AssignableRolesProviderFactoryTest extends TestCase
 
         self::assertInstanceOf(
             AssignableRolesProvider::class,
-            (new AssignableRolesProviderFactory())($container),
+            new AssignableRolesProviderFactory()($container),
         );
     }
 }

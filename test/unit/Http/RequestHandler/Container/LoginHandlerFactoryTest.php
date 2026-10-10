@@ -26,6 +26,6 @@ final class LoginHandlerFactoryTest extends TestCase
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
             ]);
 
-        self::assertInstanceOf(LoginHandler::class, (new LoginHandlerFactory())($container));
+        self::assertInstanceOf(LoginHandler::class, new LoginHandlerFactory()($container));
     }
 }
