@@ -33,7 +33,7 @@ final class SetPasswordHandler implements RequestHandlerInterface
         /** @var array{error?: string, expired?: bool, success?: bool, token?: string, errors?: array<string, list<string>>, status?: int}|null $params */
         $params = $request->getAttribute(self::class);
 
-        if (null === $params || (bool) ($params['success'] ?? false)) {
+        if (null === $params || ($params['success'] ?? false)) {
             return new RedirectResponse($this->loginUrl);
         }
 
