@@ -23,6 +23,6 @@ final class FetchUserByIdHandlerFactoryTest extends TestCase
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')->willReturn($this->createStub(UserRepositoryInterface::class));
 
-        self::assertInstanceOf(FetchUserByIdHandler::class, (new FetchUserByIdHandlerFactory())($container));
+        self::assertInstanceOf(FetchUserByIdHandler::class, new FetchUserByIdHandlerFactory()($container));
     }
 }

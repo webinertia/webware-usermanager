@@ -36,7 +36,7 @@ final class ProcessVerifyEmailMiddlewareFactoryTest extends TestCase
 
         static::assertInstanceOf(
             ProcessVerifyEmailMiddleware::class,
-            (new ProcessVerifyEmailMiddlewareFactory())($container),
+            new ProcessVerifyEmailMiddlewareFactory()($container),
         );
     }
 }

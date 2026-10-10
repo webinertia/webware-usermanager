@@ -44,7 +44,7 @@ final class SendVerificationEmailListenerFactoryTest extends TestCase
 
         self::assertInstanceOf(
             SendVerificationEmailListener::class,
-            (new SendVerificationEmailListenerFactory())($container),
+            new SendVerificationEmailListenerFactory()($container),
         );
     }
 }

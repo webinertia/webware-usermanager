@@ -33,7 +33,7 @@ final class UpdateUserModalMiddlewareFactoryTest extends TestCase
 
         self::assertInstanceOf(
             UpdateUserModalMiddleware::class,
-            (new UpdateUserModalMiddlewareFactory())($container),
+            new UpdateUserModalMiddlewareFactory()($container),
         );
     }
 }

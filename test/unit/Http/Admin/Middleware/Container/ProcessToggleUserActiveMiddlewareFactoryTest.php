@@ -28,7 +28,7 @@ final class ProcessToggleUserActiveMiddlewareFactoryTest extends TestCase
 
         self::assertInstanceOf(
             ProcessToggleUserActiveMiddleware::class,
-            (new ProcessToggleUserActiveMiddlewareFactory())($container),
+            new ProcessToggleUserActiveMiddlewareFactory()($container),
         );
     }
 }

@@ -35,7 +35,7 @@ final class CreateUserModalHandlerFactoryTest extends TestCase
 
         self::assertInstanceOf(
             CreateUserModalHandler::class,
-            (new CreateUserModalHandlerFactory())($container),
+            new CreateUserModalHandlerFactory()($container),
         );
     }
 }

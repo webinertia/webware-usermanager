@@ -26,7 +26,7 @@ final class UserUrlFactoryTest extends TestCase
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')->willReturnMap([[UrlHelper::class, $urlHelper]]);
 
-        $helper = (new UserUrlFactory())($container);
+        $helper = new UserUrlFactory()($container);
 
         self::assertInstanceOf(UserUrl::class, $helper);
         self::assertSame('user.', $this->routeNamePrefix($helper));

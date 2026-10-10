@@ -25,7 +25,7 @@ final class FetchUserByVerificationTokenHandlerFactoryTest extends TestCase
 
         self::assertInstanceOf(
             FetchUserByVerificationTokenHandler::class,
-            (new FetchUserByVerificationTokenHandlerFactory())($container),
+            new FetchUserByVerificationTokenHandlerFactory()($container),
         );
     }
 }

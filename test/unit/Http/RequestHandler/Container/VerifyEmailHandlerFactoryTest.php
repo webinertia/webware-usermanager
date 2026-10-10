@@ -31,6 +31,6 @@ final class VerifyEmailHandlerFactoryTest extends TestCase
                 [HelperPluginManager::class, $this->userUrlHelperManager()],
             ]);
 
-        static::assertInstanceOf(VerifyEmailHandler::class, (new VerifyEmailHandlerFactory())($container));
+        static::assertInstanceOf(VerifyEmailHandler::class, new VerifyEmailHandlerFactory()($container));
     }
 }

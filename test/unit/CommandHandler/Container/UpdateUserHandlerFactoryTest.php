@@ -26,6 +26,6 @@ final class UpdateUserHandlerFactoryTest extends TestCase
                 [UserRepositoryInterface::class, $this->createStub(UserRepositoryInterface::class)],
             ]);
 
-        self::assertInstanceOf(UpdateUserHandler::class, (new UpdateUserHandlerFactory())($container));
+        self::assertInstanceOf(UpdateUserHandler::class, new UpdateUserHandlerFactory()($container));
     }
 }

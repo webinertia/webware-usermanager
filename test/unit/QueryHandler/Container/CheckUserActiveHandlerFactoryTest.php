@@ -23,6 +23,6 @@ final class CheckUserActiveHandlerFactoryTest extends TestCase
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')->willReturn($this->createStub(UserRepositoryInterface::class));
 
-        self::assertInstanceOf(CheckUserActiveHandler::class, (new CheckUserActiveHandlerFactory())($container));
+        self::assertInstanceOf(CheckUserActiveHandler::class, new CheckUserActiveHandlerFactory()($container));
     }
 }

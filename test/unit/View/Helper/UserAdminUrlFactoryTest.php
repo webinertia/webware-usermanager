@@ -38,7 +38,7 @@ final class UserAdminUrlFactoryTest extends TestCase
                 ],
             ]);
 
-        $helper = (new UserAdminUrlFactory())($container);
+        $helper = new UserAdminUrlFactory()($container);
 
         self::assertInstanceOf(UserAdminUrl::class, $helper);
         self::assertSame('backoffice.user.', $this->routeNamePrefix($helper));

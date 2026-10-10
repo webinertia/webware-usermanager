@@ -33,7 +33,7 @@ final class RouteProviderFactoryTest extends TestCase
                 ],
             ]);
 
-        $provider = (new RouteProviderFactory())($container);
+        $provider = new RouteProviderFactory()($container);
 
         self::assertSame('user', $this->property($provider, 'routeSegment'));
         self::assertSame('user.', $this->property($provider, 'routeNamePrefix'));

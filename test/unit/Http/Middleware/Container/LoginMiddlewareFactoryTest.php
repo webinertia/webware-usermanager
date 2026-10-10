@@ -30,6 +30,6 @@ final class LoginMiddlewareFactoryTest extends TestCase
                 [LoggerInterface::class, $this->createStub(LoggerInterface::class)],
             ]);
 
-        self::assertInstanceOf(LoginMiddleware::class, (new LoginMiddlewareFactory())($container));
+        self::assertInstanceOf(LoginMiddleware::class, new LoginMiddlewareFactory()($container));
     }
 }

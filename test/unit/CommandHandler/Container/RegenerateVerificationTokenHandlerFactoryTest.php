@@ -25,7 +25,7 @@ final class RegenerateVerificationTokenHandlerFactoryTest extends TestCase
 
         static::assertInstanceOf(
             RegenerateVerificationTokenHandler::class,
-            (new RegenerateVerificationTokenHandlerFactory())($container),
+            new RegenerateVerificationTokenHandlerFactory()($container),
         );
     }
 }

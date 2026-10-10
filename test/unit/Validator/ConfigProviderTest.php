@@ -31,7 +31,7 @@ final class ConfigProviderTest extends TestCase
                     ],
                 ],
             ],
-            (new ConfigProvider())(),
+            new ConfigProvider()(),
         );
     }
 }
