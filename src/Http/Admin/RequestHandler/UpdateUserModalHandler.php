@@ -20,7 +20,7 @@ use Webware\UserManager\Http\Admin\Middleware\UpdateUserModalMiddleware;
  *
  * Render-only: the user and the assignable roles are assembled by the
  * middleware that runs ahead of this handler in the pipeline. The 404 is kept
- * here because it is a render decision — the attribute carries null when the id
+ * here because it is a render decision - the attribute carries null when the id
  * is unusable or no such user exists.
  */
 final class UpdateUserModalHandler implements RequestHandlerInterface

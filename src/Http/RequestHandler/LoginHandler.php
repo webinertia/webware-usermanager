@@ -44,7 +44,7 @@ final class LoginHandler implements RequestHandlerInterface
         // The guest principal is built from Role::Guest alone, so the role is the attribute
         // every principal carries; any other role is a session hydrated from a row.
         if (Role::Guest->value !== $user->getRoleId()) {
-            // Authenticated — redirect; HTMX boosted forms need HX-Redirect
+            // Authenticated - redirect; HTMX boosted forms need HX-Redirect
             if ($request->getAttribute(Attribute::Request->value) === true) {
                 return new EmptyResponse(200, [Header::Redirect->value => '/']);
             }

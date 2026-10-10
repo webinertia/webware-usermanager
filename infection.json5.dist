@@ -20,7 +20,7 @@
         // The hidden prompt's fallback flag and the redundant (string) cast on the
         // always-string role option are equivalent mutants: they cannot be observed
         // through CommandTester-based tests. The hidden flag itself is deliberately
-        // NOT ignored — the tests observe it through the newline the hidden reader
+        // NOT ignored - the tests observe it through the newline the hidden reader
         // writes to close the prompt line.
         "FalseValue": {
             "ignore": ["Webware\\UserManager\\Console\\InitDbCommand::questionFor::231"]

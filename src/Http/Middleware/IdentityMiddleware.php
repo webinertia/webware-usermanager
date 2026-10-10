@@ -24,7 +24,7 @@ use Webware\UserManager\Query\CheckUserActiveQuery;
  * the authenticated User from the stored row. Otherwise the session is cleared and
  * a User carrying Role::Guest is attached.
  *
- * Always calls the next handler — access decisions are AuthorizationMiddleware's job.
+ * Always calls the next handler - access decisions are AuthorizationMiddleware's job.
  * Pipe this once in the global pipeline, after SessionMiddleware.
  */
 final class IdentityMiddleware implements MiddlewareInterface

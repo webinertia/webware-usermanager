@@ -142,7 +142,7 @@ final class InitDbCommandTest extends TestCase
      * The password question is hidden, and Symfony's hidden-input reader closes
      * the prompt line itself because the typed value is never echoed. That
      * newline is the one thing separating the hidden question from the derived
-     * one — their prompt text is identical — so it is what pins the arm.
+     * one - their prompt text is identical - so it is what pins the arm.
      */
     #[Test]
     public function interactHidesThePasswordPrompt(): void
@@ -165,8 +165,8 @@ final class InitDbCommandTest extends TestCase
 
     /**
      * The prompt is derived from the argument name, so it is observable in the
-     * command's output. This pins the derivation itself — dash to space, first
-     * letter capitalized, colon suffix — rather than only the returned value,
+     * command's output. This pins the derivation itself - dash to space, first
+     * letter capitalized, colon suffix - rather than only the returned value,
      * which the other interact tests already cover.
      */
     #[Test]

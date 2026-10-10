@@ -39,7 +39,7 @@ use const PASSWORD_DEFAULT;
  *
  * GET only fetches the assignable roles for the modal. POST validates the body
  * against {@see CreateUserDataFilter} with the assignable roles supplied by the
- * server — never the client — and either leaves the failure on the request as a
+ * server - never the client - and either leaves the failure on the request as a
  * {@see CreateUserState} or dispatches {@see CreateUserCommand}.
  *
  * An actor attribute that is missing or role-less yields an empty assignable

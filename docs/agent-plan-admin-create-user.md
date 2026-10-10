@@ -1,6 +1,6 @@
-# Agent plan — admin create user (DeepSeek handoff)
+# Agent plan: admin create user (DeepSeek handoff)
 
-> **STATUS: COMPLETED** — every task was executed and merged (PR #80 admin create-user, PR #82 render-only
+> **STATUS: COMPLETED**: every task was executed and merged (PR #80 admin create-user, PR #82 render-only
 > list handlers). Retained as a decision record; delete just before the `1.0.0` stable tag is cut.
 
 Design is settled in [`plan-admin-create-user.md`](plan-admin-create-user.md). This file is the **work list**: do
@@ -50,7 +50,7 @@ are merged.
 
 ---
 
-## T0 — Onboard `webware-validator` (plan 16.1)
+## T0: Onboard `webware-validator` (plan 16.1)
 
 **Repo:** `webinertia/webware-validator`, clone to `~/github.com/webinertia/webware-validator`, branch
 `chore/onboard-webware-validator` from `1.0.x`.
@@ -69,7 +69,7 @@ Steps:
 Done: all gates exit 0; `git grep -i skeleton` returns nothing outside `composer.lock`.
 Stop if: the checklist is missing or contradicts the above.
 
-## T1 — `PasswordRequirement` (plan 16.2)
+## T1: `PasswordRequirement` (plan 16.2)
 
 **Repo:** `webware-validator`, branch `feat/password-requirement`, after T0 is merged.
 **Files (create):** `src/PasswordRequirement.php`, `src/Container/PasswordRequirementFactory.php`,
@@ -120,7 +120,7 @@ Rules: length uses `mb_strlen`; upper/lower/digit/special count matches with `pr
 value is cast to string. All failed rules are reported, not just the first.
 
 `ConfigProvider`: config key `PasswordRequirement::class => ['length' => 8, 'upper' => 1, 'lower' => 1,
-'digit' => 1, 'special' => 1]` (**provisional defaults — owner to confirm**), `validators` → `factories` →
+'digit' => 1, 'special' => 1]` (**provisional defaults - owner to confirm**), `validators` → `factories` →
 `PasswordRequirement::class => Container\PasswordRequirementFactory::class`. The factory merges
 `config[PasswordRequirement::class]` with the call-site `$options` (call-site wins) and returns
 `new PasswordRequirement(options: $merged)`; when no `config` service exists it uses `$options` only.
@@ -130,7 +130,7 @@ override through the factory; every message template with its placeholder text; 
 
 Done: gates exit 0; coverage 100%; MSI ≥ 95. Stop if: a gate cannot pass without a baseline entry.
 
-## T2 — Verification listener wiring (plan F3, F4)
+## T2: Verification listener wiring (plan F3, F4)
 
 **Repo:** `webware-usermanager`, branch `fix/wire-verification-email-listener`.
 **Files (edit):** `src/ConfigProvider.php`, `test/unit/ConfigProviderTest.php`. Read first:
@@ -148,13 +148,13 @@ Steps:
 
 Done: gates exit 0. Stop if the listener's factory needs a service no provider registers.
 
-## T3 — Assignable roles query (plan 7.1, 7.3)
+## T3: Assignable roles query (plan 7.1, 7.3)
 
 **Repo:** `webware-usermanager`, branch `feat/assignable-roles-query`.
 **Files (create):** `src/Query/FetchAssignableRolesQuery.php`, `src/QueryHandler/FetchAssignableRolesHandler.php`,
 `src/QueryHandler/Container/FetchAssignableRolesHandlerFactory.php`, and one test per class.
 **Files (edit):** `src/ConfigProvider.php`, `test/unit/ConfigProviderTest.php`.
-Model on the existing query, handler and factory (`FetchUserByEmailQuery`, its handler and factory) — same
+Model on the existing query, handler and factory (`FetchUserByEmailQuery`, its handler and factory) - same
 interfaces, same attributes, same registration, same constructor-argument style.
 
 Behavior. Input: `string $actorRoleId`. Source: `Webware\Core\AclInterface::getRoles()` →
@@ -175,7 +175,7 @@ terminates; result order follows the registry.
 
 Done: gates exit 0. Stop if: `Webware\Core\UserInterface::GUEST_ROLE` does not exist.
 
-## T3b — Move to current `php-db/phpdb` (exception marker)
+## T3b: Move to current `php-db/phpdb` (exception marker)
 
 **Repo:** `webware-usermanager`, branch `chore/phpdb-exception-marker`. **Do this before T4.**
 Upstream (`php-db/phpdb` 0.6.x, commit `01a9406b`, 2026-09-29) removed `PhpDb\Sql\Exception\ExceptionInterface` and
@@ -200,7 +200,7 @@ Done: gates exit 0 with **no new baseline entries** and the previous analyzer ba
 'Sql\\Exception\\ExceptionInterface\|TableGateway\\Exception\\ExceptionInterface' src test` returns nothing. Stop if:
 any analyzer finding remains in a file outside the two named files, or a gate fails for a reason not in this list.
 
-## T4 — Validators and the create input filter (plan 8.1, 16.3)
+## T4: Validators and the create input filter (plan 8.1, 16.3)
 
 **Repo:** `webware-usermanager`, branch `feat/create-user-validators`. Needs webware-tools `1.0.0-beta.8` or later
 (its guard allows `PhpDb\Validator\**`).
@@ -247,10 +247,10 @@ Steps:
 Tests: factory builds a validator with the adapter (stub the container); `AssignableRoleValidator` valid,
 invalid, missing context; filter: each field, role outside the set, missing required fields.
 
-Done: gates exit 0. Stop if: `mago guard` still rejects `PhpDb\Validator\**` after the webware-tools bump — report
+Done: gates exit 0. Stop if: `mago guard` still rejects `PhpDb\Validator\**` after the webware-tools bump - report
 it; do not work around it and do not edit `mago.toml`.
 
-## T5 — Create modal, route split, command changes (plan 6, 7.2, 9)
+## T5: Create modal, route split, command changes (plan 6, 7.2, 9)
 
 **Repo:** `webware-usermanager`, branch `feat/admin-create-user-modal`, after T1, T3, T4 are merged.
 Read first, and follow as the pattern: `RouteProvider`, `Http/Admin/Middleware/ProcessUpdateUserMiddleware.php`,
@@ -258,7 +258,7 @@ Read first, and follow as the pattern: `RouteProvider`, `Http/Admin/Middleware/P
 factories, `Command/CreateUserCommand.php`, `CommandHandler/CreateUserHandler.php`, `Acl/RuleSeeds.php`,
 `templates/default/user/update-user-modal.phtml`.
 
-**Held back — do not do in this task:** CSRF middleware, the shared `role-select` partial's use in the edit modal.
+**Held back - do not do in this task:** CSRF middleware, the shared `role-select` partial's use in the edit modal.
 The password-set flag and the activation set-password step **landed already** (webinertia/webware-usermanager#78); do
 not rebuild them.
 
@@ -302,11 +302,11 @@ Steps:
 Done: gates exit 0. Stop if: any task step conflicts with an existing class; `UserListHandler` cannot be reused
 for the success response; a guard rule rejects a new class name or location.
 
-### T5 review fixes (PR #76) — same branch, same PR, new commit
+### T5 review fixes (PR #76): same branch, same PR, new commit
 
 Found by review of the PR diff. Fix both; touch only the files named.
 
-**R1 — the success and failure outcomes never reach the handler.**
+**R1 - the success and failure outcomes never reach the handler.**
 `ProcessCreateUserMiddleware` attaches only the `CommandResult::class` request attribute (which
 `NotificationMiddleware` reads). `Http\Admin\RequestHandler\CreateUserHandler` reads the outcome from
 `CreateUserState::$result`, and no `CreateUserState` is attached on the dispatch path. Result: a successful
@@ -324,7 +324,7 @@ command returns 200 with an empty role list instead of 500.
    validation failure returns 422 with errors and old input.
 3. Update `ProcessCreateUserMiddlewareTest` to assert both attributes on the success and failure paths.
 
-**R2 — a 422 or 500 re-render lands in the wrong element.**
+**R2 - a 422 or 500 re-render lands in the wrong element.**
 The form posts with `hx-target="main"`, so a failure response (the modal fragment) would be swapped into `main`.
 Also, `CreateUserModalHandler` renders with `'layout' => false, 'body' => false`, but the POST handler's failure
 render does not.
@@ -338,7 +338,7 @@ render does not.
 Done: gates exit 0 with the existing coverage and MSI floors. Report in the standard format, plus one line saying
 whether `Header` had `Retarget` and `Reswap` cases. Do not touch the held-back items.
 
-## T6 — App configuration (plan F3, F4)
+## T6: App configuration (plan F3, F4)
 
 **Repo:** `webinertia/webware` (app), branch `chore/verification-email-config`, after T2 is merged.
 **Files (edit):** the app's `config/autoload/` global config (create `user.global.php` only if no suitable file
@@ -346,7 +346,7 @@ exists, and report which you chose).
 
 Values, under the key `Webware\Core\UserInterface::class`: `base_url` `http://localhost:8080`,
 `verification_email_subject` `Verify your Farmers IMS account`, `verification_token_ttl` `86400`. Mailer adapter
-(`Webware\Mailer` adapter config key — read `webware-mailer/src/ConfigProvider.php` for the exact key):
+(`Webware\Mailer` adapter config key - read `webware-mailer/src/ConfigProvider.php` for the exact key):
 `useSmtp` true, host `127.0.0.1`, port `1025`, no auth (Mailpit, `compose.yml`).
 
 Done: gates exit 0. **Do not run the app.** Stop if: the exact mailer config key is not obvious.
@@ -354,7 +354,7 @@ Done: gates exit 0. **Do not run the app.** Stop if: the exact mailer config key
 *T6 was done by the owner's session: `webinertia/webware#23` (keys) and `#24` (`php-db/phpdb-validator` VCS entry
 and install). Do not repeat it.*
 
-## T7 — Assignable roles on the edit flow (plan F2) — **DONE** (webinertia/webware-usermanager#80)
+## T7: Assignable roles on the edit flow (plan F2) - **DONE** (webinertia/webware-usermanager#80)
 
 **Repo:** `webware-usermanager`, branch `fix/edit-user-assignable-roles`, from `1.0.x` after #76 is merged.
 
@@ -416,10 +416,10 @@ Steps:
 
 Done: gates exit 0 with the coverage and MSI floors. Stop if: a guard rule rejects `Http\Admin\AssignableRolesProvider`
 (report which rule; do not work around it), or the user's current role is not in the assignable set and you think
-the modal should behave differently — **do not decide that**, report it (the select then simply lacks the current
+the modal should behave differently - **do not decide that**, report it (the select then simply lacks the current
 role and the form requires choosing one).
 
-## T8 — Validator false positive (owner's session, not the agent)
+## T8: Validator false positive (owner's session, not the agent)
 
 Browser test, 2026-10-02: `PhpDb\Validator\NoRecordExists` reports "found" for a nonexistent email, so no user can
 be created. `AbstractDbValidator::query()` returns `$statement->execute()?->current()` and the PDO result returns

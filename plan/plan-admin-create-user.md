@@ -1,11 +1,11 @@
-# Admin Create User — Architecture Proposal
+# Admin Create User: Architecture Proposal
 
-> **STATUS: COMPLETED** — the feature shipped in PR #80 (admin create-user) and PR #82 (render-only list
+> **STATUS: COMPLETED**: the feature shipped in PR #80 (admin create-user) and PR #82 (render-only list
 > handlers, which closed the F7 empty-list defect recorded in this document). Retained as a decision record;
 > delete just before the `1.0.0` stable tag is cut.
 
 **Status:** COMPLETED 2026-10-03. Written as "proposal v2 for review (revised after your feedback of
-2026-10-02). Nothing in this document is implemented." — true when written, no longer true.
+2026-10-02). Nothing in this document is implemented." - true when written, no longer true.
 **Date:** 2026-10-02 → completed 2026-10-03
 **Scope:** `webware-usermanager` (owner of the feature), with the contracts it consumes from `webware-core`,
 `webware-message`, `webware-htmx`, `webware-admin`, `webware-acl` and `webware-mailer`.
@@ -163,11 +163,11 @@ These are the standing conventions, with where they come from.
 | **webware-acl** | Implements `AclInterface` (the role registry in `acl_role`, resource tree, `isAllowed`); enforces route access via `AuthorizationMiddleware` on `admin.user.create`; stores the seeded rule. | Learn what "creating a user" means or decide which roles an admin may grant. No change in this proposal. |
 | **webware-admin** | Owns the admin name and route-name prefix that `userAdminUrl()` and the route names derive from. | Be edited for this feature. |
 | **webware-message** | `NotificationMiddleware` turns the command's `successMessage` / `failureMessage` into a toast; `SystemMessenger`. | Know about users. |
-| **webware-htmx** | `DisableBodyMiddleware`, `Response\Header` (`PushUrl`), the render pipeline flags `layout` / `body`. | — |
-| **webware-mailer / usermanager listener** | Sends the verification email. | — |
-| **webware-event** | Event dispatch (`SendVerificationEmailEvent` extends its `Event`). | — |
-| **webware-phpdb** | Gateway and repository base; **the place for gaps in `php-db/*`** (your direction: `php-db/*` is the database abstraction layer, `webware-phpdb` fills what it lacks). Candidate home for the session-lifetime setting (D6). | — |
-| **webware-navigation** | Renders the "Create User" nav item from the route's options (already done). | — |
+| **webware-htmx** | `DisableBodyMiddleware`, `Response\Header` (`PushUrl`), the render pipeline flags `layout` / `body`. | - |
+| **webware-mailer / usermanager listener** | Sends the verification email. | - |
+| **webware-event** | Event dispatch (`SendVerificationEmailEvent` extends its `Event`). | - |
+| **webware-phpdb** | Gateway and repository base; **the place for gaps in `php-db/*`** (your direction: `php-db/*` is the database abstraction layer, `webware-phpdb` fills what it lacks). Candidate home for the session-lifetime setting (D6). | - |
+| **webware-navigation** | Renders the "Create User" nav item from the route's options (already done). | - |
 | **app (`webware/webware`) / theme** | Provides config (`base_url`, `verification_email_subject`), the theme scripts that let htmx swap a 422, and (optionally) an app-owned `ims` copy of the template. | Hold usermanager business rules. |
 
 The one decision in this table that is not obvious is **where the role-assignment policy lives**. Role
@@ -217,7 +217,7 @@ Global middleware ahead of it is unchanged and already runs on every request: id
 parses natively (the registration route does not use it either). `DisableBodyMiddleware` **is** used on the
 modal GET (a fragment, not a full page).
 
-### 6.2 GET — show the modal
+### 6.2 GET: show the modal
 
 ```mermaid
 sequenceDiagram
@@ -236,7 +236,7 @@ sequenceDiagram
     H-->>B: 200
 ```
 
-### 6.3 POST — valid
+### 6.3 POST: valid
 
 ```mermaid
 sequenceDiagram
@@ -262,7 +262,7 @@ sequenceDiagram
     H-->>B: 200 users list
 ```
 
-### 6.4 POST — invalid or failed
+### 6.4 POST: invalid or failed
 
 | Outcome | Where decided | Response |
 |---|---|---|
@@ -287,13 +287,13 @@ All under `Webware\UserManager\`. "Reg." is where it is registered.
 | `Http\Admin\RequestHandler\CreateUserModalHandler` | `*Handler` | GET modal: fetches assignable roles, renders the modal fragment | route `admin.user.create.modal` |
 | `Query\FetchAssignableRolesQuery` | final, `QueryInterface` | carries `string $actorRoleId` | query map |
 | `QueryHandler\FetchAssignableRolesHandler` | `QueryHandlerInterface` | computes the assignable role list from `AclInterface::getRoles()` (7.3); returns `QueryResult(Success, list<string>)` | dependencies (factory in `QueryHandler\Container\`), query map |
-| `Http\Admin\CreateUserState` | `readonly` value object | what the middleware hands the handler: `list<string> $assignableRoles`, `array<string,list<string>> $errors`, `array<string,string> $old`, `?CommandResult $result` | — |
+| `Http\Admin\CreateUserState` | `readonly` value object | what the middleware hands the handler: `list<string> $assignableRoles`, `array<string,list<string>> $errors`, `array<string,string> $old`, `?CommandResult $result` | - |
 | `Http\Admin\Middleware\ProcessCreateUserMiddleware` | `*Middleware`, PSR-15, `HttpMethodProcessorTrait` | GET: fetch roles, attach state. POST: fetch roles, validate, dispatch `CreateUserCommand`, audit-log, attach state | dependencies (factory in `…\Middleware\Container\`) |
 | `InputFilter\CreateUserDataFilter` | `final`, extends `InputFilter` | the field rules in 8.1 | `input_filters` factories (`InputFilterFactory`) |
 | `Validator\Container\NoRecordExistsFactory` | validator factory | builds `PhpDb\Validator\NoRecordExists` with the container's `PhpDb\Adapter\AdapterInterface` and table `user`, field `email` (F6); no usermanager `UniqueEmailValidator` class is needed | `validators` factories |
 | `Validator\AssignableRoleValidator` | laminas validator | invalid unless the value is in `$context['assignableRoles']` | `validators` invokables |
 | `templates/default/user/create-user.phtml` | template | the form (section 9) | resolved through the `user` path already registered |
-| `templates/default/user/partials/role-select.phtml` | partial | one `<select name="roleId">` shared by create and edit (D9) | — |
+| `templates/default/user/partials/role-select.phtml` | partial | one `<select name="roleId">` shared by create and edit (D9) | - |
 
 ### 7.2 Modified
 
@@ -310,7 +310,7 @@ All under `Webware\UserManager\`. "Reg." is where it is registered.
 
 No change to: `Entity\User`, `UserRepository`, `UpdateUserCommand` (the `UserSchema` change for the flag is in 8.3).
 
-### 7.3 `FetchAssignableRolesHandler` — the rule
+### 7.3 `FetchAssignableRolesHandler`: the rule
 
 Input: the actor's role id and `AclInterface::getRoles()` (`role → direct parent roles`).
 
@@ -325,7 +325,7 @@ registry). Results are returned in registry order. An actor role that is not in 
 |---|---|---|
 | Developer | Developer, Administrator, Member | everything up the chain except Guest |
 | Administrator | Administrator, Member | Administrator, Manager, Warehouse/Sales/…, Member |
-| Member | — (route denied anyway) | — |
+| Member | - (route denied anyway) | - |
 
 Why this rule: in a Laminas ACL a role inherits every permission of its parents, so "roles the actor holds"
 is the set of roles the actor already has all the permissions of. An admin cannot create an account more
@@ -340,13 +340,13 @@ powerful than their own. Guest is excluded because it is the anonymous principal
 
 | Field | Source | Filters / validators | Notes |
 |---|---|---|---|
-| `firstName`, `lastName` | form | `StringTrim`, required | — |
+| `firstName`, `lastName` | form | `StringTrim`, required | - |
 | `email` | form | `StringTrim`, `EmailAddress`, `NoRecordExists` (table `user`, field `email`; on update `exclude` the user's own id); stored lower-cased by the command | the database `UniqueKey` stays the authority; the validator exists for a friendly error |
-| `passwordHash` / `confirmPasswordHash` | **not on the admin form** (8.3) | — | the admin does not choose the password |
+| `passwordHash` / `confirmPasswordHash` | **not on the admin form** (8.3) | - | the admin does not choose the password |
 | `roleId` | form | `StringTrim`, required, `AssignableRoleValidator` | single string |
-| `active` | **server** | — | always `0` for an admin-created user; activation happens through the emailed link (8.2) |
+| `active` | **server** | - | always `0` for an admin-created user; activation happens through the emailed link (8.2) |
 | `verificationToken` | **server** | `Uuid` | `Uuid::uuid7()`, set after the body spread |
-| `assignableRoles` | **server** | — | injected into the filter data so the validator reads it from `$context`; set after the body spread, so a posted value is overwritten |
+| `assignableRoles` | **server** | - | injected into the filter data so the validator reads it from `$context`; set after the body spread, so a posted value is overwritten |
 
 ### 8.2 Active and verification
 
@@ -358,13 +358,13 @@ Mirrors registration, with no admin choice (D2):
 
 This depends on the listener wiring (F3) and on the config keys in F4.
 
-### 8.3 Password — the user sets it at activation (your direction) — **IMPLEMENTED** (webinertia/webware-usermanager#78)
+### 8.3 Password: the user sets it at activation (your direction) - **IMPLEMENTED** (webinertia/webware-usermanager#78)
 
 The admin never enters or sees a password. As built:
 
 - `user` gains `passwordSetRequired` (`TINYINT NOT NULL DEFAULT 0`), set to `1` by the admin create middleware;
   registration leaves it `0`. **Existing databases need
-  `ALTER TABLE user ADD COLUMN passwordSetRequired TINYINT NOT NULL DEFAULT 0 AFTER active`** — `user:init-db`
+  `ALTER TABLE user ADD COLUMN passwordSetRequired TINYINT NOT NULL DEFAULT 0 AFTER active`**: `user:init-db`
   only creates the table. Applied to the dev database on 2026-10-03.
 - **Deviation from the text below:** the route parameter is not needed. The flag is the single source of truth, so a
   stripped parameter cannot activate a passwordless account. The verification email links to
@@ -376,7 +376,7 @@ The admin never enters or sees a password. As built:
 - Until the user sets a password the stored hash is an unusable random value (a hash of a random secret that
   is never disclosed), so no login is possible with it.
 - **Not built yet:** the password validator is `PasswordRequirement` (F9), rebuilt in `webinertia/webware-validator`
-  (addendum, section 16); today the set-password filter uses `StringLength` 12–255 plus the confirmation match.
+  (addendum, section 16); today the set-password filter uses `StringLength` 12-255 plus the confirmation match.
 - **This is also the base of the password-reset workflow** you called out ("A password reset workflow needs
   to be created"): reset = set the flag, issue a fresh token, send the same link. Reset is not built here, but
   the flag, token and set-password step are in place for it.
@@ -409,13 +409,13 @@ The admin never enters or sees a password. As built:
 | **A04 Insecure design** | No password policy exists (F9). I propose a minimum length on this form's filter only if you want one (D3); a policy that differs from registration is its own decision. No forced change on first login is possible until a password flow exists. |
 | **A05 Misconfiguration** | The session cookie's `SameSite` and `HttpOnly` come from `php.ini`; here both are unset (F8). That is a deployment requirement to record in the installer RFC (`webinertia/project-tracking#6`), not something this feature can fix. |
 | **A07 Authentication failures** | Duplicate email is refused at the validator and at the `UniqueKey`; no user enumeration concern, because the form is admin-only. |
-| **A08 Software and data integrity — CSRF** | `mezzio/mezzio-csrf` guard middleware on the POST (and, as fleet-wide work, on update/toggle), token in the modal form. Requires adding the package to usermanager/app and a session guard config. **Session length** (cookie lifetime, `IniDefaults` via `PhpDbSessionPersistence`) is to be configurable; issue to be opened (D6). |
+| **A08 Software and data integrity - CSRF** | `mezzio/mezzio-csrf` guard middleware on the POST (and, as fleet-wide work, on update/toggle), token in the modal form. Requires adding the package to usermanager/app and a session guard config. **Session length** (cookie lifetime, `IniDefaults` via `PhpDbSessionPersistence`) is to be configurable; issue to be opened (D6). |
 | **A09 Logging and monitoring** | The middleware writes `info` on success (actor identity, new user id, role) and `warning` on a rejected role, through `Psr\Log\LoggerInterface`, as `LoginMiddleware` does. |
 | **Mass assignment** | Server-controlled keys (`verificationToken`, `assignableRoles`) are written after the body spread; only the listed fields reach the command. |
 
 ---
 
-## 11. Sequencing — pull requests
+## 11. Sequencing: pull requests
 
 Your direction: **the work lands together**, with the member list as its own PR. Because the pieces depend on
 each other, they are listed in merge order; the feature PRs are opened as one stack and merged only when the
@@ -512,7 +512,7 @@ handler changes in 7.2.
 
 ---
 
-## 16. Addendum — `webinertia/webware-validator` and the `PasswordRequirement` rebuild
+## 16. Addendum: `webinertia/webware-validator` and the `PasswordRequirement` rebuild
 
 ### 16.1 Prerequisite V0: onboard the repository
 
@@ -566,7 +566,7 @@ itself is yours to decide as maintainer.
 `Webware\UserManager\Validator\ConfigProvider`, which the root provider merges.
 
 **Consequences of adding `php-db/phpdb-validator` (measured by the agent):** it is not on Packagist (VCS entry,
-`0.1.x-dev`); it required `laminas-translator ^1.0`, which would have downgraded the lock from 2.0.0 to 1.3.0 —
+`0.1.x-dev`); it required `laminas-translator ^1.0`, which would have downgraded the lock from 2.0.0 to 1.3.0 -
 fixed upstream in `php-db/phpdb-validator#8` (`^2.0`; #9 raised its PHP floor to 8.3 to match `php-db/phpdb`
 0.6.x, which unblocked its CI). Moving `php-db/phpdb` to `ed4a407` removes `PhpDb\Sql\Exception\ExceptionInterface`
 and `PhpDb\TableGateway\Exception\ExceptionInterface` (`PhpDb\Exception\ExceptionInterface` is now the only
@@ -585,4 +585,4 @@ agent task T3b, in front of T4.
 | **B4** | **The edit flow has no role-assignment check** (privilege escalation): `UpdateUserDataFilter` only requires a string and the middleware passes any posted role. | code | **Fixed** in webinertia/webware-usermanager#80 (T7) |
 | **B5** | **Array input is not rejected.** `roleId[]` passes `UpdateUserDataFilter` valid and stays an array (the edit modal posts `roleId[]`); on create, `email[]` makes `NoRecordExists` throw (500). | filters run with array input | **Fixed** in #80: `StringLength` runs first on every string field with `break_chain_on_failure`, and the edit modal no longer posts an array |
 | **B6** | Existing-email message is the generic "A record matching the input was found". | browser | **Fixed** in #80: `An account with this email already exists.` |
-| **B7** | Not verified: verification email delivery to Mailpit; valid create end to end; the edit modal in the browser. | — | Create verified end to end 2026-10-03 (create → Mailpit link → set password → sign-in); the edit modal still needs a browser pass on #80 |
+| **B7** | Not verified: verification email delivery to Mailpit; valid create end to end; the edit modal in the browser. | - | Create verified end to end 2026-10-03 (create → Mailpit link → set password → sign-in); the edit modal still needs a browser pass on #80 |

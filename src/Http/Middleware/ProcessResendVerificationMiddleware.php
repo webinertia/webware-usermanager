@@ -66,7 +66,7 @@ final readonly class ProcessResendVerificationMiddleware implements MiddlewareIn
         $result = $this->messageBus->handle(new FetchUserByEmailQuery(email: $email));
 
         if ($result->getStatus() === MessageStatus::Failure) {
-            // Silently skip unknown emails — do not reveal whether the address
+            // Silently skip unknown emails - do not reveal whether the address
             // is registered (prevents user enumeration).
             return $handler->handle($request->withAttribute(
                 ResendVerificationHandler::class,

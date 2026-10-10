@@ -139,7 +139,7 @@ final class InitDbCommand extends Command
         $row = $this->collectUser($input);
         $this->executeInsert($sql, Schema::User->value, $row);
 
-        $output->writeln(sprintf('User created: %s — roles: %s', $row['email'], $row['roleId']));
+        $output->writeln(sprintf('User created: %s - roles: %s', $row['email'], $row['roleId']));
         $output->writeln('User database initialized.');
 
         return Command::SUCCESS;
@@ -149,7 +149,7 @@ final class InitDbCommand extends Command
      * Asks for any mandatory value that was not supplied.
      *
      * Symfony runs this before the definition is validated, which is the only
-     * point at which a required argument can still be filled in interactively —
+     * point at which a required argument can still be filled in interactively -
      * so the command stays usable when run directly with no arguments.
      *
      * @throws ConsoleInvalidArgumentException

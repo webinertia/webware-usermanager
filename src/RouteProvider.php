@@ -56,7 +56,7 @@ final readonly class RouteProvider implements RouteProviderInterface
         RouteCollectorInterface $routeCollector,
         MiddlewareFactoryInterface $middlewareFactory,
     ): void {
-        // Login routes — AclMiddleware runs before Auth (login/register are guest grants)
+        // Login routes - AclMiddleware runs before Auth (login/register are guest grants)
         $routeCollector->get(
             "/{$this->routeSegment}/login",
             $middlewareFactory->prepare([
@@ -202,7 +202,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             "{$this->adminRouteNamePrefix}create.modal",
         );
 
-        // Create the user (POST) — re-renders the user list (mirrors the update route)
+        // Create the user (POST) - re-renders the user list (mirrors the update route)
         $routeCollector->post(
             "/{$this->adminRouteSegment}/create",
             $middlewareFactory->prepare([
@@ -214,7 +214,7 @@ final readonly class RouteProvider implements RouteProviderInterface
             "{$this->adminRouteNamePrefix}create",
         );
 
-        // Update the user (PATCH) — re-renders the user list (mirrors webware-acl's role.update route)
+        // Update the user (PATCH) - re-renders the user list (mirrors webware-acl's role.update route)
         $routeCollector->route(
             "/{$this->adminRouteSegment}/update/{id:\d+}",
             $middlewareFactory->prepare([

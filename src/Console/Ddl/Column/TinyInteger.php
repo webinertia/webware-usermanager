@@ -7,7 +7,7 @@ namespace Webware\UserManager\Console\Ddl\Column;
 use PhpDb\Sql\Ddl\Column\Integer;
 
 /**
- * TINYINT column — not provided by phpdb core.
+ * TINYINT column - not provided by phpdb core.
  */
 final class TinyInteger extends Integer
 {

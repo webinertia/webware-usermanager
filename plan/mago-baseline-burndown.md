@@ -18,7 +18,7 @@ Phase 3 MessageBus merge and the composer update):
 - `mago lint --ignore-baseline --stats` → 123 findings, 18 distinct codes
 - `mago analyze --ignore-baseline --stats` → 250 findings, 40 distinct codes
 - Sum of `count` in each baseline equals those totals exactly, and neither run reports
-  stale entries — the baselines have **zero slack**, so no finding is hidden beyond the
+  stale entries - the baselines have **zero slack**, so no finding is hidden beyond the
   ones counted here.
 
 Useful negative result: clearing baseline entries cannot reveal additional findings.
@@ -78,15 +78,15 @@ Count findings with mago's own report limiting, never by grepping rendered outpu
 | Counts from the baseline | `mago inspect-baseline analysis-baseline.toml --group code` |
 | Totals only | `--reporting-format=count` |
 
-- `mago format --check` — clean
-- `mago lint` / `mago analyze` — exit 0, `No issues found`, and the filtered count must
+- `mago format --check` - clean
+- `mago lint` / `mago analyze` - exit 0, `No issues found`, and the filtered count must
   match the baseline total
-- `mago analyze --verify-baseline` — `Baseline is up to date`. This is the check that
+- `mago analyze --verify-baseline` - `Baseline is up to date`. This is the check that
   catches baseline drift a grep cannot see; `--fail-on-out-of-sync-baseline` makes a run
   fail on it
-- `mago guard` — clean
-- `php -d zend.assertions=1 vendor/bin/phpunit --testsuite "unit test"` — green
-- Coverage — 100% classes / methods / lines (`XDEBUG_MODE=coverage`, `--cache-directory /tmp/phpunit-cache-um`)
+- `mago guard` - clean
+- `php -d zend.assertions=1 vendor/bin/phpunit --testsuite "unit test"` - green
+- Coverage - 100% classes / methods / lines (`XDEBUG_MODE=coverage`, `--cache-directory /tmp/phpunit-cache-um`)
 
 Integration tests need MySQL and run in the tooling container
 (`docker compose exec -T tooling composer test-integration`); they cover
@@ -106,8 +106,8 @@ Integration tests need MySQL and run in the tooling container
   still passed for the recorded gate because it costs nothing and keeps the command
   stable.
 - **`composer test-coverage` has no `--testsuite` filter**, so it runs unit *and*
-  integration. `TESTS_ADAPTER_MYSQL_HOSTNAME` is `127.0.0.1` everywhere — the compose
-  database publishes 3306 to the host and CI's service publishes the same port — so the
+  integration. `TESTS_ADAPTER_MYSQL_HOSTNAME` is `127.0.0.1` everywhere - the compose
+  database publishes 3306 to the host and CI's service publishes the same port - so the
   same command runs unchanged on the host and in CI.
 - **Container runs leave root-owned artifacts in the workspace**, which silently corrupt
   host measurements: `.phpunit.cache/code-coverage/` (root-owned, causes ~95
@@ -116,12 +116,12 @@ Integration tests need MySQL and run in the tooling container
   Use `--cache-directory /tmp/phpunit-cache-um` on the host, and do not trust a
   `clover.xml` whose mtime predates the run that supposedly produced it.
 
-## Inventory — lint (123)
+## Inventory: lint (123)
 
 | Code | Level | Count | Tranche |
 |---|---|---|---|
 | `string-style` | help | 30 | 1 |
-| `no-else-clause` | help | 21 | Deferred — kept baselined |
+| `no-else-clause` | help | 21 | Deferred - kept baselined |
 | `literal-named-argument` | warning | 11 | 1 |
 | `no-fully-qualified-global-class-like` | help | 11 | 1 |
 | `yoda-conditions` | help | 11 | 1 |
@@ -129,8 +129,8 @@ Integration tests need MySQL and run in the tooling container
 | `excessive-parameter-list` | error | 6 | 4 |
 | `ambiguous-constant-access` | help | 4 | 2 |
 | `no-isset` | warning | 4 | 2 |
-| `prefer-array-spread` | warning | 4 | 2 — **done** |
-| `assert-description` | warning | 3 | 2 — **done** (no `assert()` calls remain) |
+| `prefer-array-spread` | warning | 4 | 2 - **done** |
+| `assert-description` | warning | 3 | 2 - **done** (no `assert()` calls remain) |
 | `too-many-methods` | error | 3 | 4 |
 | `cyclomatic-complexity` | error | 1 | 4 |
 | `halstead` | warning | 1 | 4 |
@@ -139,7 +139,7 @@ Integration tests need MySQL and run in the tooling container
 | `no-literal-password` | error | 1 | 2 |
 | `no-negated-ternary` | help | 1 | 2 |
 
-## Inventory — analysis (250)
+## Inventory: analysis (250)
 
 | Code | Level | Count | Tranche |
 |---|---|---|---|
@@ -151,11 +151,11 @@ Integration tests need MySQL and run in the tooling container
 | `unsafe-instantiation` | warning | 10 | 3 |
 | `possibly-invalid-argument` | error | 9 | 4 |
 | `non-existent-property` | error | 8 | 4 |
-| `redundant-null-coalesce` | help | 6 | 2 — **done**: retired by mailer `1.0.0-beta.4` |
+| `redundant-null-coalesce` | help | 6 | 2 - **done**: retired by mailer `1.0.0-beta.4` |
 | `less-specific-argument` | error | 5 | 3 |
 | `mixed-return-statement` | error | 5 | 3 |
 | `redundant-comparison` | help | 5 | 2 |
-| `redundant-cast` | help | 4 | 2 — **done**: retired by mailer `1.0.0-beta.4` |
+| `redundant-cast` | help | 4 | 2 - **done**: retired by mailer `1.0.0-beta.4` |
 | `redundant-condition` | warning | 4 | 2 |
 | `redundant-type-comparison` | warning | 4 | 2 |
 | `uninitialized-property` | error | 4 | 4 |
@@ -177,7 +177,7 @@ Integration tests need MySQL and run in the tooling container
 | `possibly-null-operand` | warning | 2 | 4 |
 | `property-type-coercion` | error | 2 | 4 |
 | `docblock-parameter-narrowing` | error | 1 | 3 |
-| `impossible-nonnull-entry-check` | warning | 1 | 2 — **done**: retired by mailer `1.0.0-beta.4` |
+| `impossible-nonnull-entry-check` | warning | 1 | 2 - **done**: retired by mailer `1.0.0-beta.4` |
 | `incompatible-parameter-type` | error | 1 | 3 |
 | `less-specific-nested-return-statement` | error | 1 | 3 |
 | `missing-api-or-internal` | warning | 1 | 2 |
@@ -190,10 +190,10 @@ Integration tests need MySQL and run in the tooling container
 | # | Scope | Findings | Branch | PR | Status |
 |---|---|---|---|---|---|
 | 1 | Mechanical lint: autofixable style codes | 93 | `chore/mago-burndown-1-lint-mechanical` | #22 merged | 72 fixed; 21 `no-else-clause` deferred (baselined) |
-| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | — | 12 fixed; `prefer-array-spread` (4) and `assert-description` (3) retired; 3 retired by the `with*` null-merge fix; `unused-parameter` (1) fixed by hand in `f16578c`; 18 redundant imports dropped in `8818adb`; `excessive-parameter-list` 6->5; `redundant-null-coalesce`, `redundant-cast` and `impossible-nonnull-entry-check` (11) retired by the mailer `1.0.0-beta.4` bump; remainder awaiting decisions |
-| 3 | Type precision at the source: `imprecise-type`, `mixed-*`, `unsafe-instantiation`, `less-specific-argument`, docblock narrowing | 82 | — | — | Not started |
-| 4 | Error-level correctness: `possibly-*`, `non-existent-property`, `uninitialized-property`, `invalid-*`, `unreachable-else-clause`, plus the remaining lint errors | 38 | — | — | Not started |
-| 5 | `unhandled-thrown-type` — document `@throws` using the interface the concrete exception implements | 72 | `chore/mago-burndown-2-mechanical` | — | **Done** (`78e60a6`): all 72 fixed. Declaring an exception makes it part of the callee's contract, so a further 36 findings surfaced at callers and were fixed in the same branch until the analysis converged |
+| 2 | Mechanical analysis + remaining lint: `redundant-*`, `missing-override-attribute`, `no-isset`, `ambiguous-constant-access`, `prefer-array-spread`, `assert-description`, and the long tail of size/level reports | 40 | `chore/mago-burndown-2-mechanical` | - | 12 fixed; `prefer-array-spread` (4) and `assert-description` (3) retired; 3 retired by the `with*` null-merge fix; `unused-parameter` (1) fixed by hand in `f16578c`; 18 redundant imports dropped in `8818adb`; `excessive-parameter-list` 6->5; `redundant-null-coalesce`, `redundant-cast` and `impossible-nonnull-entry-check` (11) retired by the mailer `1.0.0-beta.4` bump; remainder awaiting decisions |
+| 3 | Type precision at the source: `imprecise-type`, `mixed-*`, `unsafe-instantiation`, `less-specific-argument`, docblock narrowing | 82 | - | - | Not started |
+| 4 | Error-level correctness: `possibly-*`, `non-existent-property`, `uninitialized-property`, `invalid-*`, `unreachable-else-clause`, plus the remaining lint errors | 38 | - | - | Not started |
+| 5 | `unhandled-thrown-type` - document `@throws` using the interface the concrete exception implements | 72 | `chore/mago-burndown-2-mechanical` | - | **Done** (`78e60a6`): all 72 fixed. Declaring an exception makes it part of the callee's contract, so a further 36 findings surfaced at callers and were fixed in the same branch until the analysis converged |
 
 Tranche 3 and 4 will move as findings resolve each other: fixing a type at its source
 (retiring `imprecise-type` or a `mixed-*` root) typically retires downstream findings in
@@ -237,10 +237,10 @@ finding stays baselined with the rest of the `imprecise-type` family (29) for tr
 rather than being fixed in isolation. Net baseline 230 -> 229.
 `redundant-logical-operation` (2) still needs a per-site decision.
 The six `redundant-null-coalesce` findings previously listed here were not a local
-problem at all — see the config-contract entry below.
+problem at all - see the config-contract entry below.
 
 **`redundant-cast` (4), `redundant-null-coalesce` (6) and
-`impossible-nonnull-entry-check` (1) — resolved**
+`impossible-nonnull-entry-check` (1) - resolved**
 (`webware/webware-mailer`). All eleven sat in `SendVerificationEmailListenerFactory` and
 shared one cause: a single over-specific `@var` shape annotation on the `config` service.
 The annotation claimed every leaf was a present non-null `string`, so the analyzer reported
@@ -284,10 +284,10 @@ than one.
 each. Reverting the prototype and exercising both on a default `User` showed the two are
 not equivalent:
 
-- `withRoleId()` — genuine `TypeError: array_merge(): Argument #1 must be of type array,
+- `withRoleId()` - genuine `TypeError: array_merge(): Argument #1 must be of type array,
   null given` on `new User()`. Its hook getter is `get => $this->roleId ?? null`, which
   passes `null` through.
-- `withDetail()` — not a runtime fault. Its hook getter is `get => $this->details ?? []`,
+- `withDetail()` - not a runtime fault. Its hook getter is `get => $this->details ?? []`,
   which coerces `null` to `[]` before `array_merge()` sees it. The analyzer does not
   narrow through the getter hook, so the finding is defensive-only here.
 

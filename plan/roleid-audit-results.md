@@ -1,7 +1,7 @@
 # `roleId` Usage Audit
 
 > **Superseded in part (2026-09-17):** the array shape recorded below is the *current* state, not the
-target. See [`roleid-single-role-direction.md`](roleid-single-role-direction.md) — `roleId` becomes a
+target. See [`roleid-single-role-direction.md`](roleid-single-role-direction.md) - `roleId` becomes a
 hard `string`, the column becomes `varchar(50)`, and `getRoles()` wraps the string.
 
 > Generated 2026-06-16 from live database (PhpDb MCP) + full codebase grep.
@@ -16,10 +16,10 @@ hard `string`, the column becomes `varchar(50)`, and `getRoles()` wraps the stri
 |---|---|
 | Type | `JSON` |
 | Nullable | ❌ NOT NULL |
-| Default | — |
+| Default | - |
 | Content | JSON array of role name strings, e.g. `["Developer"]` or `["Member","Warehouse"]` |
 
-Source: `data/schema/002_user.sql:47` — `(new Json('roleId', nullable: false))`.  
+Source: `data/schema/002_user.sql:47` - `(new Json('roleId', nullable: false))`.
 Live DB confirms: `roleId json NOT NULL`.
 
 ### `acl_role.roleId`
@@ -46,13 +46,13 @@ Source: `data/schema/017_acl_rule.sql` (migration `Migration017AclRule`).
 
 ### Schema note (historical)
 
-`data/schema/002_user.sql:4` contains a comment: *"role_id is a plain VARCHAR; roles are managed in config, not a DB table."* This comment is stale — the column was changed from `VARCHAR(50)` to `JSON`, and roles are now managed in the `acl_role` DB table, not config.
+`data/schema/002_user.sql:4` contains a comment: *"role_id is a plain VARCHAR; roles are managed in config, not a DB table."* This comment is stale - the column was changed from `VARCHAR(50)` to `JSON`, and roles are now managed in the `acl_role` DB table, not config.
 
 ---
 
 ## 2. `User` entity (`webware-usermanager`)
 
-### Property definition (lines 48–53)
+### Property definition (lines 48-53)
 
 ```php
 public private(set) string|array|null $roleId = null {
@@ -63,11 +63,11 @@ public private(set) string|array|null $roleId = null {
 },
 ```
 
-- **Type:** `string|array|null` — `array` represents `GenericRole[]`, `string` is a raw role name, `null` for guest/unauthenticated
+- **Type:** `string|array|null` - `array` represents `GenericRole[]`, `string` is a raw role name, `null` for guest/unauthenticated
 - **Get hook:** returns the raw stored value or `null`
 - **Set hook:** delegates to `parseRoleId()`
 
-### `parseRoleId()` (lines 184–203)
+### `parseRoleId()` (lines 184-203)
 
 ```php
 private function parseRoleId(string|array|null $value): array|string|null
@@ -105,7 +105,7 @@ public function getRoleId(): array|string|null
 }
 ```
 
-**⚠ Type mismatch:** `RoleInterface::getRoleId()` has no return type declaration (only `@return string` in PHPDoc). `User::getRoleId()` returns `array|string|null`. PHP does not enforce compatibility because the parent interface has no native return type. If `RoleInterface` ever adds `: string`, this would be a fatal error — PHP supports covariant return types (narrowing) only, not contravariant (widening).
+**⚠ Type mismatch:** `RoleInterface::getRoleId()` has no return type declaration (only `@return string` in PHPDoc). `User::getRoleId()` returns `array|string|null`. PHP does not enforce compatibility because the parent interface has no native return type. If `RoleInterface` ever adds `: string`, this would be a fatal error - PHP supports covariant return types (narrowing) only, not contravariant (widening).
 
 ### `getRoles()` (line 158)
 
@@ -118,12 +118,12 @@ public function getRoles(): ?array
 
 **⚠ Return type mismatch with PHPDoc:** PHPDoc says `@return RoleInterface[]|null`, but the method body can also return `string` (if `$this->roleId` is a string). The return type is `?array`, which excludes `string`.
 
-### `withRoleId()` (lines 296–312)
+### `withRoleId()` (lines 296-312)
 
 ```php
 public function withRoleId(array $roleId): self
 {
-    if (is_string($roleId)) {      // Dead check — $roleId is typed `array`
+    if (is_string($roleId)) {      // Dead check - $roleId is typed `array`
         $roleId = [$roleId];
     }
     return new self(
@@ -151,7 +151,7 @@ public function getRoleId(): string
 }
 ```
 
-Returns `string` — matches `RoleInterface` contract.
+Returns `string` - matches `RoleInterface` contract.
 
 ---
 
@@ -167,7 +167,7 @@ final class User extends WebwareUser implements StoreProprietaryInterface
     {
         return new self(
             // ...
-            roleId: $this->roleId,   // line 26 — passes through to parent
+            roleId: $this->roleId,   // line 26 - passes through to parent
             // ...
         );
     }
@@ -187,10 +187,10 @@ final public const string DEVELOPER_ROLE_ID = 'Developer';
 ```
 
 Used in:
-- `Acl.php:172-173` — auto-allows Developer role on all resources
-- `AclWidgetFilterIteratorTest.php` — test assertions
+- `Acl.php:172-173` - auto-allows Developer role on all resources
+- `AclWidgetFilterIteratorTest.php` - test assertions
 
-### `Acl::addRole()` (lines 37–55)
+### `Acl::addRole()` (lines 37-55)
 
 Extracts `$role->getRoleId()` for persistence:
 
@@ -199,7 +199,7 @@ $roleId = $role instanceof RoleInterface ? $role->getRoleId() : $role;
 $this->roleRepository->save($roleId, ...);
 ```
 
-### `Acl::getRoles()` (lines 101–108)
+### `Acl::getRoles()` (lines 101-108)
 
 Iterates the Laminas registry by `roleId` keys:
 
@@ -337,17 +337,17 @@ INSERT INTO `acl_rule` (type, roleId, resourceId, ...) VALUES ('Allow', 'Develop
 
 | # | Issue | Location |
 |---|---|---|
-| 1 | `User::getRoleId()` returns `array\|string\|null` but `RoleInterface` has no return type (only `@return string` PHPDoc) — no PHP enforcement, but contract mismatch | `User.php:152` |
-| 2 | `User::getRoles()` returns `$this->roleId` which can be `string` (not `array`) — type mismatch with PHPDoc `RoleInterface[]` | `User.php:158` |
-| 3 | `withRoleId()` has dead `is_string($roleId)` check — parameter is typed `array` | `User.php:298` |
+| 1 | `User::getRoleId()` returns `array\|string\|null` but `RoleInterface` has no return type (only `@return string` PHPDoc) - no PHP enforcement, but contract mismatch | `User.php:152` |
+| 2 | `User::getRoles()` returns `$this->roleId` which can be `string` (not `array`) - type mismatch with PHPDoc `RoleInterface[]` | `User.php:158` |
+| 3 | `withRoleId()` has dead `is_string($roleId)` check - parameter is typed `array` | `User.php:298` |
 | 4 | `withRoleId()` PHPDoc says `RoleInterface[]\|string[]\|string` but signature is `array` | `User.php:295` |
-| 5 | `user.roleId` is `JSON` (array of strings) but `acl_role.roleId` and `acl_rule.roleId` are `VARCHAR(50)` (single string) — no FK or referential integrity possible | Schema |
-| 6 | Stale schema comment: `002_user.sql:4` says role_id is a plain VARCHAR and roles are in config — both are now false | `data/schema/002_user.sql` |
+| 5 | `user.roleId` is `JSON` (array of strings) but `acl_role.roleId` and `acl_rule.roleId` are `VARCHAR(50)` (single string) - no FK or referential integrity possible | Schema |
+| 6 | Stale schema comment: `002_user.sql:4` says role_id is a plain VARCHAR and roles are in config - both are now false | `data/schema/002_user.sql` |
 | 7 | `parseRoleId()` creates `GenericRole` objects but `getRoles()` PHPDoc still says `string[]` (was never updated) | `User.php:158` |
 
 ---
 
-## Update — 2026-09-10
+## Update: 2026-09-10
 
 This audit was taken 2026-06-16 against the pre-extraction entity, before the move to
 the RowPrototype implementation. Re-checked against the current package:
@@ -367,5 +367,5 @@ the RowPrototype implementation. Re-checked against the current package:
   stays multi-role, and the ACL view is one role per proxy.
 - Entries 3, 4 and 7 above are resolved in the current entity: `withRoleId()` accepts
   `array|string` (so its string branch is live) and `parseRoleId()` / `GenericRole` no
-  longer exist — roleId normalization happens in the setter. All line numbers in the
+  longer exist - roleId normalization happens in the setter. All line numbers in the
   tables above refer to the pre-extraction file and have shifted.

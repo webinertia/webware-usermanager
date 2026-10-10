@@ -1,4 +1,4 @@
-# Admin Edit User — Implementation Plan
+# Admin Edit User: Implementation Plan
 
 > **Partly superseded (2026-09-17):** role assignment described here as a JSON-encoded array (a
 > multi-select, `wrap in [$value]`) becomes a single role string. See
@@ -17,10 +17,10 @@ on insert vs update. Modal closes on success via `HX-Trigger: closeModal` from
 
 > **Status (2026-06-30):** The actual admin route segment is `webware.admin/user.manager`
 > (route name prefix `webware.admin.user.manager.`), not the shorthand `admin/user.manager`
-> used in earlier drafts of this plan — all path/route-name examples below have been
+> used in earlier drafts of this plan - all path/route-name examples below have been
 > corrected to match. Phase 0 (dashboard widget), the `EditUserModalHandler` GET modal
 > (Step 11/12), and the templates (Step 14/15) are **already implemented and confirmed
-> working**. `SaveUserCommand`'s upsert shape (Phase 2) is **superseded** — `SaveUserCommand`
+> working**. `SaveUserCommand`'s upsert shape (Phase 2) is **superseded**: `SaveUserCommand`
 > is being replaced by the `User` entity implementing `CommandInterface` directly
 > (separate, in-progress refactor); Phase 2 of this plan should not be implemented as written.
 
@@ -31,8 +31,8 @@ on insert vs update. Modal closes on success via `HX-Trigger: closeModal` from
 | **Modal dialog** (not full-page form) | Matches ACL role-edit admin pattern; consistent UX |
 | **Reuse `SaveUserCommand`** + add `?int $id` | Matches `SaveRoleCommand` pattern (`?int $id` distinguishes create vs update) |
 | **Editable fields:** firstName, lastName, email, roleId, active | Core profile fields + role assignment; password excluded (separate reset flow) |
-| **Delete `EditUserHandler.php`** (duplicate class) | `EditUserHandler.php` defines `UpdateUserHandler` — same class as `UpdateUserHandler.php`; neither is wired for POST processing; replaced by modal + list |
-| **PhpDb event-based extensibility** | PhpDb provides an event cycle at the SQL layer. External modules (e.g. `ims-store`) hook into PhpDb events on the `user` table to modify inflight queries (add store filters, augment columns, inspect results) — no usermanager code changes needed. |
+| **Delete `EditUserHandler.php`** (duplicate class) | `EditUserHandler.php` defines `UpdateUserHandler` - same class as `UpdateUserHandler.php`; neither is wired for POST processing; replaced by modal + list |
+| **PhpDb event-based extensibility** | PhpDb provides an event cycle at the SQL layer. External modules (e.g. `ims-store`) hook into PhpDb events on the `user` table to modify inflight queries (add store filters, augment columns, inspect results) - no usermanager code changes needed. |
 
 ---
 
@@ -89,7 +89,7 @@ Server:
   → EditUserModalHandler
       → finds user by route param 'id'
       → renders user::edit-user-modal
-      → returns HtmlResponse (modal fragment only — .modal-dialog > .modal-content > ...)
+      → returns HtmlResponse (modal fragment only - .modal-dialog > .modal-content > ...)
 ```
 
 ### Submitting the Form (PATCH)
@@ -158,7 +158,7 @@ Browser:
 | Modal is never swapped by the PATCH response | It lives in the layout outside `<main>` |
 | `closeModal` trigger only fires on `MessageStatus::Success` | On failure the modal stays open so the user can fix and retry |
 | `BodyParamsMiddleware` is only on the PATCH route, not the GET modal route | Modal GET routes use `DisableBodyMiddleware` instead |
-| Toast uses `$messenger->success(...)` / `$messenger->warning(...)` in middleware | Never in the handler — handlers only render |
+| Toast uses `$messenger->success(...)` / `$messenger->warning(...)` in middleware | Never in the handler - handlers only render |
 | Shared modal shell is Bootstrap 5 `.modal.fade` | Use `getOrCreateInstance` to show, `data-bs-dismiss="modal"` for Cancel |
 | Use `#sharedModalLabel` as the modal title `id` | Consistent with all other admin modals |
 
@@ -175,7 +175,7 @@ Browser:
 | Shared modal shell | `src/App/templates/layout/default.phtml` |
 
 ---
-## Phase 0 — Dashboard Widget (Entry Point) ✅ DONE
+## Phase 0: Dashboard Widget (Entry Point) ✅ DONE
 
 The admin dashboard widget provides the UI entry point for the user management
 workflow. It appears on `/admin` alongside other module widgets (ACL, etc.).
@@ -193,10 +193,10 @@ DashboardMiddleware (webware-admin)
 ```
 
 Modules do not create `WidgetInterface`, `RegisterWidgetEvent`, `DashboardMiddleware`,
-or `DashboardHandler` — those all live in `webware-admin`. Modules only create:
+or `DashboardHandler` - those all live in `webware-admin`. Modules only create:
 the widget class, the listener, the listener factory, and the template.
 
-### Widget Contract (`WidgetInterface` — in webware-admin)
+### Widget Contract (`WidgetInterface`: in webware-admin)
 
 ```php
 interface WidgetInterface extends ResourceInterface
@@ -273,13 +273,13 @@ Add ACL resource `webware.admin.user.manager` with `read` privilege for
 
 ---
 
-## Phase 1 — Clean Up Dead Code
+## Phase 1: Clean Up Dead Code
 
 ### Step 1: Delete `EditUserHandler.php`
 
 **File:** `src/webware-usermanager/src/Admin/RequestHandler/EditUserHandler.php`
 
-Defines class `UpdateUserHandler` in `Webware\UserManager\Admin\RequestHandler` — duplicate
+Defines class `UpdateUserHandler` in `Webware\UserManager\Admin\RequestHandler` - duplicate
 of the same class in `UpdateUserHandler.php`. Not registered in `ConfigProvider`. Dead code.
 
 ### Step 2: Delete `UpdateUserHandler` + factory
@@ -295,7 +295,7 @@ Replaced by `EditUserModalHandler` (GET modal) + `UserListHandler` (PATCH respon
 
 ---
 
-## Phase 2 — Data Layer
+## Phase 2: Data Layer
 
 ### Step 3: Add `?int $id` to `SaveUserCommand`
 
@@ -332,7 +332,7 @@ Existing insert tests remain unchanged.
 
 ---
 
-## Phase 3 — Validation
+## Phase 3: Validation
 
 ### Step 7: Create `UserDataFilter`
 
@@ -360,7 +360,7 @@ it by FQCN.
 
 ---
 
-## Phase 4 — Processing Middleware
+## Phase 4: Processing Middleware
 
 ### Step 9: Create `ProcessUserMiddleware`
 
@@ -396,7 +396,7 @@ Resolves `MessageBusInterface` from container.
 
 ---
 
-## Phase 5 — Request Handlers
+## Phase 5: Request Handlers
 
 ### Step 11: Create `EditUserModalHandler` ✅ DONE
 
@@ -431,7 +431,7 @@ Pattern reference: `RoleListHandler` in `src/webware-acl/src/Admin/RequestHandle
 
 ---
 
-## Phase 6 — Templates ✅ DONE
+## Phase 6: Templates ✅ DONE
 
 ### Step 14: Create `list-users.phtml` ✅ DONE
 
@@ -463,7 +463,7 @@ Modal dialog fragment:
 
 ---
 
-## Phase 7 — Route Wiring
+## Phase 7: Route Wiring
 
 ### Step 16: Update `RouteProvider`
 
@@ -514,11 +514,11 @@ $routeCollector->patch(
 - Add resource: `webware.admin.user.manager.edit.modal`
 - Allow `Administrator` role on `webware.admin.user.manager.edit.modal` with `read` privilege
 
-**Command map:** `SaveUserCommand::class => SaveUserHandler::class` already exists — no change.
+**Command map:** `SaveUserCommand::class => SaveUserHandler::class` already exists - no change.
 
 ---
 
-## Phase 8 — Verification
+## Phase 8: Verification
 
 ### Step 18: Write Unit Tests
 
@@ -559,11 +559,11 @@ $routeCollector->patch(
 - `src/webware-usermanager/src/Admin/RequestHandler/Container/UpdateUserHandlerFactory.php`
 
 ### Modify
-- `src/webware-usermanager/src/Command/SaveUserCommand.php` — add `?int $id`
-- `src/webware-usermanager/src/CommandHandler/SaveUserHandler.php` — upsert logic
-- `src/webware-usermanager/src/RouteProvider.php` — replace route
-- `src/webware-usermanager/src/ConfigProvider.php` — add widget, listeners, ACL, factories
-- `src/webware-usermanager/src/Admin/RequestHandler/UserListHandler.php` — closeModal trigger
+- `src/webware-usermanager/src/Command/SaveUserCommand.php` - add `?int $id`
+- `src/webware-usermanager/src/CommandHandler/SaveUserHandler.php` - upsert logic
+- `src/webware-usermanager/src/RouteProvider.php` - replace route
+- `src/webware-usermanager/src/ConfigProvider.php` - add widget, listeners, ACL, factories
+- `src/webware-usermanager/src/Admin/RequestHandler/UserListHandler.php` - closeModal trigger
 
 ### Create
 - `src/webware-usermanager/src/InputFilter/UserDataFilter.php`
@@ -589,12 +589,12 @@ $routeCollector->patch(
 - Admin create-user POST processing (stub exists but no middleware)
 - Password reset / change flow
 - `storeId` migration from column to `params` JSON (separate plan: `plan-storeid-migration.md`)
-- `GuestUser` entity implementation (missing file — tracked in `roleid-audit-results.md`)
+- `GuestUser` entity implementation (missing file - tracked in `roleid-audit-results.md`)
 - Non-admin user self-service profile editing
 
 ---
 
-## Update — 2026-09-10
+## Update: 2026-09-10
 
 The `GuestUser` entity listed under "Excluded from Scope" was never implemented and is
 no longer part of the design: a guest is a `User` carrying

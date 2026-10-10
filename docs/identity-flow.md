@@ -2,17 +2,17 @@
 
 > **Partly superseded (2026-09-17):** rows below showing `roleId` as an array (`['Member']`,
 > `['roleId' => 'Guest']`) describe the current storage, not the target. See
-> [`roleid-single-role-direction.md`](../plan/roleid-single-role-direction.md) — `roleId` becomes a hard
+> [`roleid-single-role-direction.md`](../plan/roleid-single-role-direction.md) - `roleId` becomes a hard
 > `string` and `getRoles()` wraps it.
 
 ## Overview
 
 - `IdentityMiddleware` resolves the current identity on **every** request. This package
-  registers no global pipeline of its own — the application pipes it globally,
+  registers no global pipeline of its own - the application pipes it globally,
   immediately after `SessionMiddleware`.
 - `LoginMiddleware` is POST-only and sits in the route stack of `user.manager.session.create`
   (POST `/user.manager/login`).
-- `LoginHandler` renders the login form — on GET (`user.manager.session.read`) and on POST
+- `LoginHandler` renders the login form - on GET (`user.manager.session.read`) and on POST
   failure, when `LoginMiddleware` passes the request through with a flash message.
 - `LogoutHandler` (`user.manager.logout.read`, GET `/user.manager/logout`) clears the
   session and redirects to the login route.
@@ -23,7 +23,7 @@
 
 ---
 
-## Flow 1 — Login POST
+## Flow 1: Login POST
 
 ```mermaid
 sequenceDiagram
@@ -59,7 +59,7 @@ sequenceDiagram
 
 ---
 
-## Flow 2 — Session Restore (subsequent requests)
+## Flow 2: Session Restore (subsequent requests)
 
 ```mermaid
 sequenceDiagram
@@ -112,8 +112,8 @@ contract: `Webware\Core\UserInterface` extends `PhpDb\ResultSet\RowPrototypeInte
 which defines `toArray(): array` (out) and
 `populate(array $data): RowPrototypeInterface` (in).
 
-- **Write** — `LoginMiddleware`: `$session->set(UserInterface::class, $result->user->toArray())`
-- **Read** — `IdentityMiddleware` hands the stored array to the `UserInterface::class`
+- **Write**: `LoginMiddleware`: `$session->set(UserInterface::class, $result->user->toArray())`
+- **Read**: `IdentityMiddleware` hands the stored array to the `UserInterface::class`
   callable service; `UserFactory` asserts a non-empty string-keyed dict
   (`Psl\Type\non_empty_dict`) and returns `$prototype->populate($withData)`.
 
