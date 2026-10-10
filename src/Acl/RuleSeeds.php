@@ -35,6 +35,8 @@ final readonly class RuleSeeds implements RuleSeedProviderInterface
         'register.read',
         'register.create',
         'verify.email.read',
+        'set.password.read',
+        'set.password.create',
         'resend.verification.read',
         'resend.verification.create',
     ];

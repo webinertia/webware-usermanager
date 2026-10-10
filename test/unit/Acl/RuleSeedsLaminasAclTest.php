@@ -32,6 +32,8 @@ final class RuleSeedsLaminasAclTest extends TestCase
         'user.register.read',
         'user.register.create',
         'user.verify.email.read',
+        'user.set.password.read',
+        'user.set.password.create',
         'user.resend.verification.read',
         'user.resend.verification.create',
     ];
