@@ -55,6 +55,8 @@ use Webware\UserManager\View\Helper\UserUrl;
 
 use function dirname;
 
+use const DIRECTORY_SEPARATOR;
+
 #[CoversClass(ConfigProvider::class)]
 #[CoversMethod(ConfigProvider::class, 'getAclConfig')]
 #[CoversMethod(ConfigProvider::class, 'getAuthenticationConfig')]
@@ -242,7 +244,9 @@ final class ConfigProviderTest extends TestCase
                         dirname(
                             path  : __DIR__,
                             levels: 2,
-                        ) . '/src/../templates/default/user',
+                        )
+                            . DIRECTORY_SEPARATOR
+                            . 'src/../templates/default/user',
                     ],
                 ],
             ],
