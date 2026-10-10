@@ -25,6 +25,8 @@ use function array_combine;
 use function bin2hex;
 use function random_bytes;
 
+use const PHP_EOL;
+
 #[CoversClass(InitDbCommand::class)]
 final class InitDbCommandTest extends TestCase
 {
@@ -156,7 +158,9 @@ final class InitDbCommandTest extends TestCase
 
         self::assertSame(Command::SUCCESS, $tester->getStatusCode());
 
-        self::assertStringContainsString("Password: \n", $tester->getDisplay());
+        // Symfony closes the hidden prompt line with `writeln('')`, and
+        // StreamOutput appends PHP_EOL, so the separator is platform-native.
+        self::assertStringContainsString('Password: ' . PHP_EOL, $tester->getDisplay());
     }
 
     /**
