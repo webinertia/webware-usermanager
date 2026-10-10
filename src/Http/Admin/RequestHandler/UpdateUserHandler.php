@@ -19,7 +19,7 @@ use Webware\UserManager\Http\RequestHandler\UserListHandler;
  * Delegates to UserListHandler, which renders the list from the view model
  * UserListMiddleware attached, and points the browser back at the list. The
  * closeModal trigger comes from UserListHandler, so it is sent only when the
- * command reported success — a validation failure leaves the modal open.
+ * command reported success - a validation failure leaves the modal open.
  */
 final class UpdateUserHandler implements RequestHandlerInterface
 {

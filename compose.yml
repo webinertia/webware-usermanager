@@ -9,7 +9,7 @@
 # This compose file is the single source of truth for the environment. Two
 # ways to use it:
 #
-#   1. VS Code Dev Container — "Reopen in Container" uses
+#   1. VS Code Dev Container: "Reopen in Container" uses
 #      .devcontainer/devcontainer.json, which is *backed by* this file (it
 #      references the `tooling` service rather than defining its own).
 #
@@ -24,7 +24,7 @@
 # Packages whose tests need MySQL uncomment the `mysql` service below (and the
 # `phpmyadmin` web UI if wanted), plus the `depends_on` block on `tooling`. The
 # `mysql` service mirrors the `db-image` package parameter used by CI and
-# publishes 3306 to the host, so PHP — the app, the CLI and the test suite —
+# publishes 3306 to the host, so PHP: the app, the CLI and the test suite -
 # reaches it at `127.0.0.1`, the same value CI uses. Packages that need a
 # different engine add an equivalent service here (postgres, mariadb, ...)
 # mirroring their own `db-image` parameter.
@@ -56,13 +56,13 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       # Bind-mount the source so edits are visible on both the host and the
-      # container. vendor/ is NOT overridden — it is the host's own copy.
+      # container. vendor/ is NOT overridden - it is the host's own copy.
       # Composer/installs inside the container write straight into the
       # developer's working tree on disk.
       - .:/app
       # The Composer cache lives in a named volume (Linux-native I/O, fast on
       # Windows) so downloads survive container rebuilds. It is only a cache
-      # — the developer's real artifacts all live on the host.
+      # - the developer's real artifacts all live on the host.
       - composer-cache:/tmp/composer-cache
     # The package's tests need MySQL (see the `mysql` service below). Ensures
     # the database is ready before the shell attaches.
@@ -72,7 +72,7 @@ services:
     working_dir: /app
 
   # -------------------------------------------------------------------------
-  # MySQL — this package's tests need a MySQL database (webware-usermanager via
+  # MySQL - this package's tests need a MySQL database (webware-usermanager via
   # php-db/phpdb-mysql).
   #
   # Mirrors the `db-image` / `db-env-json` / `db-port` Package Parameters in
@@ -103,7 +103,7 @@ services:
       # survives `docker compose down` (use `down -v` to wipe it).
       - mysql-data:/var/lib/mysql
   #
-  # phpMyAdmin — web UI for the `mysql` service above. Reachable at
+  # phpMyAdmin - web UI for the `mysql` service above. Reachable at
   # http://localhost:8080 (log in with the MYSQL_* credentials).
   phpmyadmin:
     image: phpmyadmin:latest

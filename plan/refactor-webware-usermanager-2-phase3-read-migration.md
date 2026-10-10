@@ -8,16 +8,16 @@ status: 'Completed'
 tags: [refactor, architecture, message-bus, query, command, testing]
 ---
 
-# Phase 3 — MessageBus read/write migration (proposal)
+# Phase 3: MessageBus read/write migration (proposal)
 
 ## Status
 
 | Phase | State |
 |---|---|
-| Phase 1 — Safety net & coverage (100% line / 100% MSI) | ✅ DONE (PR #17) |
-| Phase 2 — Http boundary reorganization | ✅ DONE (PR #18) |
-| **Phase 3 — MessageBus read/write migration (this doc)** | **✅ DONE (branch `refactor/phase3-bus-migration`)** |
-| Phase 4 — Migrations & CLI | partial (InitDbCommand in PR #17; webware-migration deferred) |
+| Phase 1 - Safety net & coverage (100% line / 100% MSI) | ✅ DONE (PR #17) |
+| Phase 2 - Http boundary reorganization | ✅ DONE (PR #18) |
+| **Phase 3 - MessageBus read/write migration (this doc)** | **✅ DONE (branch `refactor/phase3-bus-migration`)** |
+| Phase 4 - Migrations & CLI | partial (InitDbCommand in PR #17; webware-migration deferred) |
 
 ## Resolved conventions (locked 2026-09-07)
 
@@ -30,7 +30,7 @@ tags: [refactor, architecture, message-bus, query, command, testing]
    `AuthenticationResult` for the authenticate query).
 3. Repository stays bus-agnostic and returns RowPrototype (`User`) / typed rows.
    No php-db `ResultSet`/`RowPrototype` types leak past the query handler.
-4. **ALL reads and writes go through the MessageBus — no exceptions**, including
+4. **ALL reads and writes go through the MessageBus - no exceptions**, including
    `Admin\Dashboard` (widget aggregation moves to a query too).
 5. **Mutations happen in the PSR middleware layer.** RequestHandlers are
    render-only. Rationale: middleware *acts* on incoming data, and behavior placed
@@ -38,7 +38,7 @@ tags: [refactor, architecture, message-bus, query, command, testing]
    placed in a RequestHandler is only composable at the terminal end, which
    provides zero flexibility. (The long-term target is a webware-tools guard rule
    that forbids RequestHandlers from depending on `MessageBusInterface`.)
-6. Payloads keep the current `User` entity (RowPrototype) shape — no read-model
+6. Payloads keep the current `User` entity (RowPrototype) shape - no read-model
    DTOs in this leg.
 
 ## Current inventory
@@ -64,12 +64,12 @@ tags: [refactor, architecture, message-bus, query, command, testing]
 
 ### Legitimate repository consumers (unchanged)
 
-- `CommandHandler\{CreateUser,ToggleUserActive,UpdateUser}Handler` — `save`/
+- `CommandHandler\{CreateUser,ToggleUserActive,UpdateUser}Handler` - `save`/
   `findById`/`update` inside the write-command flow.
 
 ### Dead code
 
-- `findRoleIdByName()` — zero callers (`return $roleName;`) → remove.
+- `findRoleIdByName()` - zero callers (`return $roleName;`) → remove.
 
 ## Queries + handlers
 
@@ -97,50 +97,50 @@ Each with a `CommandHandler` + `Container\*Factory`, wired under `command_map`.
 
 ## Consumer changes
 
-1. **`LoginMiddleware`** — inject `MessageBusInterface`; dispatch
+1. **`LoginMiddleware`**: inject `MessageBusInterface`; dispatch
    `AuthenticateUserQuery(credential: $email, password: $password)`; read the
    `AuthenticationResult` from `getResult()`. Behavior unchanged.
-2. **`IdentityMiddleware`** — inject `MessageBusInterface`; dispatch
+2. **`IdentityMiddleware`**: inject `MessageBusInterface`; dispatch
    `CheckUserActiveQuery(id: $userInfo['id'])`; read `bool` from `getResult()`.
-3. **`UserListHandler`** — inject `MessageBusInterface`; dispatch `FetchUsersQuery`;
+3. **`UserListHandler`**: inject `MessageBusInterface`; dispatch `FetchUsersQuery`;
    render the returned `list<User>`. (Follow-up: render-only via middleware once
    the webware-tools guard rule lands.)
-4. **`UpdateUserModalHandler`** — inject `MessageBusInterface`; dispatch
+4. **`UpdateUserModalHandler`**: inject `MessageBusInterface`; dispatch
    `FetchUserByIdQuery`; `Failure` → 404, `Success` → render modal.
-5. **`VerifyEmailHandler`** — becomes render-only. New
+5. **`VerifyEmailHandler`**: becomes render-only. New
    `ProcessVerifyEmailMiddleware` (in `Http\Middleware\`) does: read token →
    `FetchUserByVerificationTokenQuery` → on `Failure` set error, on `Success` check
    expiry → dispatch `ActivateUser` → set messenger → attach `CommandResult`.
    Handler renders redirect/error.
-6. **`ResendVerificationHandler`** — becomes render-only. New
+6. **`ResendVerificationHandler`**: becomes render-only. New
    `ProcessResendVerificationMiddleware` does: read email → `FetchUserByEmailQuery` →
    on `Failure` render "sent" (silent), on `Success` if active redirect to login,
    else dispatch `RegenerateVerificationToken` → send email → render "sent".
-7. **`RegisterWidgetListener`** — inject `MessageBusInterface`; dispatch
+7. **`RegisterWidgetListener`**: inject `MessageBusInterface`; dispatch
    `FetchUsersQuery`; iterate `list<User>` to count active/inactive. (No repository
    exception.)
-8. **`ConfigProvider`** — add `query_map` + `command_map` entries and all new
+8. **`ConfigProvider`**: add `query_map` + `command_map` entries and all new
    factory DI entries.
 9. **Remove `findRoleIdByName`** from `UserRepositoryInterface` + impl.
 
 ## Design decisions (resolved)
 
-- **D1 — `authenticate`** → `AuthenticateUserQuery`. Handler delegates to
+- **D1 - `authenticate`** → `AuthenticateUserQuery`. Handler delegates to
   `$repo->authenticate()`; returns `QueryResult` whose `getResult()` is the
   `AuthenticationResult`.
-- **D2 — `checkStatus`** → dedicated `CheckUserActiveQuery` (keeps the
+- **D2 - `checkStatus`** → dedicated `CheckUserActiveQuery` (keeps the
   lightweight `SELECT active`).
-- **D3 — residual writes** → move to **middleware** (policy: mutations happen in
+- **D3 - residual writes** → move to **middleware** (policy: mutations happen in
   the middleware layer). Reason: middleware *acts* on incoming data and is
   composable at any point in the PSR middleware pipeline; a RequestHandler is
-  terminal and composable only at the end — zero flexibility. Handlers become
+  terminal and composable only at the end - zero flexibility. Handlers become
   render-only. Future webware-tools guard rule (separate repo) will forbid
   handlers from depending on `MessageBusInterface`.
-- **D4 — `RegisterWidgetListener`** → **moves to the bus** (`FetchUsersQuery`). No
+- **D4 - `RegisterWidgetListener`** → **moves to the bus** (`FetchUsersQuery`). No
   repository one-off; it's a convention violation.
-- **D5 — payload type** → maintain current `User` (RowPrototype) entity. A
+- **D5 - payload type** → maintain current `User` (RowPrototype) entity. A
   follow-up audits all repository return types for non-RowPrototype values.
-- **D6 — `webware/webware-message`** → bump `^1.0.0-beta.1` → `^1.0.0-beta.2`.
+- **D6 - `webware/webware-message`** → bump `^1.0.0-beta.1` → `^1.0.0-beta.2`.
 
 ## Repository perimeter restriction (locks the boundary after migration)
 
@@ -158,7 +158,7 @@ allow-from = [
 ]
 ```
 
-Note: `Admin\Dashboard\**` is deliberately absent — it moves to the bus (D4).
+Note: `Admin\Dashboard\**` is deliberately absent - it moves to the bus (D4).
 Add this only after all consumers are migrated, so `mago guard` stays green.
 
 ## Follow-ups (separate repos / legs)
@@ -168,7 +168,7 @@ Add this only after all consumers are migrated, so `mago guard` stays green.
 - Repository return-type audit: ensure every repository method returns
   RowPrototype (`User`) or typed rows, never arrays/DTOs.
 
-## Sequencing (small sets, verify each — CON-002)
+## Sequencing (small sets, verify each: CON-002)
 
 1. Add `Query\` + `QueryHandler\` + factories + `query_map` wiring (no consumer
    changes; tests green).
@@ -183,10 +183,10 @@ Add this only after all consumers are migrated, so `mago guard` stays green.
 
 ## Verification
 
-- `mago format --check`, `mago lint`, `mago analyze`, `mago guard` — clean.
-- `composer test` — 199 tests (adjusted, same behavior) green.
-- `composer test-integration` — 6 tests green.
-- `composer mutation-test` — maintain 100% covered MSI.
+- `mago format --check`, `mago lint`, `mago analyze`, `mago guard` - clean.
+- `composer test` - 199 tests (adjusted, same behavior) green.
+- `composer test-integration` - 6 tests green.
+- `composer mutation-test` - maintain 100% covered MSI.
 
 ## Infection ignores added in this phase (scoped, reviewable)
 
@@ -205,13 +205,13 @@ assertions (exact email body/recipient/subject, `age == ttl` boundary,
 
 Details:
 
-- **`Coalesce` (6 sites)** — the resend-mail defaults: `$config['user'] ?? []`,
+- **`Coalesce` (6 sites)**: the resend-mail defaults: `$config['user'] ?? []`,
   `$config[MailerInterface::class] ?? []`, and the four mail-config fallbacks
   (`from_email ?? 'noreply@farmers-ims.local'`, `from_name ?? 'Farmers IMS'`,
   `base_url ?? 'http://localhost:8080'`,
   `verification_email_subject ?? 'Verify your account'`). These land in the
   middleware's private `$mailConfig` and are only visible through reflection.
-- **`IncrementInteger` / `DecrementInteger` (1 site)** — the `86_400` (24-hour)
+- **`IncrementInteger` / `DecrementInteger` (1 site)**: the `86_400` (24-hour)
   token-TTL default. Mutating it to `86_401`/`86_399` is an unobservable
   1-second difference in a default.
 

@@ -2,18 +2,18 @@
 
 > **Partly superseded (2026-09-17):** this document describes a role array and a
 > `Webware\Acl\Role\SingleRoleUserProxy` presenting it. See
-> [`roleid-single-role-direction.md`](../plan/roleid-single-role-direction.md) — `roleId` becomes a hard
+> [`roleid-single-role-direction.md`](../plan/roleid-single-role-direction.md) - `roleId` becomes a hard
 > `string`, `getRoles()` wraps it, and the proxy is not needed.
 >
 > **Also superseded (2026-09-18):** `withId(int|string|null $id): static` shown below was replaced
-> by `withIdentity(string $identity): static` in `webware-core` `1.0.0-alpha.2` — the id column
+> by `withIdentity(string $identity): static` in `webware-core` `1.0.0-alpha.2` - the id column
 > value is constructor-only, and the identity string is what the contract constrains. `getRoles()`
 > is `iterable`.
 
 `Webware\Core\UserInterface` is the **canonical user identity type** for the
 webware package ecosystem. It lives in
-[`webware/webware-core`](https://github.com/webinertia/webware-core) — the
-shared contracts package — alongside `Webware\Core\AclInterface`.
+[`webware/webware-core`](https://github.com/webinertia/webware-core) - the
+shared contracts package - alongside `Webware\Core\AclInterface`.
 
 > **Why these contracts live in `webware-core`**  
 > `UserInterface` (originally `Webware\UserManager\UserInterface`) and
@@ -22,8 +22,8 @@ shared contracts package — alongside `Webware\Core\AclInterface`.
 > vendor packages. `webware-usermanager` produces the user and `webware-acl`
 > consumes it for role and ownership checks, so keeping the contract in either
 > package created a circular dependency between two tightly intertwined
-> components. Moving both contracts to `webware-core` — which sits below both
-> packages in the dependency graph — gives every package a single home for the
+> components. Moving both contracts to `webware-core` - which sits below both
+> packages in the dependency graph - gives every package a single home for the
 > shared types without usermanager and acl depending on each other.
 
 It extends the three Laminas ACL interfaces required for role-based and
@@ -83,11 +83,11 @@ Laminas ACL needs:
 |---|---|---|
 | `RoleInterface` | `laminas/laminas-permissions-acl` | `$acl->isAllowed($user, ...)` |
 | `ResourceInterface` | `laminas/laminas-permissions-acl` | User-profile ownership assertion |
-| `ProprietaryInterface` | `laminas/laminas-permissions-acl` | `getOwnerId()` — used by `OwnershipAssertion` |
+| `ProprietaryInterface` | `laminas/laminas-permissions-acl` | `getOwnerId()` - used by `OwnershipAssertion` |
 | `RowPrototypeInterface` | `php-db/phpdb` | Row hydration (`populate()` / `toArray()`) |
 
 `GUEST_ROLE` (`'Guest'`) is the canonical role id for anonymous users. There
-is no dedicated `isGuest()` method — consumers inspect the user's roles
+is no dedicated `isGuest()` method - consumers inspect the user's roles
 (`getRoles()`, or `getRoleId()` on a `SingleRoleUserProxy`) for
 `UserInterface::GUEST_ROLE`.
 
@@ -136,7 +136,7 @@ object directly (not decomposed role strings), so assertions such as
 
 ## Relationship to Mezzio's `UserInterface`
 
-`Webware\Core\UserInterface` deliberately **mirrors** — rather than extends —
+`Webware\Core\UserInterface` deliberately **mirrors**: rather than extends -
 `Mezzio\Authentication\UserInterface`. The looser return types mean the two
 interfaces cannot be aliased to a single implementation, and `webware-usermanager`
 owns the identity flow directly (`IdentityMiddleware` reads and writes the
@@ -150,21 +150,21 @@ Mezzio and Webware interfaces is required.
 Any class used as the concrete implementation must:
 
 1. Implement `Webware\Core\UserInterface` (satisfies all four parent interfaces above).
-2. `getRoleId()` — return the user's role data. `User` returns the raw `roleId`
+2. `getRoleId()` - return the user's role data. `User` returns the raw `roleId`
    (`array|string|null`, normalized to an array by the setter), so a guest reports
    `['Guest']` rather than the bare string. Consumers that need exactly one role id
    read it from `Webware\Acl\Role\SingleRoleUserProxy`, which
    `Webware\Acl\Role\UserRoleIterator` yields once per role so Laminas `RoleInterface`
    sees a single role.
-3. `getResourceId(): string` — return a stable identifier for ACL resource
+3. `getResourceId(): string` - return a stable identifier for ACL resource
    checks against the user's own profile (typically `'user'`).
-4. `getOwnerId(): mixed` — return the user's primary key (`int|string|null`) so
+4. `getOwnerId(): mixed` - return the user's primary key (`int|string|null`) so
    that `OwnershipAssertion` can compare it against a profile resource's owner.
-5. `getDetail(string $name, mixed $default = null): mixed` — must expose at
+5. `getDetail(string $name, mixed $default = null): mixed` - must expose at
    minimum `store_id` for store-scoped ownership assertions.
-6. `populate(array $data)` / `toArray(): array` — hydrate from, and serialize
+6. `populate(array $data)` / `toArray(): array` - hydrate from, and serialize
    to, a row array (satisfies `RowPrototypeInterface`).
-7. `withId(int|string|null $id): static` — return a copy with a new identity,
+7. `withId(int|string|null $id): static` - return a copy with a new identity,
    used when persisting a user created without an id.
 
 ---
@@ -175,7 +175,7 @@ Any class used as the concrete implementation must:
 □ Concrete user class implements Webware\Core\UserInterface
 □ Guests are User instances carrying UserInterface::GUEST_ROLE (no separate GuestUser class)
 □ User::getRoleId() returns roleId as-is (array|string|null); single-role consumers use Webware\Acl\Role\SingleRoleUserProxy
-□ getOwnerId() returns the user's PK (not store_id — that comes via getDetail('store_id'))
+□ getOwnerId() returns the user's PK (not store_id - that comes via getDetail('store_id'))
 □ getDetail('store_id') returns an int for store-scoped ownership assertions
 □ ACL implementations type-hint Webware\Core\AclInterface (not the old per-package interface)
 ```

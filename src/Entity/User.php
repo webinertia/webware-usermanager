@@ -149,7 +149,7 @@ class User implements UserInterface
     }
 
     /**
-     * Implements ProprietaryInterface — used by the Laminas Ownership assertion.
+     * Implements ProprietaryInterface - used by the Laminas Ownership assertion.
      * Returns the user's primary key so the assertion can compare
      * $role->getOwnerId() === $resource->getOwnerId().
      */
@@ -160,7 +160,7 @@ class User implements UserInterface
     }
 
     /**
-     * Implements ResourceInterface — identifies this object as the 'user' ACL resource.
+     * Implements ResourceInterface - identifies this object as the 'user' ACL resource.
      * Allows $acl->isAllowed($role, $userEntity, $privilege) calls.
      */
     #[Override]
