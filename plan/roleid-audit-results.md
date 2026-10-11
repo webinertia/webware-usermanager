@@ -162,15 +162,7 @@ Returns `string` - matches `RoleInterface` contract.
 ```php
 final class User extends WebwareUser implements StoreProprietaryInterface
 {
-    // ...
-    public function withStoreId(int $storeId): self
-    {
-        return new self(
-            // ...
-            roleId: $this->roleId,   // line 26 - passes through to parent
-            // ...
-        );
-    }
+    // ... store-owned behavior only; roleId is inherited unchanged ...
 }
 ```
 

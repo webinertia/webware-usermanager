@@ -149,9 +149,10 @@ class User implements UserInterface
     }
 
     /**
-     * Implements ProprietaryInterface - used by the Laminas Ownership assertion.
-     * Returns the user's primary key so the assertion can compare
-     * $role->getOwnerId() === $resource->getOwnerId().
+     * Implements ProprietaryInterface - returns the user's primary key, the value an
+     * ownership assertion compares. Webware\Acl\Assertion\OwnershipAssertion
+     * evaluates $role->getOwnerId() === $resource->getOwnerId(), with this user
+     * aggregate passed as the role to AclInterface::isAllowedRoute().
      */
     #[Override]
     public function getOwnerId(): ?int
@@ -160,8 +161,8 @@ class User implements UserInterface
     }
 
     /**
-     * Implements ResourceInterface - identifies this object as the 'user' ACL resource.
-     * Allows $acl->isAllowed($role, $userEntity, $privilege) calls.
+     * Implements ResourceInterface - identifies this object as the 'user' ACL resource,
+     * so a rule may name 'user' as the resource in an AclInterface::isAllowed() check.
      */
     #[Override]
     public function getResourceId(): string

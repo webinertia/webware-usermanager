@@ -33,7 +33,8 @@ interface UserRepositoryInterface
     public function checkStatus(int $id): bool;
 
     /**
-     * Return all users, optionally filtered to a specific store.
+     * Return all users. Narrowing is the caller's: pass $where, $joins and the
+     * remaining optional arguments to filter the select.
      *
      * @param list<string> $selectColumns
      * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where

@@ -312,7 +312,7 @@ Branch on `$command->id !== null`:
 **Update path:**
 - Call `$this->users->update($command->id, [...])` with only: `firstName`, `lastName`,
   `email`, `roleId` (JSON-encoded array), `active`
-- Do **not** set password, `verificationToken`, `tokenCreatedAt`, `storeId`
+- Do **not** set password, `verificationToken`, or `tokenCreatedAt`
 - Do **not** dispatch `SendVerificationEmailEvent`
 
 Dependency: Add `EventDispatcherInterface` if not already injected (already present for
@@ -381,7 +381,7 @@ it by FQCN.
 5. `$filter->setData($parsedBody)`
 6. If invalid → messenger warning → pass to handler (re-renders list)
 7. If valid → `$filteredData = $filter->getValues()`
-8. Build `SaveUserCommand` from filtered data (password/storeId are dummies for update path)
+8. Build `SaveUserCommand` from filtered data (password is a dummy for the update path)
 9. Dispatch via `$this->messageBus->handle($command)`
 10. Set messenger success or warning based on `MessageStatus`
 11. Attach `CommandResult::class` as request attribute → pass to handler
@@ -588,7 +588,7 @@ $routeCollector->patch(
 
 - Admin create-user POST processing (stub exists but no middleware)
 - Password reset / change flow
-- `storeId` migration from column to `params` JSON (separate plan: `plan-storeid-migration.md`)
+- Store ownership data is a downstream extension concern, not this component's
 - `GuestUser` entity implementation (missing file - tracked in `roleid-audit-results.md`)
 - Non-admin user self-service profile editing
 

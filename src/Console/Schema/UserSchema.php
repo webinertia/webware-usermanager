@@ -107,7 +107,7 @@ final class UserSchema
             new Json(
                 name    : 'details',
                 nullable: true,
-            )->setOptions(options: ['comment' => 'Plugin extension data - storeId, etc. as JSON']),
+            )->setOptions(options: ['comment' => 'Plugin extension data as JSON']),
         );
 
         $table->addConstraint(new PrimaryKey(columns: 'id'));

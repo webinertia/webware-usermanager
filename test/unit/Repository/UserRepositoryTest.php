@@ -143,9 +143,9 @@ final class UserRepositoryTest extends TestCase
             selectColumns: ['id', 'email'],
             where        : ['user.active' => 1],
             joins        : [[
-                'table'   => 'store',
-                'on'      => 'user.storeId = store.id',
-                'columns' => ['store.name'],
+                'table'   => 'profile',
+                'on'      => 'user.id = profile.userId',
+                'columns' => ['profile.displayName'],
                 'type'    => Sql\Select::JOIN_INNER,
             ]],
             orderBy      : 'user.id',

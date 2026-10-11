@@ -107,7 +107,7 @@ final class UserSchemaTest extends TestCase
         self::assertInstanceOf(Json::class, $columns[11]);
         self::assertSame('details', $columns[11]->getName());
         self::assertTrue($columns[11]->isNullable());
-        self::assertSame(['comment' => 'Plugin extension data - storeId, etc. as JSON'], $columns[11]->getOptions());
+        self::assertSame(['comment' => 'Plugin extension data as JSON'], $columns[11]->getOptions());
 
         $constraints = $this->constraints($table);
         self::assertCount(2, $constraints);

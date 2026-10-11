@@ -73,10 +73,10 @@ final class UserTest extends TestCase
     #[Test]
     public function getDetailAndGetDetailsExposeDetails(): void
     {
-        $user = new User(details: ['storeId' => 207]);
+        $user = new User(details: ['a' => 1]);
 
-        static::assertSame(207, $user->getDetail('storeId'));
-        static::assertSame(['storeId' => 207], $user->getDetails());
+        static::assertSame(1, $user->getDetail('a'));
+        static::assertSame(['a' => 1], $user->getDetails());
     }
 
     #[Test]
