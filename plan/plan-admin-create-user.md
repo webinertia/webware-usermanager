@@ -506,7 +506,7 @@ the passwords.
 
 ## 15. Out of scope
 
-Password change; self-service profile editing; `storeId` migration; deleting users; bulk import;
+Password change; self-service profile editing; deleting users; bulk import;
 role management (acl's); changing registration's public behaviour beyond P0 and the two
 handler changes in 7.2.
 

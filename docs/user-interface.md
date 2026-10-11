@@ -160,8 +160,9 @@ Any class used as the concrete implementation must:
    checks against the user's own profile (typically `'user'`).
 4. `getOwnerId(): mixed` - return the user's primary key (`int|string|null`) so
    that `OwnershipAssertion` can compare it against a profile resource's owner.
-5. `getDetail(string $name, mixed $default = null): mixed` - must expose at
-   minimum `store_id` for store-scoped ownership assertions.
+5. `getDetail(string $name, mixed $default = null): mixed` - must expose the
+   unmapped row columns held in `details`. The component defines none of its own:
+   `details` is plugin extension data, owned by the host or a downstream package.
 6. `populate(array $data)` / `toArray(): array` - hydrate from, and serialize
    to, a row array (satisfies `RowPrototypeInterface`).
 7. `withId(int|string|null $id): static` - return a copy with a new identity,
@@ -175,7 +176,7 @@ Any class used as the concrete implementation must:
 □ Concrete user class implements Webware\Core\UserInterface
 □ Guests are User instances carrying UserInterface::GUEST_ROLE (no separate GuestUser class)
 □ User::getRoleId() returns roleId as-is (array|string|null); single-role consumers use Webware\Acl\Role\SingleRoleUserProxy
-□ getOwnerId() returns the user's PK (not store_id - that comes via getDetail('store_id'))
-□ getDetail('store_id') returns an int for store-scoped ownership assertions
+□ getOwnerId() returns the user's PK, the value OwnershipAssertion compares against a resource's owner
+□ getDetail()/getDetails() pass through the host's plugin extension data; this component defines no detail keys
 □ ACL implementations type-hint Webware\Core\AclInterface (not the old per-package interface)
 ```
