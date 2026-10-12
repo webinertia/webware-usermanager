@@ -12,9 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use SensitiveParameter;
-use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\Schema;
 use Webware\UserManager\Repository\UserRepository;
@@ -54,8 +52,8 @@ final class UserRepositoryIntegrationTest extends TestCase
 
         $result = $this->repository->authenticate('jane@example.com', $password);
 
-        self::assertSame(AuthenticationStatus::Success, $result->status);
-        self::assertSame('jane@example.com', $result->user?->email);
+        self::assertInstanceOf(User::class, $result);
+        self::assertSame('jane@example.com', $result->email);
     }
 
     #[Test]
@@ -142,7 +140,6 @@ final class UserRepositoryIntegrationTest extends TestCase
 
         $this->repository = new UserRepository(
             gateway         : $gateway,
-            dispatcher      : $this->createStub(EventDispatcherInterface::class),
             credentialColumn: 'email',
         );
     }

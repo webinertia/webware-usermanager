@@ -13,7 +13,6 @@ use Psl\Type\Exception\ExceptionInterface as PslTypeException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\Core\Exception;
 use Webware\UserManager\Container\Configuration;
 use Webware\UserManager\Entity\User;
@@ -40,7 +39,6 @@ final class UserRepositoryFactory
                     rowPrototype: $container->get(User::class),
                 ),
             ),
-            dispatcher      : $container->get(EventDispatcherInterface::class),
             credentialColumn: $username,
         );
     }

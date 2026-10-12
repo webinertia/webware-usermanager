@@ -77,6 +77,24 @@ final readonly class Configuration extends Config
     }
 
     /**
+     * Resolve the request-body field carrying the password, falling back to the
+     * shipped default when the configured value is absent, empty or not a string.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws Exception\ExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public static function getPasswordFieldName(ContainerInterface $container, string $callingFactory): string
+    {
+        $config = self::getCredentialConfig($container, $callingFactory);
+
+        /** @var mixed $value */
+        $value = $config['password'] ?? null;
+
+        return is_string($value) && '' !== $value ? $value : 'password';
+    }
+
+    /**
      * Resolve the post-login redirect path, falling back to the default when the
      * configured value is absent or is not a non-empty string.
      *
@@ -96,6 +114,25 @@ final readonly class Configuration extends Config
         }
 
         return $value;
+    }
+
+    /**
+     * Resolve the request-body field carrying the credential, falling back to the
+     * shipped default when the configured value is absent, empty or not a string.
+     * Mezzio's session adapter reads the same key as its form field name.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws Exception\ExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public static function getUsernameFieldName(ContainerInterface $container, string $callingFactory): string
+    {
+        $config = self::getCredentialConfig($container, $callingFactory);
+
+        /** @var mixed $value */
+        $value = $config['username'] ?? null;
+
+        return is_string($value) && '' !== $value ? $value : 'email';
     }
 
     /**

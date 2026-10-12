@@ -7,6 +7,7 @@ namespace Webware\UserManager\QueryHandler\Container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
 
@@ -19,7 +20,8 @@ final readonly class AuthenticateUserHandlerFactory
     public function __invoke(ContainerInterface $container): AuthenticateUserHandler
     {
         return new AuthenticateUserHandler(
-            users: $container->get(UserRepositoryInterface::class),
+            users     : $container->get(UserRepositoryInterface::class),
+            dispatcher: $container->get(EventDispatcherInterface::class),
         );
     }
 }

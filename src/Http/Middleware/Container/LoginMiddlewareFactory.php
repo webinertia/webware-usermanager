@@ -7,7 +7,6 @@ namespace Webware\UserManager\Http\Middleware\Container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Psr\Log\LoggerInterface;
 use Webware\Core\Exception;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Container\Configuration;
@@ -23,9 +22,10 @@ final class LoginMiddlewareFactory
     public function __invoke(ContainerInterface $container): LoginMiddleware
     {
         return new LoginMiddleware(
-            messageBus : $container->get(MessageBusInterface::class),
-            logger     : $container->get(LoggerInterface::class),
-            redirectUrl: Configuration::getPostLoginRedirect($container, self::class),
+            messageBus     : $container->get(MessageBusInterface::class),
+            credentialField: Configuration::getUsernameFieldName($container, self::class),
+            passwordField  : Configuration::getPasswordFieldName($container, self::class),
+            redirectUrl    : Configuration::getPostLoginRedirect($container, self::class),
         );
     }
 }

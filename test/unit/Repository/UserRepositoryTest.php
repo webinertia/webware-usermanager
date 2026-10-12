@@ -10,8 +10,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\UserRepository;
 use Webware\UserManager\Repository\UserRepositoryInterface;
@@ -36,10 +34,8 @@ final class UserRepositoryTest extends TestCase
 {
     use PhpDbAdapterMockTrait;
 
-    private EventDispatcherInterface $dispatcher;
-
     #[Test]
-    public function authenticateReturnsInvalidCredentialsForWrongPassword(): void
+    public function authenticateReturnsNullForWrongPassword(): void
     {
         $hash = password_hash('secret', PASSWORD_DEFAULT);
 
@@ -52,25 +48,37 @@ final class UserRepositoryTest extends TestCase
             )],
         ]);
 
-        $result = $this->repository($adapter)->authenticate('jane@example.com', 'wrong');
-
-        self::assertSame(AuthenticationStatus::InvalidCredentials, $result->status);
-        self::assertNull($result->user);
+        self::assertNull($this->repository($adapter)->authenticate('jane@example.com', 'wrong'));
     }
 
     #[Test]
-    public function authenticateReturnsInvalidCredentialsWhenUserMissing(): void
+    public function authenticateReturnsNullWhenPasswordIsNull(): void
+    {
+        $adapter = $this->createAdapter([
+            [$this->userRow(
+                id          : 1,
+                email       : 'jane@example.com',
+                passwordHash: password_hash('secret', PASSWORD_DEFAULT),
+                active      : 1,
+            )],
+        ]);
+
+        self::assertNull($this->repository($adapter)->authenticate('jane@example.com'));
+
+        // The row above matches and is active, so any query would have been prepared.
+        self::assertSame([], $this->preparedSqlObjects);
+    }
+
+    #[Test]
+    public function authenticateReturnsNullWhenUserMissing(): void
     {
         $adapter = $this->createAdapter([[]]);
 
-        $result = $this->repository($adapter)->authenticate('missing@example.com', 'secret');
-
-        self::assertSame(AuthenticationStatus::InvalidCredentials, $result->status);
-        self::assertNull($result->user);
+        self::assertNull($this->repository($adapter)->authenticate('missing@example.com', 'secret'));
     }
 
     #[Test]
-    public function authenticateReturnsNotActiveForInactiveUser(): void
+    public function authenticateReturnsUserEvenWhenInactive(): void
     {
         $hash = password_hash('secret', PASSWORD_DEFAULT);
 
@@ -83,14 +91,11 @@ final class UserRepositoryTest extends TestCase
             )],
         ]);
 
-        $result = $this->repository($adapter)->authenticate('jane@example.com', 'secret');
-
-        self::assertSame(AuthenticationStatus::NotActive, $result->status);
-        self::assertNull($result->user);
+        self::assertInstanceOf(User::class, $this->repository($adapter)->authenticate('jane@example.com', 'secret'));
     }
 
     #[Test]
-    public function authenticateReturnsSuccessForValidCredentials(): void
+    public function authenticateReturnsUserForValidCredentials(): void
     {
         $hash = password_hash('secret', PASSWORD_DEFAULT);
 
@@ -103,10 +108,10 @@ final class UserRepositoryTest extends TestCase
             )],
         ]);
 
-        $result = $this->repository($adapter)->authenticate('jane@example.com', 'secret');
+        $user = $this->repository($adapter)->authenticate('jane@example.com', 'secret');
 
-        self::assertSame(AuthenticationStatus::Success, $result->status);
-        self::assertInstanceOf(User::class, $result->user);
+        self::assertInstanceOf(User::class, $user);
+        self::assertSame('jane@example.com', $user->email);
     }
 
     #[Test]
@@ -294,14 +299,9 @@ final class UserRepositoryTest extends TestCase
         self::assertSame(2, $this->repository($adapter)->update(1, ['firstName' => 'Jane']));
     }
 
-    protected function setUp(): void
-    {
-        $this->dispatcher = $this->createStub(EventDispatcherInterface::class);
-    }
-
     private function repository(AdapterInterface $adapter): UserRepositoryInterface
     {
-        return $this->createUserRepository($adapter, $this->dispatcher);
+        return $this->createUserRepository($adapter);
     }
 
     /**

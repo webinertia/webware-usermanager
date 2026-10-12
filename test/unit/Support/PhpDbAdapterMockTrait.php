@@ -16,7 +16,6 @@ use PhpDb\Sql\PreparableSqlInterface;
 use PhpDb\Sql\SqlInterface;
 use PhpDb\Sql\TableIdentifier;
 use PhpDb\TableGateway\TableGateway;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\Schema;
@@ -105,12 +104,10 @@ trait PhpDbAdapterMockTrait
 
     protected function createUserRepository(
         AdapterInterface $adapter,
-        EventDispatcherInterface $dispatcher,
         string $credentialColumn = 'email',
     ): UserRepository {
         return new UserRepository(
             gateway         : $this->createUserGateway($adapter),
-            dispatcher      : $dispatcher,
             credentialColumn: $credentialColumn,
         );
     }

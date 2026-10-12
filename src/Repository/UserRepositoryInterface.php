@@ -5,27 +5,44 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use Closure;
+use Mezzio\Authentication\UserRepositoryInterface as MezzioUserRepositoryInterface;
+use Override;
 use PhpDb\ResultSet\ResultSetInterface;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
 use PhpDb\Sql\Predicate\PredicateInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
-use Webware\UserManager\Auth\AuthenticationResult;
+use Webware\UserManager\Entity\User;
 
-interface UserRepositoryInterface
+interface UserRepositoryInterface extends MezzioUserRepositoryInterface
 {
     /**
      * Authenticate a user by credential and password.
      *
-     * A successful authentication always returns a fully-hydrated User entity,
-     * or null if the credential/password pair is not valid.
+     * Implements the Mezzio authentication repository contract: the hydrated
+     * user, or null when the pair does not match. The inherited return type is
+     * narrowed to the entity this component hands out.
+     *
+     * A null password returns null without querying. Mezzio's contract also
+     * permits a credential-only lookup for token-based credentials, which this
+     * implementation does not provide: the verification token column is for
+     * email activation, not for authentication, so there is nothing to match
+     * against. A host migrating a token-based Mezzio repository must keep its
+     * own implementation.
+     *
+     * An empty password is never a valid credential, and is rejected before the
+     * lookup as well.
+     *
+     * Account state is policy rather than authentication, so an inactive account
+     * still authenticates and the caller decides whether it may proceed.
      */
+    #[Override]
     public function authenticate(
         string $credential,
         #[SensitiveParameter]
         ?string $password = null,
-    ): AuthenticationResult;
+    ): (UserInterface&User)|null;
 
     /**
      * Check if a user is active.

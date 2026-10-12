@@ -8,9 +8,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Webware\Log\Event\LogEvent;
+use Webware\Log\LogChannel;
 use Webware\MessageBus\MessageStatus;
 use Webware\UserManager\Auth\AuthenticationResult;
 use Webware\UserManager\Auth\AuthenticationStatus;
+use Webware\UserManager\Entity\User;
 use Webware\UserManager\Query\AuthenticateUserQuery;
 use Webware\UserManager\QueryHandler\AuthenticateUserHandler;
 use Webware\UserManager\Repository\UserRepositoryInterface;
@@ -24,21 +28,110 @@ use function random_bytes;
 final class AuthenticateUserHandlerTest extends TestCase
 {
     #[Test]
-    public function handleDelegatesToRepository(): void
+    public function activeUserLogsAndReturnsTheUser(): void
     {
-        $authResult = new AuthenticationResult(AuthenticationStatus::Success);
-        $users      = $this->createStub(UserRepositoryInterface::class);
-        $users->method('authenticate')->willReturn($authResult);
+        $user = new User(
+            id       : 1,
+            firstName: 'Jane',
+            lastName : 'Doe',
+            email    : 'jane@example.com',
+            active   : true,
+        );
 
-        $handler = new AuthenticateUserHandler($users);
-        $result  = $handler->handle(
+        $users = $this->createStub(UserRepositoryInterface::class);
+        $users->method('authenticate')->willReturn($user);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(static::callback(
+                static fn(LogEvent $event): bool => (
+                    LogChannel::Security === $event->getChannel()
+                    && 'Jane Doe authenticated successfully.' === $event->getMessage()
+                ),
+            ));
+
+        $result = new AuthenticateUserHandler($users, $dispatcher)->handle(
             new AuthenticateUserQuery(
                 credential: 'jane@example.com',
                 password  : bin2hex(random_bytes(16)),
             ),
         );
 
+        /** @var AuthenticationResult $auth */
+        $auth = $result->getResult();
+
         self::assertSame(MessageStatus::Success, $result->getStatus());
-        self::assertSame($authResult, $result->getResult());
+        self::assertSame(AuthenticationStatus::Success, $auth->status);
+        self::assertSame($user, $auth->user);
+    }
+
+    #[Test]
+    public function inactiveUserLogsAndReportsNotActive(): void
+    {
+        $user = new User(
+            id    : 1,
+            email : 'jane@example.com',
+            active: false,
+        );
+
+        $users = $this->createStub(UserRepositoryInterface::class);
+        $users->method('authenticate')->willReturn($user);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(static::callback(
+                static fn(LogEvent $event): bool => (
+                    LogChannel::Security === $event->getChannel()
+                    && 'Failed login attempt for inactive user: jane@example.com' === $event->getMessage()
+                ),
+            ));
+
+        $result = new AuthenticateUserHandler($users, $dispatcher)->handle(
+            new AuthenticateUserQuery(
+                credential: 'jane@example.com',
+                password  : bin2hex(random_bytes(16)),
+            ),
+        );
+
+        /** @var AuthenticationResult $auth */
+        $auth = $result->getResult();
+
+        self::assertSame(MessageStatus::Failure, $result->getStatus());
+        self::assertSame(AuthenticationStatus::NotActive, $auth->status);
+        self::assertNull($auth->user);
+    }
+
+    #[Test]
+    public function invalidCredentialsLogsAndReportsInvalidCredentials(): void
+    {
+        $users = $this->createStub(UserRepositoryInterface::class);
+        $users->method('authenticate')->willReturn(null);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(static::callback(
+                static fn(LogEvent $event): bool => (
+                    LogChannel::Security === $event->getChannel()
+                    && 'Failed login attempt.' === $event->getMessage()
+                    && ['credential' => 'jane@example.com'] === $event->getContext()
+                ),
+            ));
+
+        $result = new AuthenticateUserHandler($users, $dispatcher)->handle(
+            new AuthenticateUserQuery(
+                credential: 'jane@example.com',
+                password  : bin2hex(random_bytes(16)),
+            ),
+        );
+
+        /** @var AuthenticationResult $auth */
+        $auth = $result->getResult();
+
+        self::assertSame(MessageStatus::Failure, $result->getStatus());
+        self::assertSame(AuthenticationStatus::InvalidCredentials, $auth->status);
+        self::assertNull($auth->user);
     }
 }

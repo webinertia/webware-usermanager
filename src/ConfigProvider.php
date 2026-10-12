@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webware\UserManager;
 
 use Laminas\InputFilter\InputFilterFactory;
+use Mezzio\Authentication\UserRepositoryInterface as MezzioUserRepositoryInterface;
 use Webware\Admin\Container\Configuration as AdminConfiguration;
 use Webware\Admin\Event\RegisterWidgetEvent;
 use Webware\Console\ConsoleInterface;
@@ -157,7 +158,8 @@ final class ConfigProvider
     {
         return [
             'aliases'    => [
-                UserRepositoryInterface::class => Repository\UserRepository::class,
+                UserRepositoryInterface::class       => Repository\UserRepository::class,
+                MezzioUserRepositoryInterface::class => Repository\UserRepository::class,
             ],
             'factories'  => [
                 // Registers the user factory under our own interface key.

@@ -16,7 +16,15 @@
   failure, when `LoginMiddleware` passes the request through with a flash message.
 - `LogoutHandler` (`user.manager.logout.read`, GET `/user.manager/logout`) clears the
   session and redirects to the login route.
-- `mezzio/mezzio-authentication-session` (`PhpSession`) is **not used**.
+- `mezzio/mezzio-authentication-session` (`PhpSession`) is **not used**, but
+  `mezzio/mezzio-authentication`'s contracts are honored:
+  `UserRepositoryInterface` extends `Mezzio\Authentication\UserRepositoryInterface`,
+  and `ConfigProvider` aliases `Mezzio\Authentication\UserRepositoryInterface` to
+  `UserRepository`, so a host migrating off a hand-rolled Mezzio authentication stack
+  can type against either contract.
+- The POST body field names come from configuration, not from literals:
+  `authentication.username` (default `'email'`) and `authentication.password`
+  (default `'password'`).
 - Reads go through the MessageBus: `LoginMiddleware` dispatches `AuthenticateUserQuery`,
   `IdentityMiddleware` dispatches `CheckUserActiveQuery`. Neither middleware touches the
   repository directly.
@@ -34,19 +42,20 @@ sequenceDiagram
     participant Bus as MessageBus
     participant Session
 
-    Browser->>SessionMW: POST /user.manager/login {email, password}
+    Browser->>SessionMW: POST /user.manager/login {<username field>, <password field>}
     SessionMW->>IdentMW: session started (no user yet)
     IdentMW->>IdentMW: session->get(UserInterface::class) → null
     IdentMW->>IdentMW: userFactory(['roleId' => 'Guest']) → User, role Guest
     Note over IdentMW: withAttribute(UserInterface::class, User)
     IdentMW->>LoginMW: process(request)
-    LoginMW->>Bus: AuthenticateUserQuery(credential: email, password: password)
+    LoginMW->>Bus: AuthenticateUserQuery(credential: <username field>, password: <password field>)
     Bus->>Bus: AuthenticateUserHandler → UserRepository::authenticate()
     alt credentials missing or not strings
         LoginMW-->>Browser: pass through, LoginHandler renders clean form
-    else auth fails or account inactive
-        Bus-->>LoginMW: AuthenticationResult(status != Success)
-        LoginMW->>LoginMW: logger->info('Failed login attempt'), messenger->danger(...)
+    else no user matches, or account is inactive
+        Bus->>Bus: AuthenticateUserHandler dispatches one security LogEvent
+        Bus-->>LoginMW: QueryResult(Failure, AuthenticationResult(status != Success))
+        LoginMW->>LoginMW: messenger->danger(...)
         Note over LoginMW: messenger->info when status is NotActive
         LoginMW-->>Browser: pass through, LoginHandler renders form with flash messages
     else auth succeeds
@@ -160,13 +169,13 @@ Notes:
 | `src/Http/Middleware/IdentityMiddleware.php` | Session restore, active check via bus, `UserInterface::class` request attribute |
 | `src/Http/Middleware/Container/IdentityMiddlewareFactory.php` | Wires `MessageBusInterface` + the `UserInterface::class` callable |
 | `src/Http/Middleware/LoginMiddleware.php` | Credential POST handling, session write + regenerate, redirect |
-| `src/Http/Middleware/Container/LoginMiddlewareFactory.php` | Wires bus, logger, `post_login_redirect` |
+| `src/Http/Middleware/Container/LoginMiddlewareFactory.php` | Wires bus, the configured field names, `post_login_redirect` |
 | `src/Http/RequestHandler/LoginHandler.php` | Renders the login form; redirects when already authenticated |
 | `src/Http/RequestHandler/LogoutHandler.php` | Clears the session, redirects to login |
 | `src/Container/UserFactory.php` | `UserInterface::class` callable: non-empty dict assert, then `populate()` |
-| `src/Query/AuthenticateUserQuery.php` / `src/QueryHandler/AuthenticateUserHandler.php` | Login query + handler |
+| `src/Query/AuthenticateUserQuery.php` / `src/QueryHandler/AuthenticateUserHandler.php` | Login query + handler: resolves the outcome, applies the account-state policy, dispatches one security-channel `LogEvent` per attempt. Returns `MessageStatus::Failure` for every attempt that must not establish a session (invalid credentials, inactive account) with `AuthenticationResult::status` carrying the reason; `Success` only when a session may be written |
 | `src/Query/CheckUserActiveQuery.php` / `src/QueryHandler/CheckUserActiveHandler.php` | Identity status query + handler |
-| `src/Repository/UserRepository.php` | `authenticate()` returns `AuthenticationResult` (status + hydrated `User`); `checkStatus(int): bool` backs the identity check |
+| `src/Repository/UserRepository.php` | Implements `Mezzio\Authentication\UserRepositoryInterface`: `authenticate()` returns the matching `User` or `null` (no audit side effects, no account-state policy); `checkStatus(int): bool` backs the identity check |
 | `src/Entity/User.php` | `UserInterface` + RowPrototype implementation: property hooks, `toArray()`, `populate()` |
 | `src/RouteProvider.php` | `session.read`, `session.create`, `logout.read` routes |
 

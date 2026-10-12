@@ -11,7 +11,6 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\UserRepository;
 use Webware\UserManager\Repository\UserRepositoryFactory;
@@ -36,7 +35,6 @@ final class UserRepositoryFactoryTest extends TestCase
                 [SchemaFactory::class, $schemaFactory],
                 [AdapterInterface::class, $adapter],
                 [User::class, new User()],
-                [EventDispatcherInterface::class, $this->createStub(EventDispatcherInterface::class)],
             ]);
 
         self::assertInstanceOf(UserRepository::class, new UserRepositoryFactory()($container));
