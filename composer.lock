@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8ec6267ba0e84a07c087e48d8770b51",
+    "content-hash": "eee970e68cce411720f8000bf201fad5",
     "packages": [
         {
             "name": "brick/math",
@@ -3973,16 +3973,16 @@
         },
         {
             "name": "webware/webware-log",
-            "version": "2.0.0-alpha.3",
+            "version": "2.0.0-alpha.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-log.git",
-                "reference": "309184bfd56a471174c08dedf6d929183ffb79b5"
+                "reference": "4cd3632482453181a5782ddab28d32cc9f37076e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-log/zipball/309184bfd56a471174c08dedf6d929183ffb79b5",
-                "reference": "309184bfd56a471174c08dedf6d929183ffb79b5",
+                "url": "https://api.github.com/repos/webinertia/webware-log/zipball/4cd3632482453181a5782ddab28d32cc9f37076e",
+                "reference": "4cd3632482453181a5782ddab28d32cc9f37076e",
                 "shasum": ""
             },
             "require": {
@@ -4007,7 +4007,8 @@
                 "roave/backward-compatibility-check": "^8.21.0",
                 "roave/security-advisories": "dev-master",
                 "webware/webware-console": "1.0.x-dev",
-                "webware/webware-tools": "^1.0.0-beta.2"
+                "webware/webware-core": "^1.0.0-alpha.9",
+                "webware/webware-tools": "^1.0.0-rc.6"
             },
             "suggest": {
                 "php-db/phpdb-mysql": "Required when using PhpDbHandler with a MySQL/MariaDB database",
@@ -4047,9 +4048,9 @@
             "support": {
                 "chat": "https://discord.gg/89DfgmuF6C",
                 "issues": "https://github.com/webinertia/webware-log/issues",
-                "source": "https://github.com/webinertia/webware-log/tree/2.0.0-alpha.3"
+                "source": "https://github.com/webinertia/webware-log/tree/2.0.0-alpha.4"
             },
-            "time": "2026-10-03T15:10:09+00:00"
+            "time": "2026-10-15T19:27:34+00:00"
         },
         {
             "name": "webware/webware-mailer",
