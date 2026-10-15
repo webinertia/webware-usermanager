@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Middleware\Container\ProcessSetPasswordMiddlewareFactory;
@@ -34,6 +35,10 @@ final class ProcessSetPasswordMiddlewareFactoryTest extends TestCase
                 [
                     InputFilterPluginManager::class,
                     InputFilterHelper::inputFilterPluginManager(),
+                ],
+                [
+                    EventDispatcherInterface::class,
+                    $this->createStub(EventDispatcherInterface::class),
                 ],
             ]);
 

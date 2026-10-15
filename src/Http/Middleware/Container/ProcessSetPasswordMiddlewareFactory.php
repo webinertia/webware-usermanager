@@ -8,6 +8,7 @@ use Laminas\InputFilter\InputFilterPluginManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\Core\Exception;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Container\Configuration;
@@ -29,6 +30,7 @@ final class ProcessSetPasswordMiddlewareFactory
             messageBus: $container->get(MessageBusInterface::class),
             filter    : $manager->get(SetPasswordDataFilter::class),
             tokenTtl  : Configuration::getVerificationTokenTtl($container, self::class),
+            dispatcher: $container->get(EventDispatcherInterface::class),
         );
     }
 }

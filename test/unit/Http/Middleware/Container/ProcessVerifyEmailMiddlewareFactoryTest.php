@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\Core\UserInterface;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory;
@@ -33,6 +34,10 @@ final class ProcessVerifyEmailMiddlewareFactoryTest extends TestCase
                 ['config', [UserInterface::class => ['verification_token_ttl' => 3600]]],
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [HelperPluginManager::class, $this->userUrlHelperManager()],
+                [
+                    EventDispatcherInterface::class,
+                    $this->createStub(EventDispatcherInterface::class),
+                ],
             ]);
 
         static::assertInstanceOf(

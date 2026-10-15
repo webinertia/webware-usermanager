@@ -10,6 +10,7 @@ use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Webware\Core\Exception;
 use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Container\Configuration;
@@ -34,6 +35,7 @@ final readonly class ProcessVerifyEmailMiddlewareFactory
             messageBus: $container->get(MessageBusInterface::class),
             userUrl   : $userUrl,
             tokenTtl  : Configuration::getVerificationTokenTtl($container, self::class),
+            dispatcher: $container->get(EventDispatcherInterface::class),
         );
     }
 }

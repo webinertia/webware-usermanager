@@ -13,9 +13,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Log\Event\LogEvent;
+use Webware\Log\LogChannel;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
@@ -70,6 +73,101 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         );
 
         static::assertSame($commandResult, $request->getAttribute(CommandResult::class));
+    }
+
+    /**
+     * The redirect changes no state and a mail client may prefetch the link, so
+     * auditing it would fill the table with clicks nobody made.
+     */
+    #[Test]
+    public function doesNotAuditTheSetPasswordRedirect(): void
+    {
+        $user = new User(
+            id                 : 3,
+            passwordSetRequired: 1,
+        );
+
+        $bus = $this->createStub(MessageBusInterface::class);
+        $bus->method('handle')->willReturnCallback(
+            static fn(MessageInterface $message): ResultInterface => new QueryResult(
+                $message,
+                MessageStatus::Success,
+                $user,
+            ),
+        );
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher->expects($this->never())->method('dispatch');
+
+        $handler = $this->createStub(RequestHandlerInterface::class);
+
+        $response = $this->middleware(
+            bus       : $bus,
+            dispatcher: $dispatcher,
+        )->process(
+            new ServerRequest()->withAttribute('token', bin2hex(random_bytes(16))),
+            $handler,
+        );
+
+        static::assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    #[Test]
+    public function logsASecurityAuditEntryWhenTheAccountIsActivated(): void
+    {
+        $user = new User(
+            id       : 3,
+            firstName: 'Jane',
+            lastName : 'Doe',
+            email    : 'jane@example.com',
+        );
+
+        $bus = $this->createStub(MessageBusInterface::class);
+        $bus->method('handle')->willReturnCallback(
+            static fn(MessageInterface $message): ResultInterface => $message
+                instanceof FetchUserByVerificationTokenQuery
+                    ? new QueryResult($message, MessageStatus::Success, $user)
+                    : new CommandResult($message, MessageStatus::Success, 1),
+        );
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(static::callback(
+                static fn(LogEvent $event): bool => (
+                    LogChannel::Security === $event->getChannel()
+                    && 'Jane Doe verified their email and activated their account.' === $event->getMessage()
+                    && ['email' => 'jane@example.com', 'userId' => 3] === $event->getContext()
+                ),
+            ));
+
+        $this->process(
+            bus       : $bus,
+            request   : new ServerRequest()->withAttribute('token', 'x'),
+            dispatcher: $dispatcher,
+        );
+    }
+
+    #[Test]
+    public function logsASecurityAuditEntryWhenTheTokenIsMissing(): void
+    {
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(static::callback(
+                static fn(LogEvent $event): bool => (
+                    LogChannel::Security === $event->getChannel()
+                    && 'Email verification attempt without a token.' === $event->getMessage()
+                ),
+            ));
+
+        $this->process(
+            bus       : $this->createStub(MessageBusInterface::class),
+            request   : new ServerRequest(),
+            dispatcher: $dispatcher,
+        );
     }
 
     #[Test]
@@ -201,8 +299,11 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         static::assertSame($commandResult, $request->getAttribute(CommandResult::class));
     }
 
-    private function middleware(MessageBusInterface $bus, int $tokenTtl = 3600): ProcessVerifyEmailMiddleware
-    {
+    private function middleware(
+        MessageBusInterface $bus,
+        int $tokenTtl = 3600,
+        ?EventDispatcherInterface $dispatcher = null,
+    ): ProcessVerifyEmailMiddleware {
         $urlHelper = $this->createStub(UrlHelper::class);
         $urlHelper
             ->method('__invoke')
@@ -223,6 +324,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             messageBus: $bus,
             userUrl   : new UserUrl($urlHelper, 'user.'),
             tokenTtl  : $tokenTtl,
+            dispatcher: $dispatcher ?? $this->createStub(EventDispatcherInterface::class),
         );
     }
 
@@ -230,6 +332,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         MessageBusInterface $bus,
         ServerRequestInterface $request,
         int $tokenTtl = 3600,
+        ?EventDispatcherInterface $dispatcher = null,
     ): ServerRequestInterface {
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
@@ -245,8 +348,9 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             });
 
         $this->middleware(
-            bus     : $bus,
-            tokenTtl: $tokenTtl,
+            bus       : $bus,
+            tokenTtl  : $tokenTtl,
+            dispatcher: $dispatcher,
         )->process($request, $handler);
 
         return $capturedRequest;
