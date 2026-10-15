@@ -27,9 +27,39 @@ use Webware\UserManager\Http\RequestHandler\LoginHandler;
 final class LoginHandlerTest extends TestCase
 {
     #[Test]
+    public function passesTheConfiguredFieldNamesToTheTemplate(): void
+    {
+        $template = $this->createMock(TemplateRendererInterface::class);
+        $template
+            ->expects($this->once())
+            ->method('render')
+            ->with('user::login', [
+                'credentialField' => 'user_name',
+                'passwordField'   => 'pass',
+                'flashMessages'   => [],
+            ])
+            ->willReturn('<form>');
+
+        $handler = new LoginHandler(
+            template       : $template,
+            credentialField: 'user_name',
+            passwordField  : 'pass',
+        );
+
+        $handler->handle(new ServerRequest()->withAttribute(
+            UserInterface::class,
+            new User(roleId: Role::Guest->value),
+        ));
+    }
+
+    #[Test]
     public function redirectsAuthenticatedUser(): void
     {
-        $handler = new LoginHandler($this->createStub(TemplateRendererInterface::class));
+        $handler = new LoginHandler(
+            template       : $this->createStub(TemplateRendererInterface::class),
+            credentialField: 'email',
+            passwordField  : 'password',
+        );
 
         $request = new ServerRequest()->withAttribute(
             UserInterface::class,
@@ -55,10 +85,18 @@ final class LoginHandlerTest extends TestCase
         $template
             ->expects($this->once())
             ->method('render')
-            ->with('user::login', ['flashMessages' => ['danger' => ['Invalid email or password.']]])
+            ->with('user::login', [
+                'credentialField' => 'email',
+                'passwordField'   => 'password',
+                'flashMessages'   => ['danger' => ['Invalid email or password.']],
+            ])
             ->willReturn('<form>');
 
-        $handler = new LoginHandler($template);
+        $handler = new LoginHandler(
+            template       : $template,
+            credentialField: 'email',
+            passwordField  : 'password',
+        );
 
         $request = new ServerRequest()
             ->withAttribute(
@@ -76,7 +114,11 @@ final class LoginHandlerTest extends TestCase
     #[Test]
     public function returnsHtmxRedirectForBoostedAuthenticatedRequest(): void
     {
-        $handler = new LoginHandler($this->createStub(TemplateRendererInterface::class));
+        $handler = new LoginHandler(
+            template       : $this->createStub(TemplateRendererInterface::class),
+            credentialField: 'email',
+            passwordField  : 'password',
+        );
 
         $request = new ServerRequest()
             ->withAttribute(UserInterface::class, new User(

@@ -25,11 +25,16 @@ use Webware\Message\SystemMessengerInterface;
  * GET: renders the form.
  * POST failure: LoginMiddleware passes through on bad credentials; this handler re-renders with errors.
  * POST success: LoginMiddleware redirects before this handler is reached.
+ *
+ * The POST body field names are resolved from configuration and handed to the
+ * template, so the form posts exactly what LoginMiddleware reads back.
  */
 final class LoginHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $template,
+        private readonly string $credentialField,
+        private readonly string $passwordField,
     ) {}
 
     /**
@@ -57,7 +62,9 @@ final class LoginHandler implements RequestHandlerInterface
         $messages  = $messenger?->getMessages() ?? [];
 
         return new HtmlResponse($this->template->render('user::login', [
-            'flashMessages' => $messages,
+            'credentialField' => $this->credentialField,
+            'passwordField'   => $this->passwordField,
+            'flashMessages'   => $messages,
         ]));
     }
 }

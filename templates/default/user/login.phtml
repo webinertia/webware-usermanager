@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+/**
+ * @var string $credentialField
+ * @var string $passwordField
+ */
+
+$credentialIsEmail      = 'email' === $credentialField;
+$credentialLabel        = $credentialIsEmail ? 'Email' : 'Username';
+$credentialType         = $credentialIsEmail ? 'email' : 'text';
+$credentialPlaceholder  = $credentialIsEmail ? 'you@example.com' : '';
+$credentialAutocomplete = $credentialIsEmail ? 'email' : 'username';
+
 $this->headTitle('Sign In');
 ?>
 <div class="container">
@@ -16,14 +27,16 @@ $this->headTitle('Sign In');
                     <form action="<?= $this->userUrl('session.create') ?>" method="post" novalidate>
 
                         <div class="mb-3">
-                            <label class="form-label form-label-sm fw-semibold" for="login-email">Email</label>
+                            <label class="form-label form-label-sm fw-semibold" for="login-credential">
+                                <?= $credentialLabel ?>
+                            </label>
                             <input
-                                type="email"
+                                type="<?= $credentialType ?>"
                                 class="form-control"
-                                id="login-email"
-                                name="email"
-                                placeholder="you@example.com"
-                                autocomplete="email"
+                                id="login-credential"
+                                name="<?= $this->escapeHtmlAttr($credentialField) ?>"
+                                placeholder="<?= $this->escapeHtmlAttr($credentialPlaceholder) ?>"
+                                autocomplete="<?= $credentialAutocomplete ?>"
                                 required
                             />
                         </div>
@@ -35,7 +48,7 @@ $this->headTitle('Sign In');
                                     type="password"
                                     class="form-control"
                                     id="login-password"
-                                    name="password"
+                                    name="<?= $this->escapeHtmlAttr($passwordField) ?>"
                                     placeholder="••••••••"
                                     autocomplete="current-password"
                                     required

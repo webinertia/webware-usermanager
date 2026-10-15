@@ -28,9 +28,6 @@ final class UserRepositoryFactory
      */
     public function __invoke(ContainerInterface $container): UserRepository
     {
-        $config = Configuration::getCredentialConfig($container, self::class);
-        /** @var string $username */
-        $username = $config['username'];
         return new UserRepository(
             gateway         : new TableGateway(
                 table             : $container->get(SchemaFactory::class)(Schema::User),
@@ -39,7 +36,7 @@ final class UserRepositoryFactory
                     rowPrototype: $container->get(User::class),
                 ),
             ),
-            credentialColumn: $username,
+            credentialColumn: Configuration::getUsernameFieldName($container, self::class),
         );
     }
 }

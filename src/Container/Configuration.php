@@ -117,9 +117,13 @@ final readonly class Configuration extends Config
     }
 
     /**
-     * Resolve the request-body field carrying the credential, falling back to the
-     * shipped default when the configured value is absent, empty or not a string.
-     * Mezzio's session adapter reads the same key as its form field name.
+     * Resolve the credential field name, falling back to the shipped default when
+     * the configured value is absent, empty or not a string.
+     *
+     * One key, one meaning. Mezzio reads it as its form field name, LoginMiddleware
+     * reads the POST body under it, and UserRepositoryFactory hands it to
+     * UserRepository as the column the credential is matched against. Every reader
+     * comes through here so no two of them can drift apart.
      *
      * @throws ContainerExceptionInterface
      * @throws Exception\ExceptionInterface
