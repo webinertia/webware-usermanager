@@ -163,12 +163,6 @@ message = "Attempting to call a method on `null`."
 count = 1
 
 [[issues]]
-file = "src/Repository/UserRepositoryFactory.php"
-code = "possibly-undefined-string-array-index"
-message = "Possibly undefined array key `string('username')` accessed on `non-empty-array<array-key, mixed>`."
-count = 1
-
-[[issues]]
 file = "src/Repository/UserRepositoryInterface.php"
 code = "missing-api-or-internal"
 message = 'Interface `Webware\UserManager\Repository\UserRepositoryInterface` is missing an `@api` or `@internal` annotation.'

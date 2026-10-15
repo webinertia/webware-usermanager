@@ -37,7 +37,8 @@ final class VerifyEmailHandlerTest extends TestCase
     public function rendersErrorWhenTemplateParamsProvided(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::verify-email', ['error' => 'Invalid verification link.'])
             ->willReturn('<p>error</p>');

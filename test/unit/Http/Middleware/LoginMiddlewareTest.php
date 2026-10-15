@@ -13,7 +13,6 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
 use Webware\Core\UserInterface;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\MessageBusInterface;
@@ -38,13 +37,14 @@ final class LoginMiddlewareTest extends TestCase
     public function addsActivationHintWhenAccountNotActive(): void
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
+        $messageBus
+            ->method('handle')
             ->willReturn(new QueryResult(
                 new AuthenticateUserQuery(
                     credential: 'jane@example.com',
                     password  : bin2hex(random_bytes(16)),
                 ),
-                MessageStatus::Success,
+                MessageStatus::Failure,
                 new AuthenticationResult(AuthenticationStatus::NotActive),
             ));
 
@@ -57,7 +57,8 @@ final class LoginMiddlewareTest extends TestCase
 
         $middleware = $this->middleware(messageBus: $messageBus);
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute(SystemMessengerInterface::class, $messenger)
             ->withParsedBody(['email' => 'jane@example.com', 'password' => bin2hex(random_bytes(16))]);
 
@@ -67,23 +68,19 @@ final class LoginMiddlewareTest extends TestCase
     }
 
     #[Test]
-    public function logsAndNotifiesOnInvalidCredentials(): void
+    public function notifiesOnInvalidCredentials(): void
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
+        $messageBus
+            ->method('handle')
             ->willReturn(new QueryResult(
                 new AuthenticateUserQuery(
                     credential: 'jane@example.com',
                     password  : bin2hex(random_bytes(16)),
                 ),
-                MessageStatus::Success,
+                MessageStatus::Failure,
                 new AuthenticationResult(AuthenticationStatus::InvalidCredentials),
             ));
-
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())
-            ->method('info')
-            ->with('Failed login attempt', ['email' => 'jane@example.com']);
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
         $messenger->expects($this->once())->method('danger')->with('Invalid email or password.');
@@ -91,29 +88,14 @@ final class LoginMiddlewareTest extends TestCase
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler->expects($this->once())->method('handle')->willReturn(new EmptyResponse());
 
-        $middleware = $this->middleware(
-            messageBus: $messageBus,
-            logger    : $logger,
-        );
+        $middleware = $this->middleware(messageBus: $messageBus);
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute(SystemMessengerInterface::class, $messenger)
             ->withParsedBody(['email' => 'jane@example.com', 'password' => bin2hex(random_bytes(16))]);
 
         $response = $middleware->process($request, $handler);
-
-        self::assertInstanceOf(EmptyResponse::class, $response);
-    }
-
-    #[Test]
-    public function passesThroughNonPostRequests(): void
-    {
-        $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())->method('handle')->willReturn(new EmptyResponse());
-
-        $middleware = $this->middleware();
-
-        $response = $middleware->process(new ServerRequest(), $handler);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
     }
@@ -126,12 +108,62 @@ final class LoginMiddlewareTest extends TestCase
 
         $middleware = $this->middleware();
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withParsedBody(['email' => 'jane@example.com']);
 
         $response = $middleware->process($request, $handler);
 
         self::assertInstanceOf(EmptyResponse::class, $response);
+    }
+
+    #[Test]
+    public function readsConfiguredCredentialFieldNames(): void
+    {
+        $password = bin2hex(random_bytes(16));
+        $user     = new User(
+            id    : 1,
+            email : 'jane@example.com',
+            active: true,
+        );
+
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->once())
+            ->method('handle')
+            ->with(static::callback(
+                static fn(AuthenticateUserQuery $query): bool => (
+                    'jane@example.com' === $query->credential
+                    && hash_equals($password, $query->password ?? '')
+                ),
+            ))
+            ->willReturn(new QueryResult(
+                new AuthenticateUserQuery(
+                    credential: 'jane@example.com',
+                    password  : $password,
+                ),
+                MessageStatus::Success,
+                new AuthenticationResult(AuthenticationStatus::Success, $user),
+            ));
+
+        $session = $this->createMock(SessionInterface::class);
+        $session->expects($this->once())->method('set')->with(UserInterface::class, $user->toArray());
+        $session->expects($this->once())->method('regenerate')->willReturnSelf();
+
+        $middleware = $this->middleware(
+            messageBus     : $messageBus,
+            credentialField: 'user_name',
+            passwordField  : 'pass',
+        );
+
+        $request = new ServerRequest()
+            ->withMethod('POST')
+            ->withAttribute(SessionInterface::class, $session)
+            ->withParsedBody(['user_name' => 'jane@example.com', 'pass' => $password]);
+
+        $response = $middleware->process($request, $this->createStub(RequestHandlerInterface::class));
+
+        self::assertInstanceOf(RedirectResponse::class, $response);
     }
 
     #[Test]
@@ -145,7 +177,8 @@ final class LoginMiddlewareTest extends TestCase
         );
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus
+            ->expects($this->once())
             ->method('handle')
             ->with(static::callback(
                 static fn(AuthenticateUserQuery $query): bool => (
@@ -168,7 +201,8 @@ final class LoginMiddlewareTest extends TestCase
 
         $middleware = $this->middleware(messageBus: $messageBus);
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute(SessionInterface::class, $session)
             ->withParsedBody(['email' => 'jane@example.com', 'password' => $password]);
 
@@ -180,15 +214,14 @@ final class LoginMiddlewareTest extends TestCase
 
     private function middleware(
         ?MessageBusInterface $messageBus = null,
-        ?LoggerInterface $logger = null,
+        string $credentialField = 'email',
+        string $passwordField = 'password',
     ): LoginMiddleware {
-        $messageBus ??= $this->createStub(MessageBusInterface::class);
-        $logger     ??= $this->createStub(LoggerInterface::class);
-
         return new LoginMiddleware(
-            messageBus : $messageBus,
-            logger     : $logger,
-            redirectUrl: '/dashboard',
+            messageBus     : $messageBus ?? $this->createStub(MessageBusInterface::class),
+            credentialField: $credentialField,
+            passwordField  : $passwordField,
+            redirectUrl    : '/dashboard',
         );
     }
 }

@@ -23,7 +23,8 @@ final class RouteProviderFactoryTest extends TestCase
     {
         $container = $this->createStub(ContainerInterface::class);
         $container->method('has')->willReturnMap([['config', true]]);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [
                     'config',

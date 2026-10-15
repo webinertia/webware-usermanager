@@ -6,11 +6,15 @@ namespace Webware\UserManager\Http\Middleware;
 
 use DateTimeImmutable;
 use Fig\Http\Message\RequestMethodInterface;
+use Monolog\Level;
 use Override;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Log\Event\LogEvent;
+use Webware\Log\LogChannel;
 use Webware\Message\Exception\InvalidHopsValueException;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\MessageBusInterface;
@@ -41,6 +45,7 @@ final readonly class ProcessSetPasswordMiddleware implements MiddlewareInterface
         private MessageBusInterface $messageBus,
         private SetPasswordDataFilter $filter,
         private int $tokenTtl,
+        private EventDispatcherInterface $dispatcher,
     ) {}
 
     /**
@@ -53,12 +58,16 @@ final readonly class ProcessSetPasswordMiddleware implements MiddlewareInterface
         $token = $request->getAttribute('token');
 
         if (! is_string($token) || '' === $token) {
+            $this->audit('Set-password attempt without a token.');
+
             return $this->fail($request, $handler, 'Invalid verification link.');
         }
 
         $result = $this->messageBus->handle(new FetchUserByVerificationTokenQuery(token: $token));
 
         if ($result->getStatus() === MessageStatus::Failure) {
+            $this->audit('Set-password attempt with an invalid or already used token.');
+
             return $this->fail($request, $handler, 'Invalid or already used verification link.');
         }
 
@@ -66,6 +75,8 @@ final readonly class ProcessSetPasswordMiddleware implements MiddlewareInterface
         $user = $result->getResult();
 
         if ($this->isExpired($user)) {
+            $this->audit('Set-password attempt with an expired token.');
+
             return $this->fail(
                 $request,
                 $handler,
@@ -75,6 +86,11 @@ final readonly class ProcessSetPasswordMiddleware implements MiddlewareInterface
         }
 
         if (! $user->passwordSetRequired) {
+            $this->audit(
+                'Set-password attempt for an account that already has a password.',
+                $this->identifiersOf($user),
+            );
+
             return $this->fail($request, $handler, 'This account already has a password. Please sign in.');
         }
 
@@ -85,6 +101,24 @@ final readonly class ProcessSetPasswordMiddleware implements MiddlewareInterface
                     SetPasswordHandler::class,
                     ['token' => $token],
                 ))
+        );
+    }
+
+    /**
+     * Record one security-channel audit entry per attempt.
+     *
+     * `user_identifier` is filled by webware-log's middleware from the request
+     * principal, which is the guest here: the visitor holds a token rather than a
+     * session, so the account under change belongs in the context.
+     *
+     * @param array<string, mixed> $context
+     */
+    private function audit(string $message, array $context = []): void
+    {
+        $this->dispatcher->dispatch(
+            new LogEvent(LogChannel::Security, Level::Info)
+                ->setMessage($message)
+                ->setContext($context),
         );
     }
 
@@ -108,6 +142,14 @@ final readonly class ProcessSetPasswordMiddleware implements MiddlewareInterface
             SetPasswordHandler::class,
             ['error' => $error, 'expired' => $expired],
         ));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function identifiersOf(User $user): array
+    {
+        return ['email' => $user->email, 'userId' => (int) $user->id];
     }
 
     private function isExpired(User $user): bool
@@ -154,6 +196,11 @@ final readonly class ProcessSetPasswordMiddleware implements MiddlewareInterface
             passwordHash: $values['passwordHash'],
         ));
         $this->messageBus->handle(new ActivateUserCommand(id: (int) $user->id));
+
+        $this->audit(
+            "{$user->firstName} {$user->lastName} set a password and activated their account.",
+            $this->identifiersOf($user),
+        );
 
         /** @var SystemMessengerInterface|null $messenger */
         $messenger = $request->getAttribute(SystemMessengerInterface::class);

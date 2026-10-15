@@ -16,7 +16,6 @@ use PhpDb\Sql\PreparableSqlInterface;
 use PhpDb\Sql\SqlInterface;
 use PhpDb\Sql\TableIdentifier;
 use PhpDb\TableGateway\TableGateway;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 use Webware\UserManager\Entity\User;
 use Webware\UserManager\Repository\Schema;
@@ -61,7 +60,8 @@ trait PhpDbAdapterMockTrait
         $driver->method('getConnection')->willReturn($connection);
         $connection->method('getLastGeneratedValue')->willReturn($lastGeneratedValue);
         $platform->method('getSqlPlatformDecorator')->willReturn($decorator);
-        $decorator->method('setSubject')
+        $decorator
+            ->method('setSubject')
             ->willReturnCallback(
                 function (SqlInterface|PreparableSqlInterface|null $subject) use (
                     $decorator,
@@ -105,12 +105,10 @@ trait PhpDbAdapterMockTrait
 
     protected function createUserRepository(
         AdapterInterface $adapter,
-        EventDispatcherInterface $dispatcher,
         string $credentialColumn = 'email',
     ): UserRepository {
         return new UserRepository(
             gateway         : $this->createUserGateway($adapter),
-            dispatcher      : $dispatcher,
             credentialColumn: $credentialColumn,
         );
     }
@@ -124,7 +122,8 @@ trait PhpDbAdapterMockTrait
         $result->method('getFieldCount')->willReturn(0);
         $result->method('isBuffered')->willReturn(false);
         $result->method('getAffectedRows')->willReturn($affectedRows);
-        $result->method('valid')
+        $result
+            ->method('valid')
             ->willReturnOnConsecutiveCalls(
                 ...[...array_fill(0, count($rows), value: true), false],
             );

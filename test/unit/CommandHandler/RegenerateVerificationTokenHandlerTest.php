@@ -28,7 +28,8 @@ final class RegenerateVerificationTokenHandlerTest extends TestCase
         $now   = '2026-09-08 12:00:00';
 
         $users = $this->createMock(UserRepositoryInterface::class);
-        $users->expects($this->once())
+        $users
+            ->expects($this->once())
             ->method('update')
             ->with(7, ['verificationToken' => $token, 'tokenCreatedAt' => $now])
             ->willReturn(1);

@@ -293,7 +293,8 @@ final class InitDbCommandTest extends TestCase
             PreparableSqlInterface::class,
         ]);
 
-        $decorator->method('setSubject')
+        $decorator
+            ->method('setSubject')
             ->willReturnCallback(
                 static function (SqlInterface|PreparableSqlInterface|null $subject) use (
                     $decorator,
@@ -318,7 +319,8 @@ final class InitDbCommandTest extends TestCase
         $adapter = $this->createMock(AdapterInterface::class);
         $adapter->method('getDriver')->willReturn($driver);
         $adapter->method('getPlatform')->willReturn($platform);
-        $adapter->expects($this->exactly($queryCalls))
+        $adapter
+            ->expects($this->exactly($queryCalls))
             ->method('query')
             ->with($this->anything(), AdapterInterface::QUERY_MODE_EXECUTE)
             ->willReturn($this->createStub(ResultInterface::class));

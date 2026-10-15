@@ -8,11 +8,15 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Helper\Exception\ExceptionInterface as HelperException;
+use Monolog\Level;
 use Override;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Log\Event\LogEvent;
+use Webware\Log\LogChannel;
 use Webware\Message\Exception\InvalidHopsValueException;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
@@ -34,6 +38,7 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
         private MessageBusInterface $messageBus,
         private UserUrl $userUrl,
         private int $tokenTtl,
+        private EventDispatcherInterface $dispatcher,
     ) {}
 
     /**
@@ -48,6 +53,8 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
         $token = $request->getAttribute('token');
 
         if (null === $token || '' === $token) {
+            $this->audit('Email verification attempt without a token.');
+
             return $handler->handle($request->withAttribute(
                 VerifyEmailHandler::class,
                 ['error' => 'Invalid verification link.'],
@@ -57,6 +64,8 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
         $result = $this->messageBus->handle(new FetchUserByVerificationTokenQuery(token: $token));
 
         if ($result->getStatus() === MessageStatus::Failure) {
+            $this->audit('Email verification attempt with an invalid or already used token.');
+
             return $handler->handle($request->withAttribute(
                 VerifyEmailHandler::class,
                 ['error' => 'Invalid or already used verification link.'],
@@ -72,6 +81,8 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
             $age = new DateTimeImmutable()->getTimestamp() - $tokenCreatedAt->getTimestamp();
 
             if ($age > $this->tokenTtl) {
+                $this->audit('Email verification attempt with an expired token.');
+
                 return $handler->handle($request->withAttribute(
                     VerifyEmailHandler::class,
                     ['error' => 'Your verification link has expired.', 'expired' => true],
@@ -81,7 +92,8 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
 
         if ($user->passwordSetRequired) {
             // Created without a password: send the user to set one rather than
-            // activating an account nobody can sign in to.
+            // activating an account nobody can sign in to. No state changes here,
+            // and a mail client may prefetch the link, so this branch is not audited.
             return new RedirectResponse(
                 ($this->userUrl)('set.password.read', ['token' => $token]),
             );
@@ -89,10 +101,33 @@ final readonly class ProcessVerifyEmailMiddleware implements MiddlewareInterface
 
         $commandResult = $this->messageBus->handle(new ActivateUserCommand(id: (int) $user->id));
 
+        $this->audit(
+            "{$user->firstName} {$user->lastName} verified their email and activated their account.",
+            ['email' => $user->email, 'userId' => (int) $user->id],
+        );
+
         /** @var SystemMessengerInterface|null $messenger */
         $messenger = $request->getAttribute(SystemMessengerInterface::class);
         $messenger?->success('Email verified! You may now sign in.', hops: 1, now: false);
 
         return $handler->handle($request->withAttribute(CommandResult::class, $commandResult));
+    }
+
+    /**
+     * Record one security-channel audit entry per attempt.
+     *
+     * `user_identifier` is filled by webware-log's middleware from the request
+     * principal, which is the guest here: the visitor holds a token rather than a
+     * session, so the account under change belongs in the context.
+     *
+     * @param array<string, mixed> $context
+     */
+    private function audit(string $message, array $context = []): void
+    {
+        $this->dispatcher->dispatch(
+            new LogEvent(LogChannel::Security, Level::Info)
+                ->setMessage($message)
+                ->setContext($context),
+        );
     }
 }

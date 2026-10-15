@@ -26,7 +26,8 @@ final class UserUrlTest extends TestCase
         $token = bin2hex(random_bytes(16));
 
         $urlHelper = $this->createMock(UrlHelper::class);
-        $urlHelper->expects($this->once())
+        $urlHelper
+            ->expects($this->once())
             ->method('__invoke')
             ->with('user.verify.email.read', ['token' => $token], [], null, [])
             ->willReturn("/user/verify-email/{$token}");

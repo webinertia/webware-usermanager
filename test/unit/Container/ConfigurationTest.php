@@ -16,7 +16,9 @@ use Webware\UserManager\Container\Configuration;
 
 #[CoversClass(Configuration::class)]
 #[CoversMethod(Configuration::class, 'getBaseUrl')]
+#[CoversMethod(Configuration::class, 'getPasswordFieldName')]
 #[CoversMethod(Configuration::class, 'getPostLoginRedirect')]
+#[CoversMethod(Configuration::class, 'getUsernameFieldName')]
 #[CoversMethod(Configuration::class, 'getVerificationEmailSubject')]
 #[CoversMethod(Configuration::class, 'getVerificationTokenTtl')]
 final class ConfigurationTest extends TestCase
@@ -26,6 +28,18 @@ final class ConfigurationTest extends TestCase
     {
         self::assertSame(UserInterface::class, Configuration::CONFIG_KEY);
         self::assertSame('user', Configuration::COMPONENT_NAME);
+    }
+
+    #[Test]
+    public function fallsBackToDefaultWhenPasswordFieldNameIsEmpty(): void
+    {
+        self::assertSame(
+            'password',
+            Configuration::getPasswordFieldName(
+                $this->containerWith(['authentication' => ['password' => '']]),
+                'TestFactory',
+            ),
+        );
     }
 
     #[Test]
@@ -65,6 +79,30 @@ final class ConfigurationTest extends TestCase
     }
 
     #[Test]
+    public function fallsBackToDefaultWhenUsernameFieldNameIsMissing(): void
+    {
+        self::assertSame(
+            'email',
+            Configuration::getUsernameFieldName(
+                $this->containerWith(['authentication' => ['post_login_redirect' => '/dashboard']]),
+                'TestFactory',
+            ),
+        );
+    }
+
+    #[Test]
+    public function fallsBackToDefaultWhenUsernameFieldNameIsNotAString(): void
+    {
+        self::assertSame(
+            'email',
+            Configuration::getUsernameFieldName(
+                $this->containerWith(['authentication' => ['username' => 42]]),
+                'TestFactory',
+            ),
+        );
+    }
+
+    #[Test]
     public function returnsAuthenticationConfigWhenPresent(): void
     {
         self::assertSame(
@@ -82,6 +120,32 @@ final class ConfigurationTest extends TestCase
             'https://example.com',
             Configuration::getBaseUrl(
                 $this->containerWith([UserInterface::class => ['base_url' => 'https://example.com']]),
+                'TestFactory',
+            ),
+        );
+    }
+
+    #[Test]
+    public function returnsConfiguredPasswordFieldName(): void
+    {
+        $fieldName = 'user_pass';
+
+        self::assertSame(
+            $fieldName,
+            Configuration::getPasswordFieldName(
+                $this->containerWith(['authentication' => ['password' => $fieldName]]),
+                'TestFactory',
+            ),
+        );
+    }
+
+    #[Test]
+    public function returnsConfiguredUsernameFieldName(): void
+    {
+        self::assertSame(
+            'user_name',
+            Configuration::getUsernameFieldName(
+                $this->containerWith(['authentication' => ['username' => 'user_name']]),
                 'TestFactory',
             ),
         );

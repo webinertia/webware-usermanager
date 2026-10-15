@@ -68,7 +68,8 @@ final class CreateUserDataFilterTest extends TestCase
     {
         $uniqueness = $this->createMock(ValidatorInterface::class);
         $uniqueness->method('getMessages')->willReturn([]);
-        $uniqueness->expects($this->once())
+        $uniqueness
+            ->expects($this->once())
             ->method('isValid')
             ->with('jane@example.com')
             ->willReturn(true);
@@ -163,9 +164,9 @@ final class CreateUserDataFilterTest extends TestCase
     public function rejectsAnEmailThatAlreadyExists(): void
     {
         $uniqueness = $this->createMock(ValidatorInterface::class);
-        $uniqueness->method('getMessages')
-            ->willReturn(['recordFound' => 'A record matching the input was found']);
-        $uniqueness->expects($this->once())
+        $uniqueness->method('getMessages')->willReturn(['recordFound' => 'A record matching the input was found']);
+        $uniqueness
+            ->expects($this->once())
             ->method('isValid')
             ->willReturn(false);
 

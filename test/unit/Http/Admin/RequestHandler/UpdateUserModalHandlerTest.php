@@ -29,7 +29,8 @@ final class UpdateUserModalHandlerTest extends TestCase
         );
 
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::update-user-modal', [
                 'user'            => $user,

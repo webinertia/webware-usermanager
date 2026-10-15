@@ -41,7 +41,8 @@ final class ToggleUserActiveHandlerTest extends TestCase
 
         $users = $this->createMock(UserRepositoryInterface::class);
         $users->method('findById')->willReturn($user);
-        $users->expects($this->once())
+        $users
+            ->expects($this->once())
             ->method('update')
             ->with(1, ['active' => 0])
             ->willReturn(1);
@@ -61,7 +62,8 @@ final class ToggleUserActiveHandlerTest extends TestCase
 
         $users = $this->createMock(UserRepositoryInterface::class);
         $users->method('findById')->willReturn($user);
-        $users->expects($this->once())
+        $users
+            ->expects($this->once())
             ->method('update')
             ->with(1, ['active' => 1])
             ->willReturn(1);

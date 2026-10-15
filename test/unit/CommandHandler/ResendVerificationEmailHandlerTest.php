@@ -26,7 +26,8 @@ final class ResendVerificationEmailHandlerTest extends TestCase
         $sent = null;
 
         $mailer = $this->createMock(MailerInterface::class);
-        $mailer->expects($this->once())
+        $mailer
+            ->expects($this->once())
             ->method('send')
             ->willReturnCallback(static function (MessageInterface $message) use (&$sent): bool {
                 $sent = $message;

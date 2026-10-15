@@ -40,7 +40,8 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         $capturedCommand = null;
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(2))
+        $bus
+            ->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(static function (MessageInterface $message) use (
                 &$capturedCommand,
@@ -81,7 +82,8 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
     public function ignoresAClientSuppliedAssignableRoleList(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (MessageInterface $message): QueryResult {
                 assert($message instanceof FetchAssignableRolesQuery, description: 'Expected the roles query');
@@ -106,7 +108,8 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         $capturedCommand = null;
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (MessageInterface $message): QueryResult {
                 assert($message instanceof FetchAssignableRolesQuery, description: 'Expected the roles query');
@@ -115,7 +118,8 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
             });
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())
+        $messenger
+            ->expects($this->once())
             ->method('warning')
             ->with($this->callback(is_string(...)));
 
@@ -174,7 +178,8 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
     public function warnsAndPassesThroughWhenValidationFails(): void
     {
         $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())
+        $messenger
+            ->expects($this->once())
             ->method('warning')
             ->with($this->callback(is_string(...)));
 
@@ -209,7 +214,8 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
     private function capturingHandler(?ServerRequestInterface &$capturedRequest): RequestHandlerInterface
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $request) use (
                 &$capturedRequest,
@@ -239,7 +245,8 @@ final class ProcessUpdateUserMiddlewareTest extends TestCase
         RequestHandlerInterface $handler,
         array $overrides,
     ): ServerRequest {
-        return new ServerRequest()->withMethod('PATCH')
+        return new ServerRequest()
+            ->withMethod('PATCH')
             ->withAttribute(UserInterface::class, $this->actor())
             ->withAttribute('id', '42')
             ->withParsedBody([

@@ -72,7 +72,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
 
         $this->process(
             bus: $bus,
-            request: new ServerRequest()->withMethod('POST')
+            request: new ServerRequest()
+                ->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
         );
 
@@ -110,7 +111,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         );
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(2))
+        $bus
+            ->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(
                 static fn(MessageInterface $message): ResultInterface => $message instanceof FetchUserByEmailQuery
@@ -120,7 +122,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
 
         $request = $this->process(
             bus: $bus,
-            request: new ServerRequest()->withMethod('POST')
+            request: new ServerRequest()
+                ->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
         );
 
@@ -154,7 +157,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
 
         $request = $this->process(
             bus: $bus,
-            request: new ServerRequest()->withMethod('POST')
+            request: new ServerRequest()
+                ->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
         );
 
@@ -184,7 +188,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         $dispatched = [];
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(3))
+        $bus
+            ->expects($this->exactly(3))
             ->method('handle')
             ->willReturnCallback(
                 static function (MessageInterface $message) use (&$dispatched, $user, $commandResult): ResultInterface {
@@ -197,7 +202,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
             );
 
         $urlHelper = $this->createMock(UrlHelper::class);
-        $urlHelper->expects($this->once())
+        $urlHelper
+            ->expects($this->once())
             ->method('__invoke')
             ->with(
                 'user.verify.email.read',
@@ -211,7 +217,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
         $request = $this->process(
             bus      : $bus,
             urlHelper: $urlHelper,
-            request  : new ServerRequest()->withMethod('POST')
+            request  : new ServerRequest()
+                ->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
         );
 
@@ -233,7 +240,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
     {
         $request = $this->process(
             bus    : $this->createStub(MessageBusInterface::class),
-            request: new ServerRequest()->withMethod('POST')
+            request: new ServerRequest()
+                ->withMethod('POST')
                 ->withParsedBody(['email' => '']),
         );
 
@@ -256,7 +264,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
 
         $request = $this->process(
             bus: $bus,
-            request: new ServerRequest()->withMethod('POST')
+            request: new ServerRequest()
+                ->withMethod('POST')
                 ->withParsedBody(['email' => 'ghost@example.com']),
         );
 
@@ -275,7 +284,8 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
 
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $req) use (
                 &$capturedRequest,

@@ -21,7 +21,8 @@ final class ResendVerificationEmailHandlerFactoryTest extends TestCase
     public function invokeBuildsHandler(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [MailerInterface::class, $this->createStub(MailerInterface::class)],
             ]);

@@ -21,7 +21,8 @@ final class SetPasswordHandlerFactoryTest extends TestCase
     public function invokeBuildsTheHandler(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [UserRepositoryInterface::class, $this->createStub(UserRepositoryInterface::class)],
             ]);

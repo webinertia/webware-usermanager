@@ -11,9 +11,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Webware\Log\Event\LogEvent;
+use Webware\Log\LogChannel;
 use Webware\Message\SystemMessengerInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\MessageBusInterface;
@@ -37,6 +40,78 @@ use function random_bytes;
 #[CoversMethod(ProcessSetPasswordMiddleware::class, 'process')]
 final class ProcessSetPasswordMiddlewareTest extends TestCase
 {
+    #[Test]
+    public function logsASecurityAuditEntryWhenThePasswordIsSet(): void
+    {
+        $token = bin2hex(random_bytes(16));
+        $user  = new User(
+            id                 : 4,
+            firstName          : 'Jane',
+            lastName           : 'Doe',
+            email              : 'jane@example.com',
+            passwordSetRequired: 1,
+        );
+
+        $bus = $this->createStub(MessageBusInterface::class);
+        $bus->method('handle')->willReturnCallback(
+            static fn(MessageInterface $message): ResultInterface => $message
+                instanceof FetchUserByVerificationTokenQuery
+                    ? new QueryResult($message, MessageStatus::Success, $user)
+                    : new CommandResult($message, MessageStatus::Success, 1),
+        );
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(static::callback(
+                static fn(LogEvent $event): bool => (
+                    LogChannel::Security === $event->getChannel()
+                    && 'Jane Doe set a password and activated their account.' === $event->getMessage()
+                    && ['email' => 'jane@example.com', 'userId' => 4] === $event->getContext()
+                ),
+            ));
+
+        $this->process(
+            bus       : $bus,
+            request   : new ServerRequest([], [], null, 'POST')
+                ->withAttribute('token', $token)
+                ->withParsedBody([
+                    'passwordHash'        => 'correct horse battery staple',
+                    'confirmPasswordHash' => 'correct horse battery staple',
+                ]),
+            dispatcher: $dispatcher,
+        );
+    }
+
+    #[Test]
+    public function logsASecurityAuditEntryWhenTheTokenIsRejected(): void
+    {
+        $token = bin2hex(random_bytes(16));
+        $user  = new User(
+            id                 : 4,
+            tokenCreatedAt     : new DateTimeImmutable('-2 hours'),
+            passwordSetRequired: 1,
+        );
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(static::callback(
+                static fn(LogEvent $event): bool => (
+                    LogChannel::Security === $event->getChannel()
+                    && 'Set-password attempt with an expired token.' === $event->getMessage()
+                ),
+            ));
+
+        $this->process(
+            bus       : $this->busReturning($user),
+            request   : new ServerRequest()->withAttribute('token', $token),
+            dispatcher: $dispatcher,
+        );
+    }
+
     #[Test]
     public function rejectsAMissingToken(): void
     {
@@ -134,7 +209,8 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
 
         $request = $this->process(
             bus    : $this->busReturning($this->flaggedUser()),
-            request: new ServerRequest([], [], null, 'POST')->withAttribute('token', $token)
+            request: new ServerRequest([], [], null, 'POST')
+                ->withAttribute('token', $token)
                 ->withParsedBody([
                     'passwordHash'        => 'correct horse battery staple',
                     'confirmPasswordHash' => 'a different password',
@@ -156,7 +232,8 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
 
         $dispatched = [];
         $bus        = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(3))
+        $bus
+            ->expects($this->exactly(3))
             ->method('handle')
             ->willReturnCallback(
                 static function (MessageInterface $message) use (&$dispatched, $user): ResultInterface {
@@ -171,13 +248,15 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
             );
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())
+        $messenger
+            ->expects($this->once())
             ->method('success')
             ->with('Your password is set. You may now sign in.', 1, false);
 
         $request = $this->process(
             bus: $bus,
-            request: new ServerRequest([], [], null, 'POST')->withAttribute('token', $token)
+            request: new ServerRequest([], [], null, 'POST')
+                ->withAttribute('token', $token)
                 ->withAttribute(SystemMessengerInterface::class, $messenger)
                 ->withParsedBody([
                     'passwordHash'        => 'correct horse battery staple',
@@ -274,10 +353,12 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
         MessageBusInterface $bus,
         ServerRequestInterface $request,
         int $tokenTtl = 3600,
+        ?EventDispatcherInterface $dispatcher = null,
     ): ServerRequestInterface {
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $req) use (
                 &$capturedRequest,
@@ -291,6 +372,7 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
             messageBus: $bus,
             filter    : InputFilterHelper::setPasswordDataFilter(),
             tokenTtl  : $tokenTtl,
+            dispatcher: $dispatcher ?? $this->createStub(EventDispatcherInterface::class),
         )->process($request, $handler);
 
         return $capturedRequest;

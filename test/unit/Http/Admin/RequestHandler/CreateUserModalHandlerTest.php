@@ -61,7 +61,8 @@ final class CreateUserModalHandlerTest extends TestCase
     public function rendersTheModalWithTheAssignableRoles(): void
     {
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus
+            ->expects($this->once())
             ->method('handle')
             ->with($this->callback(
                 static fn(FetchAssignableRolesQuery $query): bool => 'Administrator' === $query->actorRoleId,
@@ -73,7 +74,8 @@ final class CreateUserModalHandlerTest extends TestCase
             ));
 
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::create-user-modal', [
                 'assignableRoles' => ['Administrator', 'Member'],
@@ -98,7 +100,8 @@ final class CreateUserModalHandlerTest extends TestCase
     private function expectingEmptyRoles(): TemplateRendererInterface
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::create-user-modal', [
                 'assignableRoles' => [],

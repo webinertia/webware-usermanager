@@ -39,7 +39,8 @@ final class CreateUserHandlerFactoryTest extends TestCase
         );
 
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [HelperPluginManager::class, $helperManager],
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],

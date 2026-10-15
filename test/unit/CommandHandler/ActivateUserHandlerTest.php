@@ -22,7 +22,8 @@ final class ActivateUserHandlerTest extends TestCase
     public function activatesUserAndClearsVerificationToken(): void
     {
         $users = $this->createMock(UserRepositoryInterface::class);
-        $users->expects($this->once())
+        $users
+            ->expects($this->once())
             ->method('update')
             ->with(7, ['active' => 1, 'verificationToken' => null, 'tokenCreatedAt' => null])
             ->willReturn(1);

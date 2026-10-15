@@ -26,7 +26,8 @@ final class SendVerificationEmailHandlerTest extends TestCase
         $sent = null;
 
         $mailer = $this->createStub(MailerInterface::class);
-        $mailer->method('send')
+        $mailer
+            ->method('send')
             ->willReturnCallback(static function (MessageInterface $message) use (&$sent): bool {
                 $sent = $message;
 
@@ -58,7 +59,8 @@ final class SendVerificationEmailHandlerTest extends TestCase
         $sent = null;
 
         $mailer = $this->createMock(MailerInterface::class);
-        $mailer->expects($this->once())
+        $mailer
+            ->expects($this->once())
             ->method('send')
             ->willReturnCallback(static function (MessageInterface $message) use (&$sent): bool {
                 $sent = $message;

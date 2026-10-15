@@ -28,21 +28,20 @@ final class RegisterWidgetListenerTest extends TestCase
     public function registersWidgetWithUserCounts(): void
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, [
-                new User(
-                    id    : 1,
-                    active: true,
-                ),
-                new User(
-                    id    : 2,
-                    active: false,
-                ),
-                new User(
-                    id    : 3,
-                    active: true,
-                ),
-            ]));
+        $messageBus->method('handle')->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, [
+            new User(
+                id    : 1,
+                active: true,
+            ),
+            new User(
+                id    : 2,
+                active: false,
+            ),
+            new User(
+                id    : 3,
+                active: true,
+            ),
+        ]));
 
         $listener = new RegisterWidgetListener(
             resourceId: 'user',

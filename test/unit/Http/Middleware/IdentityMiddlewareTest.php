@@ -42,7 +42,8 @@ final class IdentityMiddlewareTest extends TestCase
         $session->expects($this->once())->method('clear');
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus
+            ->expects($this->once())
             ->method('handle')
             ->with(static::callback(static fn(CheckUserActiveQuery $query): bool => 5 === $query->id))
             ->willReturn(new QueryResult(new CheckUserActiveQuery(id: 5), MessageStatus::Success, false));
@@ -81,7 +82,8 @@ final class IdentityMiddlewareTest extends TestCase
 
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $request) use (
                 &$capturedRequest,
@@ -112,7 +114,8 @@ final class IdentityMiddlewareTest extends TestCase
         $session->method('get')->willReturn($sessionData);
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus
+            ->expects($this->once())
             ->method('handle')
             ->with(static::callback(static fn(CheckUserActiveQuery $query): bool => 0 === $query->id))
             ->willReturn(new QueryResult(new CheckUserActiveQuery(id: 0), MessageStatus::Success, true));
@@ -121,7 +124,8 @@ final class IdentityMiddlewareTest extends TestCase
 
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $request) use (
                 &$capturedRequest,
@@ -149,7 +153,8 @@ final class IdentityMiddlewareTest extends TestCase
         $session->method('get')->willReturn($sessionData);
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus
+            ->expects($this->once())
             ->method('handle')
             ->with(static::callback(static fn(CheckUserActiveQuery $query): bool => 5 === $query->id))
             ->willReturn(new QueryResult(new CheckUserActiveQuery(id: 5), MessageStatus::Success, true));
@@ -167,7 +172,8 @@ final class IdentityMiddlewareTest extends TestCase
 
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $request) use (
                 &$capturedRequest,
@@ -197,7 +203,8 @@ final class IdentityMiddlewareTest extends TestCase
     {
         $persistence = $this->createStub(SessionPersistenceInterface::class);
         $persistence->method('initializeSessionFromRequest')->willReturn(new Session([]));
-        $persistence->method('persistSession')
+        $persistence
+            ->method('persistSession')
             ->willReturnCallback(
                 static fn(SessionInterface $session, ResponseInterface $response): ResponseInterface => $response,
             );
@@ -217,7 +224,8 @@ final class IdentityMiddlewareTest extends TestCase
         // Stands in for the remainder of the pipeline: IdentityMiddleware runs
         // behind SessionMiddleware, exactly as the global pipeline pipes it.
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static fn(ServerRequestInterface $request): ResponseInterface => $identity->process(

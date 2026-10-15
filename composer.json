@@ -31,6 +31,7 @@
         "laminas/laminas-validator": "^3.7",
         "laminas/laminas-view": "^2.30 || ^3.0",
         "mezzio/mezzio": "^3.26",
+        "mezzio/mezzio-authentication": "^1.13",
         "mezzio/mezzio-helpers": "^5.9",
         "mezzio/mezzio-router": "^3.15 || ^4.0",
         "mezzio/mezzio-session": "^1.12",
@@ -52,7 +53,7 @@
         "webware/webware-core": "^1.0.0-alpha.9",
         "webware/webware-event": "^1.0.0-alpha.2",
         "webware/webware-htmx": "1.0.x-dev",
-        "webware/webware-log": "^2.0.0-alpha.1",
+        "webware/webware-log": "^2.0.0-alpha.4",
         "webware/webware-mailer": "^1.0.0-beta.5",
         "webware/webware-message": "^1.0.0-beta.2",
         "webware/webware-phpdb": "^1.0.0-alpha.1"
@@ -64,7 +65,7 @@
         "roave/backward-compatibility-check": "^8.21.0",
         "roave/security-advisories": "dev-master",
         "webware/webware-console": "1.0.x-dev",
-        "webware/webware-tools": "^1.0.0-rc.5"
+        "webware/webware-tools": "^1.0.0-rc.6"
     },
     "autoload": {
         "psr-4": {

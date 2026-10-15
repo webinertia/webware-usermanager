@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WebwareTest\UserManager;
 
+use Mezzio\Authentication\UserRepositoryInterface as MezzioUserRepositoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
@@ -148,6 +149,10 @@ final class ConfigProviderTest extends TestCase
         self::assertSame(
             UserRepository::class,
             $deps['aliases'][UserRepositoryInterface::class],
+        );
+        self::assertSame(
+            UserRepository::class,
+            $deps['aliases'][MezzioUserRepositoryInterface::class],
         );
         self::assertSame(UserFactory::class, $deps['factories'][UserInterface::class]);
         self::assertArrayNotHasKey(User::class, $deps['factories']);

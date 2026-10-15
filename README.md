@@ -35,6 +35,14 @@ Any provider that declares an entry for `Mezzio\Authentication\UserInterface` co
 the same service name and the last one aggregated wins, so load `mezzio/mezzio-authentication`
 first, then `webware/webware-core`, then this package.
 
+This package also aliases `Mezzio\Authentication\UserRepositoryInterface` to its
+`Repository\UserRepository`, whose `authenticate()` implements that contract (the return
+type is narrowed to the user entity this package hands out). `Mezzio\Authentication\ConfigProvider`
+declares no service for that name, so the alias does not compete with anything. A host can
+type against either `Webware\UserManager\Repository\UserRepositoryInterface` or the Mezzio
+interface; this package replaces the authentication *workflow* while keeping the contract
+shape, so a hand-rolled Mezzio repository can be removed without touching type hints.
+
 ## Documentation
 
 See [docs/](docs/).

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Webware\UserManager\Repository;
 
 use Closure;
-use Monolog\Level;
 use Override;
 use PhpDb\Exception\ExceptionInterface;
 use PhpDb\ResultSet\ResultSetInterface;
@@ -15,13 +14,8 @@ use PhpDb\Sql\Predicate\PredicateInterface;
 use PhpDb\TableGateway\TableGateway;
 use Psl\Type;
 use Psl\Type\Exception\ExceptionInterface as PslTypeException;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
-use Webware\Log\Event\LogEvent;
-use Webware\Log\LogChannel;
-use Webware\UserManager\Auth\AuthenticationResult;
-use Webware\UserManager\Auth\AuthenticationStatus;
 use Webware\UserManager\Entity\User;
 
 use function password_verify;
@@ -31,7 +25,6 @@ final class UserRepository implements UserRepositoryInterface
 {
     public function __construct(
         private readonly TableGateway $gateway,
-        private readonly EventDispatcherInterface $dispatcher,
         private readonly string $credentialColumn,
     ) {}
 
@@ -43,43 +36,30 @@ final class UserRepository implements UserRepositoryInterface
         string $credential,
         #[SensitiveParameter]
         ?string $password = null,
-    ): AuthenticationResult {
+    ): (UserInterface&User)|null {
+        // Credential-only authentication is not supported: nothing here looks a
+        // token up, so a null password can never match and is not worth a query.
+        //
+        // An empty password is rejected for the same reason plus one more:
+        // password_hash('') is a real hash, so an account created with an empty
+        // password would otherwise authenticate on password_verify('', $hash).
+        if (null === $password || '' === $password) {
+            return null;
+        }
+
         $user = $this->findByConfiguredCredential($this->credentialColumn, $credential);
 
         if (null === $user) {
-            $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                'Failed login attempt.',
-            )
-                ->setContext(['credential' => $credential]));
-            return new AuthenticationResult(AuthenticationStatus::InvalidCredentials);
-        }
-
-        if (! $user->active) {
-            $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                "Failed login attempt for inactive user: {$user->email}",
-            )
-                ->setContext(['credential' => $credential]));
-            return new AuthenticationResult(AuthenticationStatus::NotActive);
+            return null;
         }
 
         // The ?? '' keeps a row with no stored hash from type-erroring password_verify();
-        // an empty hash simply never matches, so the result is invalid credentials.
-        if (! password_verify($password ?? '', $user->passwordHash ?? '')) {
-            $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                "Failed login attempt for user: {$user->email}",
-            )
-                ->setContext(['credential' => $credential]));
-            return new AuthenticationResult(AuthenticationStatus::InvalidCredentials);
+        // an empty hash simply never matches, so the result is a failed authentication.
+        if (! password_verify($password, $user->passwordHash ?? '')) {
+            return null;
         }
 
-        $this->dispatcher->dispatch(
-            new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                "{$user->firstName} {$user->lastName} authenticated successfully.",
-            )
-                ->setContext(['identity' => $user->email]),
-        );
-
-        return new AuthenticationResult(AuthenticationStatus::Success, $user);
+        return $user;
     }
 
     /**

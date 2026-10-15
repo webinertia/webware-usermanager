@@ -77,6 +77,24 @@ final readonly class Configuration extends Config
     }
 
     /**
+     * Resolve the request-body field carrying the password, falling back to the
+     * shipped default when the configured value is absent, empty or not a string.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws Exception\ExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public static function getPasswordFieldName(ContainerInterface $container, string $callingFactory): string
+    {
+        $config = self::getCredentialConfig($container, $callingFactory);
+
+        /** @var mixed $value */
+        $value = $config['password'] ?? null;
+
+        return is_string($value) && '' !== $value ? $value : 'password';
+    }
+
+    /**
      * Resolve the post-login redirect path, falling back to the default when the
      * configured value is absent or is not a non-empty string.
      *
@@ -96,6 +114,29 @@ final readonly class Configuration extends Config
         }
 
         return $value;
+    }
+
+    /**
+     * Resolve the credential field name, falling back to the shipped default when
+     * the configured value is absent, empty or not a string.
+     *
+     * One key, one meaning. Mezzio reads it as its form field name, LoginMiddleware
+     * reads the POST body under it, and UserRepositoryFactory hands it to
+     * UserRepository as the column the credential is matched against. Every reader
+     * comes through here so no two of them can drift apart.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws Exception\ExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public static function getUsernameFieldName(ContainerInterface $container, string $callingFactory): string
+    {
+        $config = self::getCredentialConfig($container, $callingFactory);
+
+        /** @var mixed $value */
+        $value = $config['username'] ?? null;
+
+        return is_string($value) && '' !== $value ? $value : 'email';
     }
 
     /**

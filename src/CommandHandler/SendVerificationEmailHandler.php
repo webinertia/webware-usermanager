@@ -31,7 +31,8 @@ final class SendVerificationEmailHandler implements CommandHandlerInterface
         $verifyUrl = htmlspecialchars($command->verificationUrl, flags: ENT_QUOTES, encoding: 'UTF-8');
 
         $sent = $this->mailer->send(
-            new Message()->withTo($command->to)
+            new Message()
+                ->withTo($command->to)
                 ->withSubject($command->subject)
                 ->withHtml()
                 ->withBody(

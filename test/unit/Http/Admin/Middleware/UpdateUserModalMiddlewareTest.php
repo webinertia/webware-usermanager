@@ -40,7 +40,8 @@ final class UpdateUserModalMiddlewareTest extends TestCase
         $attached = null;
 
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static function (ServerRequestInterface $request) use (&$attached): ResponseInterface {
@@ -64,13 +65,15 @@ final class UpdateUserModalMiddlewareTest extends TestCase
     public function attachesNoUserWhenTheQueryFails(): void
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
+        $messageBus
+            ->method('handle')
             ->willReturn(new QueryResult(new FetchUserByIdQuery(id: 99), MessageStatus::Failure, null));
 
         $attached = null;
 
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static function (ServerRequestInterface $request) use (&$attached): ResponseInterface {
@@ -99,7 +102,8 @@ final class UpdateUserModalMiddlewareTest extends TestCase
         );
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->exactly(2))
+        $messageBus
+            ->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(static function (MessageInterface $message) use ($user): QueryResult {
                 if ($message instanceof FetchUserByIdQuery) {
@@ -114,7 +118,8 @@ final class UpdateUserModalMiddlewareTest extends TestCase
         $attached = null;
 
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static function (ServerRequestInterface $request) use (&$attached): ResponseInterface {
@@ -127,7 +132,8 @@ final class UpdateUserModalMiddlewareTest extends TestCase
         $actor = $this->createStub(UserInterface::class);
         $actor->method('getRoles')->willReturn(['Administrator']);
 
-        $request = new ServerRequest()->withAttribute('id', '5')
+        $request = new ServerRequest()
+            ->withAttribute('id', '5')
             ->withAttribute(UserInterface::class, $actor);
 
         $middleware = new UpdateUserModalMiddleware(
@@ -145,7 +151,8 @@ final class UpdateUserModalMiddlewareTest extends TestCase
     public function returnsTheHandlerResponseUnchanged(): void
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
+        $messageBus
+            ->method('handle')
             ->willReturn(new QueryResult(new FetchUserByIdQuery(id: 1), MessageStatus::Failure, null));
 
         $expected = new HtmlResponse('', 404);

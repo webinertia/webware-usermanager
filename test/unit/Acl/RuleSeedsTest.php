@@ -42,7 +42,8 @@ final class RuleSeedsTest extends TestCase
         $collector = $this->createStub(RouteCollectorInterface::class);
 
         foreach (['get', 'post', 'patch', 'delete'] as $method) {
-            $collector->method($method)
+            $collector
+                ->method($method)
                 ->willReturnCallback(
                     static function (
                         string $path,
@@ -56,7 +57,8 @@ final class RuleSeedsTest extends TestCase
                 );
         }
 
-        $collector->method('route')
+        $collector
+            ->method('route')
             ->willReturnCallback(
                 static function (
                     string $path,

@@ -38,7 +38,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
     public function attachesTheOldInputWithoutAWarningWhenAFieldIsMissing(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static fn(FetchAssignableRolesQuery $query): QueryResult => new QueryResult(
@@ -52,7 +53,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
         $logger->expects($this->never())->method('warning');
 
         $capturedRequest = null;
-        $request         = new ServerRequest()->withMethod('POST')
+        $request         = new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute(UserInterface::class, $this->actor())
             ->withParsedBody(['firstName' => 'Jane', 'lastName' => 'Doe', 'roleId' => 'Member']);
 
@@ -98,7 +100,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
         $captured = null;
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(2))
+        $bus
+            ->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(static function (MessageInterface $message) use (
                 &$captured,
@@ -114,7 +117,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
             });
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())
+        $logger
+            ->expects($this->once())
             ->method('info')
             ->with('Created user', [
                 'actor'  => 'admin@example.com',
@@ -153,12 +157,14 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
         $bus->expects($this->never())->method('handle');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())
+        $logger
+            ->expects($this->once())
             ->method('warning')
             ->with('Rejected a role outside the assignable set', ['roleId' => 'Member']);
 
         $capturedRequest = null;
-        $request         = new ServerRequest()->withMethod('POST')
+        $request         = new ServerRequest()
+            ->withMethod('POST')
             ->withParsedBody([
                 'firstName' => 'Jane',
                 'lastName'  => 'Doe',
@@ -187,7 +193,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
         );
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())
+        $logger
+            ->expects($this->once())
             ->method('warning')
             ->with('Rejected a role outside the assignable set', ['roleId' => 'Member']);
 
@@ -264,7 +271,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
     public function warnsAndAttachesStateWhenTheRoleIsNotAssignable(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static fn(FetchAssignableRolesQuery $query): QueryResult => new QueryResult(
@@ -275,7 +283,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
             );
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())
+        $logger
+            ->expects($this->once())
             ->method('warning')
             ->with('Rejected a role outside the assignable set', ['roleId' => 'Developer']);
         $logger->expects($this->never())->method('info');
@@ -311,7 +320,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
     private function capturingHandler(?ServerRequestInterface &$capturedRequest): RequestHandlerInterface
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $request) use (
                 &$capturedRequest,
@@ -339,7 +349,8 @@ final class ProcessCreateUserMiddlewareTest extends TestCase
      */
     private function postRequest(array $overrides): ServerRequest
     {
-        return new ServerRequest()->withMethod('POST')
+        return new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute(UserInterface::class, $this->actor())
             ->withParsedBody([
                 'firstName' => 'Jane',

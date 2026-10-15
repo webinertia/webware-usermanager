@@ -24,7 +24,8 @@ final class ProcessUpdateUserMiddlewareFactoryTest extends TestCase
     public function invokeBuildsMiddleware(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [InputFilterPluginManager::class, InputFilterHelper::inputFilterPluginManager()],
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
