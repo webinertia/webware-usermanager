@@ -372,7 +372,8 @@ The admin never enters or sees a password. As built:
   redirects that link to the set-password page when it is set, so the verify link also cannot activate such an account.
 - `GET /user/set.password/{token}` renders the form; `POST` validates, then dispatches `SetPasswordCommand`
   (hash + clear the flag) and `ActivateUserCommand` (activate + clear the token), and redirects to sign-in.
-  Tokens keep the 24-hour TTL and are single use.
+  Tokens keep the 24-hour TTL and are single use. Each attempt records a security-channel audit entry, with
+  the account under change in the context and the request principal in `user_identifier`.
 - Until the user sets a password the stored hash is an unusable random value (a hash of a random secret that
   is never disclosed), so no login is possible with it.
 - **Not built yet:** the password validator is `PasswordRequirement` (F9), rebuilt in `webinertia/webware-validator`
