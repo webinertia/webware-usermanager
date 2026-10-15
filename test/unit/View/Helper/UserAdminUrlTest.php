@@ -21,7 +21,8 @@ final class UserAdminUrlTest extends TestCase
     public function invokePrependsAdminPrefix(): void
     {
         $urlHelper = $this->createMock(UrlHelper::class);
-        $urlHelper->expects($this->once())
+        $urlHelper
+            ->expects($this->once())
             ->method('__invoke')
             ->with('admin.user.create', [], [], null, [])
             ->willReturn('/admin/user/create');
@@ -35,7 +36,8 @@ final class UserAdminUrlTest extends TestCase
     public function invokeTrimsTrailingDotForEmptyRouteName(): void
     {
         $urlHelper = $this->createMock(UrlHelper::class);
-        $urlHelper->expects($this->once())
+        $urlHelper
+            ->expects($this->once())
             ->method('__invoke')
             ->with('admin.user', [], [], null, [])
             ->willReturn('/admin/user');

@@ -27,7 +27,8 @@ final class SendVerificationEmailListenerFactoryTest extends TestCase
     {
         $container = $this->createStub(ContainerInterface::class);
         $container->method('has')->willReturn(true);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [
                     'config',

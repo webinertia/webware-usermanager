@@ -43,7 +43,8 @@ final class RegistrationHandlerTest extends TestCase
     public function rendersFormOnFailedRegistration(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::registration')
             ->willReturn('<form>');
@@ -65,7 +66,8 @@ final class RegistrationHandlerTest extends TestCase
     public function rendersFormWhenNoResultPresent(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::registration')
             ->willReturn('<form>');

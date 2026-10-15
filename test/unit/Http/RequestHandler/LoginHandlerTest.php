@@ -52,17 +52,19 @@ final class LoginHandlerTest extends TestCase
         $messenger->method('getMessages')->willReturn(['danger' => ['Invalid email or password.']]);
 
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::login', ['flashMessages' => ['danger' => ['Invalid email or password.']]])
             ->willReturn('<form>');
 
         $handler = new LoginHandler($template);
 
-        $request = new ServerRequest()->withAttribute(
-            UserInterface::class,
-            new User(roleId: Role::Guest->value),
-        )
+        $request = new ServerRequest()
+            ->withAttribute(
+                UserInterface::class,
+                new User(roleId: Role::Guest->value),
+            )
             ->withAttribute(SystemMessengerInterface::class, $messenger);
 
         $response = $handler->handle($request);
@@ -76,10 +78,11 @@ final class LoginHandlerTest extends TestCase
     {
         $handler = new LoginHandler($this->createStub(TemplateRendererInterface::class));
 
-        $request = new ServerRequest()->withAttribute(UserInterface::class, new User(
-            email : 'jane@example.com',
-            roleId: 'Member',
-        ))
+        $request = new ServerRequest()
+            ->withAttribute(UserInterface::class, new User(
+                email : 'jane@example.com',
+                roleId: 'Member',
+            ))
             ->withAttribute(Attribute::Request->value, true);
 
         $response = $handler->handle($request);

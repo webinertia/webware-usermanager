@@ -31,7 +31,8 @@ final class UserListMiddlewareTest extends TestCase
         $users = [new User(id: 1), new User(id: 2)];
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus
+            ->expects($this->once())
             ->method('handle')
             ->with($this->isInstanceOf(FetchUsersQuery::class))
             ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, $users));
@@ -39,7 +40,8 @@ final class UserListMiddlewareTest extends TestCase
         $attached = null;
 
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static function (ServerRequestInterface $request) use (&$attached): ResponseInterface {
@@ -61,8 +63,7 @@ final class UserListMiddlewareTest extends TestCase
     public function returnsTheHandlerResponseUnchanged(): void
     {
         $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
-            ->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, []));
+        $messageBus->method('handle')->willReturn(new QueryResult(new FetchUsersQuery(), MessageStatus::Success, []));
 
         $expected = new HtmlResponse('<ul>', 201);
 

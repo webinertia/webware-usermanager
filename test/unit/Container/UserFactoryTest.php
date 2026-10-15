@@ -21,7 +21,8 @@ final class UserFactoryTest extends TestCase
     public function invokeRejectsEmptyData(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [User::class, new User()],
             ]);
@@ -37,7 +38,8 @@ final class UserFactoryTest extends TestCase
     public function invokeReturnsCallableThatHydratesUser(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [User::class, new User()],
             ]);

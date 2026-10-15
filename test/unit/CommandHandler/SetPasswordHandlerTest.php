@@ -27,7 +27,8 @@ final class SetPasswordHandlerTest extends TestCase
         );
 
         $users = $this->createMock(UserRepositoryInterface::class);
-        $users->expects($this->once())
+        $users
+            ->expects($this->once())
             ->method('update')
             ->with(4, [
                 'passwordHash'        => $command->passwordHash,

@@ -134,7 +134,8 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
 
         $request = $this->process(
             bus    : $this->busReturning($this->flaggedUser()),
-            request: new ServerRequest([], [], null, 'POST')->withAttribute('token', $token)
+            request: new ServerRequest([], [], null, 'POST')
+                ->withAttribute('token', $token)
                 ->withParsedBody([
                     'passwordHash'        => 'correct horse battery staple',
                     'confirmPasswordHash' => 'a different password',
@@ -156,7 +157,8 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
 
         $dispatched = [];
         $bus        = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(3))
+        $bus
+            ->expects($this->exactly(3))
             ->method('handle')
             ->willReturnCallback(
                 static function (MessageInterface $message) use (&$dispatched, $user): ResultInterface {
@@ -171,13 +173,15 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
             );
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())
+        $messenger
+            ->expects($this->once())
             ->method('success')
             ->with('Your password is set. You may now sign in.', 1, false);
 
         $request = $this->process(
             bus: $bus,
-            request: new ServerRequest([], [], null, 'POST')->withAttribute('token', $token)
+            request: new ServerRequest([], [], null, 'POST')
+                ->withAttribute('token', $token)
                 ->withAttribute(SystemMessengerInterface::class, $messenger)
                 ->withParsedBody([
                     'passwordHash'        => 'correct horse battery staple',
@@ -277,7 +281,8 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
     ): ServerRequestInterface {
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $req) use (
                 &$capturedRequest,

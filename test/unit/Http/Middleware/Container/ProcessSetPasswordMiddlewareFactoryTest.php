@@ -26,7 +26,8 @@ final class ProcessSetPasswordMiddlewareFactoryTest extends TestCase
     {
         $container = $this->createStub(ContainerInterface::class);
         $container->method('has')->willReturn(true);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 ['config', [UserInterface::class => ['verification_token_ttl' => 3600]]],
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],

@@ -22,7 +22,8 @@ final class UpdateUserModalMiddlewareFactoryTest extends TestCase
     public function invokeBuildsMiddleware(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [

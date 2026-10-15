@@ -46,7 +46,8 @@ final class CreateUserFlowTest extends TestCase
     public function aFailedCommandReturnsTheModalAt500WithTheAssignableRoles(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::create-user-modal', [
                 'assignableRoles' => ['Member'],
@@ -78,7 +79,8 @@ final class CreateUserFlowTest extends TestCase
     public function aValidationFailureReturnsTheModalAt422WithErrorsAndOldInput(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::create-user-modal', [
                 'assignableRoles' => ['Member'],
@@ -171,7 +173,8 @@ final class CreateUserFlowTest extends TestCase
         $actor->method('getRoles')->willReturn(['Administrator']);
         $actor->method('getIdentity')->willReturn('admin@example.com');
 
-        return new ServerRequest()->withMethod('POST')
+        return new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute(UserInterface::class, $actor)
             ->withParsedBody([
                 'firstName' => 'Jane',

@@ -37,9 +37,10 @@ final readonly class AuthenticateUserHandler implements QueryHandlerInterface
         $user = $this->users->authenticate($query->credential, $query->password);
 
         if (null === $user) {
-            $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                'Failed login attempt.',
-            )
+            $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)
+                ->setMessage(
+                    'Failed login attempt.',
+                )
                 ->setContext(['credential' => $query->credential]));
 
             return new QueryResult(
@@ -50,9 +51,10 @@ final readonly class AuthenticateUserHandler implements QueryHandlerInterface
         }
 
         if (! $user->active) {
-            $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-                "Failed login attempt for inactive user: {$user->email}",
-            )
+            $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)
+                ->setMessage(
+                    "Failed login attempt for inactive user: {$user->email}",
+                )
                 ->setContext(['credential' => $query->credential]));
 
             return new QueryResult(
@@ -62,9 +64,10 @@ final readonly class AuthenticateUserHandler implements QueryHandlerInterface
             );
         }
 
-        $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)->setMessage(
-            "{$user->firstName} {$user->lastName} authenticated successfully.",
-        )
+        $this->dispatcher->dispatch(new LogEvent(LogChannel::Security, Level::Info)
+            ->setMessage(
+                "{$user->firstName} {$user->lastName} authenticated successfully.",
+            )
             ->setContext(['identity' => $user->email]));
 
         return new QueryResult(

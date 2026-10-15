@@ -58,7 +58,8 @@ final class UpdateUserHandlerTest extends TestCase
         $users = [new User(id: 1)];
 
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::list-users', ['users' => $users])
             ->willReturn('<ul>');

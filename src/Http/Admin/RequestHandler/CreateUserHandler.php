@@ -51,7 +51,8 @@ final class CreateUserHandler implements RequestHandlerInterface
             && $state->result instanceof CommandResult
             && MessageStatus::Success === $state->result->getStatus()
         ) {
-            return $this->listHandler->handle($request)
+            return $this->listHandler
+                ->handle($request)
                 ->withHeader(Header::PushUrl->value, $this->listUrl)
                 ->withHeader(Header::Trigger->value, (string) json_encode(['closeModal' => null]));
         }

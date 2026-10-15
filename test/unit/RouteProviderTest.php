@@ -44,7 +44,8 @@ final class RouteProviderTest extends TestCase
         $prepared = [];
 
         $factory = $this->createStub(MiddlewareFactoryInterface::class);
-        $factory->method('prepare')
+        $factory
+            ->method('prepare')
             ->willReturnCallback(
                 static function (mixed $pipeline) use (&$prepared, $middleware): MiddlewareInterface {
                     if (is_array($pipeline)) {
@@ -57,7 +58,8 @@ final class RouteProviderTest extends TestCase
             );
 
         $collector = $this->createStub(RouteCollectorInterface::class);
-        $collector->method('get')
+        $collector
+            ->method('get')
             ->willReturnCallback(
                 static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => new Route(
                     $path,
@@ -66,7 +68,8 @@ final class RouteProviderTest extends TestCase
                     $name,
                 ),
             );
-        $collector->method('post')
+        $collector
+            ->method('post')
             ->willReturnCallback(
                 static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => new Route(
                     $path,
@@ -75,7 +78,8 @@ final class RouteProviderTest extends TestCase
                     $name,
                 ),
             );
-        $collector->method('route')
+        $collector
+            ->method('route')
             ->willReturnCallback(
                 static fn(
                     string $path,
@@ -157,7 +161,8 @@ final class RouteProviderTest extends TestCase
         $routes = [];
 
         $collector = $this->createMock(RouteCollectorInterface::class);
-        $collector->expects($this->exactly(7))
+        $collector
+            ->expects($this->exactly(7))
             ->method('get')
             ->willReturnCallback(
                 static function (string $path, MiddlewareInterface $mw, ?string $name = null) use (&$gets): Route {
@@ -166,7 +171,8 @@ final class RouteProviderTest extends TestCase
                     return new Route($path, $mw, ['GET'], $name);
                 },
             );
-        $collector->expects($this->exactly(6))
+        $collector
+            ->expects($this->exactly(6))
             ->method('post')
             ->willReturnCallback(
                 static function (string $path, MiddlewareInterface $mw, ?string $name = null) use (&$posts): Route {
@@ -175,7 +181,8 @@ final class RouteProviderTest extends TestCase
                     return new Route($path, $mw, ['POST'], $name);
                 },
             );
-        $collector->expects($this->exactly(3))
+        $collector
+            ->expects($this->exactly(3))
             ->method('route')
             ->willReturnCallback(
                 static function (
@@ -255,7 +262,8 @@ final class RouteProviderTest extends TestCase
         };
 
         $collector = $this->createStub(RouteCollectorInterface::class);
-        $collector->method('get')
+        $collector
+            ->method('get')
             ->willReturnCallback(
                 static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => $register(
                     $path,
@@ -264,7 +272,8 @@ final class RouteProviderTest extends TestCase
                     ['GET'],
                 ),
             );
-        $collector->method('post')
+        $collector
+            ->method('post')
             ->willReturnCallback(
                 static fn(string $path, MiddlewareInterface $mw, ?string $name = null): Route => $register(
                     $path,
@@ -273,7 +282,8 @@ final class RouteProviderTest extends TestCase
                     ['POST'],
                 ),
             );
-        $collector->method('route')
+        $collector
+            ->method('route')
             ->willReturnCallback(
                 static fn(
                     string $path,

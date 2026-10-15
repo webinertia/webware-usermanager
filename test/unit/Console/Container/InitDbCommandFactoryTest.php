@@ -19,7 +19,8 @@ final class InitDbCommandFactoryTest extends TestCase
     public function invokeBuildsCommandWithAdapter(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [AdapterInterface::class, $this->createStub(AdapterInterface::class)],
             ]);

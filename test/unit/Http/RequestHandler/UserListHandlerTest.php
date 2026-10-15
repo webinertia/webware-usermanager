@@ -33,7 +33,8 @@ final class UserListHandlerTest extends TestCase
         $handler = new UserListHandler(template: $template);
 
         $result  = new CommandResult($this->createStub(CommandInterface::class), MessageStatus::Success, null);
-        $request = new ServerRequest()->withAttribute(UserListMiddleware::class, ['users' => []])
+        $request = new ServerRequest()
+            ->withAttribute(UserListMiddleware::class, ['users' => []])
             ->withAttribute(CommandResult::class, $result);
 
         $response = $handler->handle($request);
@@ -62,7 +63,8 @@ final class UserListHandlerTest extends TestCase
     public function rendersAnEmptyListWhenTheMiddlewareDidNotRun(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::list-users', ['users' => []])
             ->willReturn('<ul>');
@@ -80,7 +82,8 @@ final class UserListHandlerTest extends TestCase
         $users = [new User(id: 1)];
 
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::list-users', ['users' => $users])
             ->willReturn('<ul>');

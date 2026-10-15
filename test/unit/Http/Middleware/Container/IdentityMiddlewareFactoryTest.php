@@ -23,7 +23,8 @@ final class IdentityMiddlewareFactoryTest extends TestCase
     public function invokeBuildsMiddleware(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [UserInterface::class, static fn(): User => new User()],

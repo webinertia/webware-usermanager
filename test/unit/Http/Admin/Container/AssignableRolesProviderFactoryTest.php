@@ -21,7 +21,8 @@ final class AssignableRolesProviderFactoryTest extends TestCase
     public function invokeBuildsProvider(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
             ]);

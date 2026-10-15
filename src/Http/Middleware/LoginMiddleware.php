@@ -53,12 +53,14 @@ final class LoginMiddleware implements MiddlewareInterface
         }
 
         /** @var AuthenticationResult $result */
-        $result = $this->messageBus->handle(
-            new AuthenticateUserQuery(
-                credential: $credential,
-                password  : $password,
-            ),
-        )->getResult();
+        $result = $this->messageBus
+            ->handle(
+                new AuthenticateUserQuery(
+                    credential: $credential,
+                    password  : $password,
+                ),
+            )
+            ->getResult();
 
         if (AuthenticationStatus::Success !== $result->status) {
             /** @var SystemMessengerInterface|null $messenger */

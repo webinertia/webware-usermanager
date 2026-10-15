@@ -27,7 +27,8 @@ final class UpdateUserHandlerTest extends TestCase
 
         $users = $this->createMock(UserRepositoryInterface::class);
         $users->method('findById')->willReturn($user);
-        $users->expects($this->once())
+        $users
+            ->expects($this->once())
             ->method('update')
             ->willThrowException(new RuntimeException('DB error'));
 
@@ -56,7 +57,8 @@ final class UpdateUserHandlerTest extends TestCase
 
         $users = $this->createMock(UserRepositoryInterface::class);
         $users->method('findById')->willReturn($user);
-        $users->expects($this->once())
+        $users
+            ->expects($this->once())
             ->method('update')
             ->with(1, [
                 'firstName' => 'Jane',

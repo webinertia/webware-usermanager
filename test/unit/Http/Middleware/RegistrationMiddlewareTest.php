@@ -40,7 +40,8 @@ final class RegistrationMiddlewareTest extends TestCase
         $password = bin2hex(random_bytes(16));
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (MessageInterface $message): CommandResult {
                 assert($message instanceof CreateUserCommand, description: 'Expected a CreateUserCommand');
@@ -49,13 +50,15 @@ final class RegistrationMiddlewareTest extends TestCase
             });
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())
+        $messenger
+            ->expects($this->once())
             ->method('success')
             ->with('Registration successful! Please check your email to verify your account.', 1, false);
 
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $request) use (
                 &$capturedRequest,
@@ -71,7 +74,8 @@ final class RegistrationMiddlewareTest extends TestCase
             filter    : InputFilterHelper::registrationDataFilter(),
         );
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute(SystemMessengerInterface::class, $messenger)
             ->withParsedBody([
                 'firstName'           => 'Jane',
@@ -91,7 +95,8 @@ final class RegistrationMiddlewareTest extends TestCase
     public function rendersErrorsWhenValidationFails(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with(
                 'user::registration',
@@ -105,7 +110,8 @@ final class RegistrationMiddlewareTest extends TestCase
             filter    : InputFilterHelper::registrationDataFilter(),
         );
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withParsedBody(['email' => 'jane@example.com']);
 
         $response = $middleware->process($request, $this->createStub(RequestHandlerInterface::class));
@@ -129,7 +135,8 @@ final class RegistrationMiddlewareTest extends TestCase
         );
 
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::registration', ['errors' => ['Email already registered.']])
             ->willReturn('<form>');
@@ -140,7 +147,8 @@ final class RegistrationMiddlewareTest extends TestCase
             filter    : InputFilterHelper::registrationDataFilter(),
         );
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withParsedBody([
                 'firstName'           => 'Jane',
                 'lastName'            => 'Doe',

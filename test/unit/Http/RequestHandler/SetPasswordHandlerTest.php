@@ -84,7 +84,8 @@ final class SetPasswordHandlerTest extends TestCase
     private function handler(): SetPasswordHandler
     {
         $template = $this->createStub(TemplateRendererInterface::class);
-        $template->method('render')
+        $template
+            ->method('render')
             ->willReturnCallback(
                 static fn(string $name): string => $name,
             );

@@ -227,7 +227,8 @@ final class InitDbCommand extends Command
             )) . ': ';
 
         return match ($name) {
-            'password' => new Question('Password: ')->setHidden(true)
+            'password' => new Question('Password: ')
+                ->setHidden(true)
                 ->setHiddenFallback(false),
             default    => new Question($prompt),
         };

@@ -26,7 +26,8 @@ final class AssignableRolesProviderTest extends TestCase
     public function asksForTheRolesTheActorsOwnRoleMayAssign(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->with($this->callback(
                 static fn(FetchAssignableRolesQuery $query): bool => 'Administrator' === $query->actorRoleId,

@@ -160,7 +160,8 @@ final class CreateUserHandlerTest extends TestCase
     private function expectingTemplateRender(array $variables): TemplateRendererInterface
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::create-user-modal', $variables)
             ->willReturn('<form>');

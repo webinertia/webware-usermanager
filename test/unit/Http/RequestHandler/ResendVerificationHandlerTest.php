@@ -42,7 +42,8 @@ final class ResendVerificationHandlerTest extends TestCase
     public function rendersFormWhenNoTemplateParams(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::resend-verification')
             ->willReturn('<form>');
@@ -61,7 +62,8 @@ final class ResendVerificationHandlerTest extends TestCase
     public function rendersTemplateParamsWhenPresent(): void
     {
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::resend-verification', ['sent' => true])
             ->willReturn('<p>sent</p>');

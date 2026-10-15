@@ -60,7 +60,8 @@ trait PhpDbAdapterMockTrait
         $driver->method('getConnection')->willReturn($connection);
         $connection->method('getLastGeneratedValue')->willReturn($lastGeneratedValue);
         $platform->method('getSqlPlatformDecorator')->willReturn($decorator);
-        $decorator->method('setSubject')
+        $decorator
+            ->method('setSubject')
             ->willReturnCallback(
                 function (SqlInterface|PreparableSqlInterface|null $subject) use (
                     $decorator,
@@ -121,7 +122,8 @@ trait PhpDbAdapterMockTrait
         $result->method('getFieldCount')->willReturn(0);
         $result->method('isBuffered')->willReturn(false);
         $result->method('getAffectedRows')->willReturn($affectedRows);
-        $result->method('valid')
+        $result
+            ->method('valid')
             ->willReturnOnConsecutiveCalls(
                 ...[...array_fill(0, count($rows), value: true), false],
             );

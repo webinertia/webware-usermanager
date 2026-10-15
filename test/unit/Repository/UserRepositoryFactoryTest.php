@@ -29,7 +29,8 @@ final class UserRepositoryFactoryTest extends TestCase
         $schemaFactory = new SchemaFactory();
 
         $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')
+        $container
+            ->method('get')
             ->willReturnMap([
                 ['config', ['authentication' => ['username' => 'email']]],
                 [SchemaFactory::class, $schemaFactory],

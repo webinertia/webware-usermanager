@@ -31,7 +31,8 @@ final class ToggleUserActiveHandlerTest extends TestCase
         );
 
         $template = $this->createMock(TemplateRendererInterface::class);
-        $template->expects($this->once())
+        $template
+            ->expects($this->once())
             ->method('render')
             ->with('user::partials/user-row', ['user' => $user, 'layout' => false, 'body' => false])
             ->willReturn('<tr>');

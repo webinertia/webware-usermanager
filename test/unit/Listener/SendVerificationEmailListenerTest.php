@@ -35,7 +35,8 @@ final class SendVerificationEmailListenerTest extends TestCase
         $event      = $this->event();
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (object $message) use (&$dispatched, $result): CommandResultInterface {
                 $dispatched = $message;
@@ -44,7 +45,8 @@ final class SendVerificationEmailListenerTest extends TestCase
             });
 
         $urlHelper = $this->createMock(UrlHelper::class);
-        $urlHelper->expects($this->once())
+        $urlHelper
+            ->expects($this->once())
             ->method('__invoke')
             ->with('user.verify.email.read', ['token' => $event->getToken()])
             ->willReturn('/user/verify-email');
@@ -73,7 +75,8 @@ final class SendVerificationEmailListenerTest extends TestCase
         $event      = $this->event(passwordSetRequired: 1);
 
         $messageBus = $this->createStub(MessageBusInterface::class);
-        $messageBus->method('handle')
+        $messageBus
+            ->method('handle')
             ->willReturnCallback(static function (object $message) use (&$dispatched): CommandResultInterface {
                 $dispatched = $message;
 
@@ -81,7 +84,8 @@ final class SendVerificationEmailListenerTest extends TestCase
             });
 
         $urlHelper = $this->createMock(UrlHelper::class);
-        $urlHelper->expects($this->once())
+        $urlHelper
+            ->expects($this->once())
             ->method('__invoke')
             ->with('user.set.password.read', ['token' => $event->getToken()])
             ->willReturn('/user/set-password');

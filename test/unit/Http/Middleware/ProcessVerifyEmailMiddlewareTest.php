@@ -46,7 +46,8 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         $commandResult = new CommandResult(new ActivateUserCommand(id: 3), MessageStatus::Success, 1);
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(2))
+        $bus
+            ->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(
                 static fn(MessageInterface $message): ResultInterface => $message
@@ -56,13 +57,15 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             );
 
         $messenger = $this->createMock(SystemMessengerInterface::class);
-        $messenger->expects($this->once())
+        $messenger
+            ->expects($this->once())
             ->method('success')
             ->with('Email verified! You may now sign in.', 1, false);
 
         $request = $this->process(
             bus: $bus,
-            request: new ServerRequest()->withAttribute('token', 'x')
+            request: new ServerRequest()
+                ->withAttribute('token', 'x')
                 ->withAttribute(SystemMessengerInterface::class, $messenger),
         );
 
@@ -79,7 +82,8 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         );
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(
                 static fn(MessageInterface $message): ResultInterface => new QueryResult(
@@ -178,7 +182,8 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
         $commandResult = new CommandResult(new ActivateUserCommand(id: 3), MessageStatus::Success, 1);
 
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->exactly(2))
+        $bus
+            ->expects($this->exactly(2))
             ->method('handle')
             ->willReturnCallback(
                 static fn(MessageInterface $message): ResultInterface => $message
@@ -199,7 +204,8 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
     private function middleware(MessageBusInterface $bus, int $tokenTtl = 3600): ProcessVerifyEmailMiddleware
     {
         $urlHelper = $this->createStub(UrlHelper::class);
-        $urlHelper->method('__invoke')
+        $urlHelper
+            ->method('__invoke')
             ->willReturnCallback(
                 static fn(string $routeName, array $params = []): string => (
                     '/user/'
@@ -227,7 +233,8 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
     ): ServerRequestInterface {
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $req) use (
                 &$capturedRequest,

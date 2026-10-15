@@ -31,7 +31,8 @@ final class ProcessToggleUserActiveMiddlewareTest extends TestCase
     public function dispatchesToggleCommandAndForwardsResult(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->with($this->callback(
                 static fn($command): bool => $command instanceof ToggleUserActiveCommand && 42 === $command->id,
@@ -44,7 +45,8 @@ final class ProcessToggleUserActiveMiddlewareTest extends TestCase
 
         $capturedRequest = null;
         $handler         = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())
+        $handler
+            ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(static function (ServerRequestInterface $request) use (
                 &$capturedRequest,
@@ -56,7 +58,8 @@ final class ProcessToggleUserActiveMiddlewareTest extends TestCase
 
         $middleware = new ProcessToggleUserActiveMiddleware(messageBus: $bus);
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute('id', '42');
 
         $response = $middleware->process($request, $handler);
@@ -69,7 +72,8 @@ final class ProcessToggleUserActiveMiddlewareTest extends TestCase
     public function fallsBackToZeroWhenIdIsInvalid(): void
     {
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->expects($this->once())
+        $bus
+            ->expects($this->once())
             ->method('handle')
             ->with($this->callback(
                 static fn($command): bool => $command instanceof ToggleUserActiveCommand && 0 === $command->id,
@@ -85,7 +89,8 @@ final class ProcessToggleUserActiveMiddlewareTest extends TestCase
 
         $middleware = new ProcessToggleUserActiveMiddleware(messageBus: $bus);
 
-        $request = new ServerRequest()->withMethod('POST')
+        $request = new ServerRequest()
+            ->withMethod('POST')
             ->withAttribute('id', 'not-an-integer');
 
         $response = $middleware->process($request, $handler);

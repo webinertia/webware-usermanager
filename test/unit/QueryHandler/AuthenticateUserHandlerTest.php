@@ -42,7 +42,8 @@ final class AuthenticateUserHandlerTest extends TestCase
         $users->method('authenticate')->willReturn($user);
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $dispatcher->expects($this->once())
+        $dispatcher
+            ->expects($this->once())
             ->method('dispatch')
             ->with(static::callback(
                 static fn(LogEvent $event): bool => (
@@ -79,7 +80,8 @@ final class AuthenticateUserHandlerTest extends TestCase
         $users->method('authenticate')->willReturn($user);
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $dispatcher->expects($this->once())
+        $dispatcher
+            ->expects($this->once())
             ->method('dispatch')
             ->with(static::callback(
                 static fn(LogEvent $event): bool => (
@@ -110,7 +112,8 @@ final class AuthenticateUserHandlerTest extends TestCase
         $users->method('authenticate')->willReturn(null);
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $dispatcher->expects($this->once())
+        $dispatcher
+            ->expects($this->once())
             ->method('dispatch')
             ->with(static::callback(
                 static fn(LogEvent $event): bool => (

@@ -30,7 +30,8 @@ final class ResendVerificationEmailHandler implements CommandHandlerInterface
         $verifyUrl = htmlspecialchars($command->verificationUrl, flags: ENT_QUOTES, encoding: 'UTF-8');
 
         $sent = $this->mailer->send(
-            new Message()->withTo($command->to, $command->toName)
+            new Message()
+                ->withTo($command->to, $command->toName)
                 ->withSubject($command->subject)
                 ->withHtml()
                 ->withBody(
