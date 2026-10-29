@@ -39,7 +39,7 @@
         "monolog/monolog": "^3.4",
         "php-db/phpdb-mysql": "^0.5.x-dev",
         "php-db/phpdb-validator": "0.1.x-dev",
-        "php-standard-library/type": "^6.2",
+        "php-standard-library/type": "^6.4.2",
         "psr/container": "^2.0",
         "psr/event-dispatcher": "^1.0",
         "psr/http-message": "^2.0",
