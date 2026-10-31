@@ -23,6 +23,28 @@ final class CreateUserCommand implements NamedCommandInterface, NotificationCapa
 
     public readonly string $failureMessage;
 
+    public private(set) string $tokenCreatedAt {
+        get => $this->tokenCreatedAt;
+        set(DateTimeImmutable|string $value) {
+            if ($value instanceof DateTimeImmutable) {
+                $this->tokenCreatedAt = $value->format(UserInterface::DATETIME_FORMAT);
+            } else {
+                $this->tokenCreatedAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
+            }
+        }
+    }
+
+    public private(set) string $createdAt {
+        get => $this->createdAt;
+        set(DateTimeImmutable|string $value) {
+            if ($value instanceof DateTimeImmutable) {
+                $this->createdAt = $value->format(UserInterface::DATETIME_FORMAT);
+            } else {
+                $this->createdAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
+            }
+        }
+    }
+
     // @mago-expect lint:excessive-parameter-list - accepted: the promoted properties are the row shape; splitting the list changes every call site.
     public function __construct(
         public private(set) string $firstName {
@@ -75,28 +97,12 @@ final class CreateUserCommand implements NamedCommandInterface, NotificationCapa
                 $this->passwordSetRequired = $value;
             }
         },
-        public private(set) DateTimeImmutable|string $tokenCreatedAt = new DateTimeImmutable() {
-            get => $this->tokenCreatedAt;
-            set(DateTimeImmutable|string $value) {
-                if ($value instanceof DateTimeImmutable) {
-                    $this->tokenCreatedAt = $value->format(UserInterface::DATETIME_FORMAT);
-                } else {
-                    $this->tokenCreatedAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
-                }
-            }
-        },
-        public private(set) DateTimeImmutable|string $createdAt = new DateTimeImmutable() {
-            get => $this->createdAt;
-            set(DateTimeImmutable|string $value) {
-                if ($value instanceof DateTimeImmutable) {
-                    $this->createdAt = $value->format(UserInterface::DATETIME_FORMAT);
-                } else {
-                    $this->createdAt = new DateTimeImmutable($value)->format(UserInterface::DATETIME_FORMAT);
-                }
-            }
-        },
+        DateTimeImmutable|string|null $tokenCreatedAt = null,
+        DateTimeImmutable|string|null $createdAt = null,
     ) {
         $this->successMessage = 'User created.';
         $this->failureMessage = 'User could not be created. Please try again.';
+        $this->tokenCreatedAt = $tokenCreatedAt ?? new DateTimeImmutable();
+        $this->createdAt      = $createdAt ?? new DateTimeImmutable();
     }
 }
