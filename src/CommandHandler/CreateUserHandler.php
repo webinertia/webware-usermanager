@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\UserManager\CommandHandler;
 
-use DateTimeImmutable;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Webware\Core\UserInterface;
 use Webware\MessageBus\Command\CommandResult;
 use Webware\MessageBus\CommandHandlerInterface;
 use Webware\MessageBus\MessageStatus;
@@ -32,8 +30,8 @@ final class CreateUserHandler implements CommandHandlerInterface
             'verificationToken'   => $command->verificationToken,
             'active'              => $command->active,
             'passwordSetRequired' => $command->passwordSetRequired,
-            'tokenCreatedAt'      => $this->formatTimestamp($command->tokenCreatedAt),
-            'createdAt'           => $this->formatTimestamp($command->createdAt),
+            'tokenCreatedAt'      => $command->tokenCreatedAt,
+            'createdAt'           => $command->createdAt,
         ]);
 
         if ($result) {
@@ -45,16 +43,5 @@ final class CreateUserHandler implements CommandHandlerInterface
         }
 
         return new CommandResult($command, MessageStatus::Failure, 'Failed to save user.');
-    }
-
-    /**
-     * The command accepts either form but only ever stores the formatted string, and its default
-     * is still a DateTimeImmutable, so the payload is normalized here before it reaches the repository.
-     */
-    private function formatTimestamp(DateTimeImmutable|string $value): string
-    {
-        return $value instanceof DateTimeImmutable
-            ? $value->format(UserInterface::DATETIME_FORMAT)
-            : $value;
     }
 }
