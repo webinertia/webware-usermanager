@@ -78,7 +78,7 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * @param list<string> $selectColumns
-     * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
+     * @param PredicateInterface|Sql\Where|array<string, bool|float|int|string|null|PredicateInterface|Sql\ArgumentInterface|Sql\ExpressionInterface>|string|Closure|null $where
      * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      * @throws PslTypeException
      * @throws ExceptionInterface
@@ -162,7 +162,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<string, scalar|null> $data
      * @throws ExceptionInterface
      */
     #[Override]
@@ -177,7 +177,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<string, scalar|null> $data
      * @throws ExceptionInterface
      */
     #[Override]
@@ -192,7 +192,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<string, scalar|null> $data
      * @throws ExceptionInterface
      */
     #[Override]

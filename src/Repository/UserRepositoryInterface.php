@@ -54,7 +54,7 @@ interface UserRepositoryInterface extends MezzioUserRepositoryInterface
      * remaining optional arguments to filter the select.
      *
      * @param list<string> $selectColumns
-     * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
+     * @param PredicateInterface|Sql\Where|array<string, bool|float|int|string|null|PredicateInterface|Sql\ArgumentInterface|Sql\ExpressionInterface>|string|Closure|null $where
      * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      */
     // @mago-expect lint:excessive-parameter-list - accepted: the parameter list mirrors the SQL select findAll() builds.
@@ -85,21 +85,21 @@ interface UserRepositoryInterface extends MezzioUserRepositoryInterface
     /**
      * Persist a new user row and return the generated id.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, scalar|null> $data
      */
     public function insert(array $data): int;
 
     /**
      * Persist a user row and return the affected row count.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, scalar|null> $data
      */
     public function save(array $data): int;
 
     /**
      * Update an existing user row.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, scalar|null> $data
      */
     public function update(int $id, array $data): int;
 }
