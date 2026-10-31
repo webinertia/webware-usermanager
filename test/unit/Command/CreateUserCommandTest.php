@@ -81,12 +81,24 @@ final class CreateUserCommandTest extends TestCase
         static::assertSame('2024-01-02 03:04:05', $command->tokenCreatedAt);
     }
 
+    #[Test]
+    public function timestampStringsAreNormalizedToDatabaseFormat(): void
+    {
+        $command = $this->command(
+            createdAt     : '2024-01-02 03:04:05',
+            tokenCreatedAt: '2024-01-02 03:04:05',
+        );
+
+        static::assertSame('2024-01-02 03:04:05', $command->createdAt);
+        static::assertSame('2024-01-02 03:04:05', $command->tokenCreatedAt);
+    }
+
     private function command(
         string $email = 'jane@example.com',
         ?string $passwordHash = null,
         string $roleId = 'Member',
-        ?DateTimeImmutable $createdAt = null,
-        ?DateTimeImmutable $tokenCreatedAt = null,
+        DateTimeImmutable|string|null $createdAt = null,
+        DateTimeImmutable|string|null $tokenCreatedAt = null,
     ): CreateUserCommand {
         $parameters = [
             'firstName'         => 'Jane',
