@@ -7,6 +7,7 @@ namespace Webware\UserManager\Console;
 use JsonException;
 use Override;
 use PhpDb\Adapter\AdapterInterface;
+use PhpDb\Exception\ExceptionInterface as PhpDbException;
 use PhpDb\Sql\Ddl\CreateTable;
 use PhpDb\Sql\Ddl\DropTable;
 use PhpDb\Sql\Exception\InvalidArgumentException as SqlInvalidArgumentException;
@@ -26,6 +27,7 @@ use Symfony\Component\Console\Question\Question;
 use Webware\Core\Role;
 use Webware\UserManager\Console\Schema\UserSchema;
 use Webware\UserManager\Repository\Schema;
+use Webware\UserManager\Repository\UserRepositoryInterface;
 
 use function implode;
 use function in_array;
@@ -37,6 +39,9 @@ use function ucfirst;
 
 use const PASSWORD_DEFAULT;
 
+/**
+ * @import-type ColumnValue from UserRepositoryInterface
+ */
 #[AsCommand(
     name       : 'user:init-db',
     description: 'Create the user database schema and seed an initial user',
@@ -117,6 +122,7 @@ final class InitDbCommand extends Command
      * @throws ConsoleLogicException
      * @throws ConsoleRuntimeException
      * @throws JsonException
+     * @throws PhpDbException
      * @throws SqlInvalidArgumentException
      */
     #[Override]
@@ -192,6 +198,7 @@ final class InitDbCommand extends Command
     }
 
     /**
+     * @throws PhpDbException
      * @throws SqlInvalidArgumentException
      */
     private function executeDdl(Sql $sql, CreateTable|DropTable $ddl): void
@@ -203,8 +210,9 @@ final class InitDbCommand extends Command
     }
 
     /**
-     * @param array<string, mixed> $row
+     * @param array<string, ColumnValue> $row
      *
+     * @throws PhpDbException
      * @throws SqlInvalidArgumentException
      */
     private function executeInsert(Sql $sql, string $table, array $row): void

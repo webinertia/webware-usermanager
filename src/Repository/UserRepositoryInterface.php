@@ -10,11 +10,22 @@ use Override;
 use PhpDb\ResultSet\ResultSetInterface;
 use PhpDb\ResultSet\RowPrototypeResultSetInterface;
 use PhpDb\Sql;
+use PhpDb\Sql\ArgumentInterface;
+use PhpDb\Sql\ExpressionInterface;
 use PhpDb\Sql\Predicate\PredicateInterface;
+use PhpDb\Sql\Select;
+use PhpDb\Sql\SqlInterface;
 use SensitiveParameter;
 use Webware\Core\UserInterface;
 use Webware\UserManager\Entity\User;
 
+/**
+ * The argument shapes phpdb accepts, mirroring its own unions so they track upstream instead of
+ * being restated at each call site.
+ *
+ * @type WhereArg array<array-key, ArgumentInterface|ExpressionInterface|PredicateInterface|SqlInterface|list<bool|float|int|null|string>|null|scalar>
+ * @type ColumnValue ExpressionInterface|Select|null|scalar
+ */
 interface UserRepositoryInterface extends MezzioUserRepositoryInterface
 {
     /**
@@ -54,7 +65,7 @@ interface UserRepositoryInterface extends MezzioUserRepositoryInterface
      * remaining optional arguments to filter the select.
      *
      * @param list<string> $selectColumns
-     * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
+     * @param PredicateInterface|Sql\Where|WhereArg|string|Closure|null $where
      * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      */
     // @mago-expect lint:excessive-parameter-list - accepted: the parameter list mirrors the SQL select findAll() builds.
@@ -85,7 +96,7 @@ interface UserRepositoryInterface extends MezzioUserRepositoryInterface
     /**
      * Persist a new user row and return the generated id.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, ColumnValue> $data
      */
     public function insert(array $data): int;
 
@@ -99,7 +110,7 @@ interface UserRepositoryInterface extends MezzioUserRepositoryInterface
     /**
      * Update an existing user row.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, ColumnValue> $data
      */
     public function update(int $id, array $data): int;
 }
