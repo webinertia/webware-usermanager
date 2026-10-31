@@ -21,6 +21,10 @@ use Webware\UserManager\Entity\User;
 use function password_verify;
 
 // @mago-expect lint:too-many-methods - accepted: the repository's public surface mirrors UserRepositoryInterface.
+/**
+ * @import-type WhereArg from UserRepositoryInterface
+ * @import-type ColumnValue from UserRepositoryInterface
+ */
 final class UserRepository implements UserRepositoryInterface
 {
     public function __construct(
@@ -78,7 +82,7 @@ final class UserRepository implements UserRepositoryInterface
 
     /**
      * @param list<string> $selectColumns
-     * @param PredicateInterface|Sql\Where|array<string, mixed>|string|Closure|null $where
+     * @param PredicateInterface|Sql\Where|WhereArg|string|Closure|null $where
      * @param list<array{table: string, on: string, columns?: list<string>|string, type?: string}>|null $joins
      * @throws PslTypeException
      * @throws ExceptionInterface
@@ -162,7 +166,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<string, ColumnValue> $data
      * @throws ExceptionInterface
      */
     #[Override]
@@ -192,7 +196,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<string, ColumnValue> $data
      * @throws ExceptionInterface
      */
     #[Override]
