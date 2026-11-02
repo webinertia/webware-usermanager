@@ -3763,12 +3763,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-admin.git",
-                "reference": "1932c74273a8bbe4f52d738b4c21a7153cd1c9c5"
+                "reference": "6903c101a6bf5ae051e00ab57cdf0d83a3f60f34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/1932c74273a8bbe4f52d738b4c21a7153cd1c9c5",
-                "reference": "1932c74273a8bbe4f52d738b4c21a7153cd1c9c5",
+                "url": "https://api.github.com/repos/webinertia/webware-admin/zipball/6903c101a6bf5ae051e00ab57cdf0d83a3f60f34",
+                "reference": "6903c101a6bf5ae051e00ab57cdf0d83a3f60f34",
                 "shasum": ""
             },
             "require": {
@@ -3831,8 +3831,8 @@
                 "issues": "https://github.com/webinertia/webware-admin/issues",
                 "source": "https://github.com/webinertia/webware-admin/tree/1.0.x"
             },
-            "time": "2026-11-02T00:04:50+00:00",
-            "published-time": "2026-11-02T00:04:54+00:00"
+            "time": "2026-11-02T03:34:24+00:00",
+            "published-time": "2026-11-02T03:34:29+00:00"
         },
         {
             "name": "webware/webware-core",
@@ -3967,12 +3967,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-htmx.git",
-                "reference": "dc7d26bc9cd0a4b2257b0ad3198656956dc814f3"
+                "reference": "b0d2ebe697c1d6ecf14eef42f264a06450cb7a08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-htmx/zipball/dc7d26bc9cd0a4b2257b0ad3198656956dc814f3",
-                "reference": "dc7d26bc9cd0a4b2257b0ad3198656956dc814f3",
+                "url": "https://api.github.com/repos/webinertia/webware-htmx/zipball/b0d2ebe697c1d6ecf14eef42f264a06450cb7a08",
+                "reference": "b0d2ebe697c1d6ecf14eef42f264a06450cb7a08",
                 "shasum": ""
             },
             "require": {
@@ -4026,8 +4026,8 @@
                 "issues": "https://github.com/webinertia/webware-htmx/issues",
                 "source": "https://github.com/webinertia/webware-htmx/tree/1.0.x"
             },
-            "time": "2026-11-02T00:05:02+00:00",
-            "published-time": "2026-11-02T00:05:07+00:00"
+            "time": "2026-11-02T03:34:52+00:00",
+            "published-time": "2026-11-02T03:34:56+00:00"
         },
         {
             "name": "webware/webware-log",
@@ -13399,12 +13399,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinertia/webware-console.git",
-                "reference": "b35bb34c5ea70739a6de8df2590c44093bfc5700"
+                "reference": "5da57bbbd6435caf036cc391ef36195748c5a06b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/b35bb34c5ea70739a6de8df2590c44093bfc5700",
-                "reference": "b35bb34c5ea70739a6de8df2590c44093bfc5700",
+                "url": "https://api.github.com/repos/webinertia/webware-console/zipball/5da57bbbd6435caf036cc391ef36195748c5a06b",
+                "reference": "5da57bbbd6435caf036cc391ef36195748c5a06b",
                 "shasum": ""
             },
             "require": {
@@ -13452,8 +13452,8 @@
                 "issues": "https://github.com/webinertia/webware-console/issues",
                 "source": "https://github.com/webinertia/webware-console/tree/1.0.x"
             },
-            "time": "2026-11-02T00:04:53+00:00",
-            "published-time": "2026-11-02T00:04:57+00:00"
+            "time": "2026-11-02T03:34:28+00:00",
+            "published-time": "2026-11-02T03:34:33+00:00"
         },
         {
             "name": "webware/webware-tools",
