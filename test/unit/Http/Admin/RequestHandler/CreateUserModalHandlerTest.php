@@ -11,23 +11,21 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webware\Core\UserInterface;
-use Webware\MessageBus\MessageBusInterface;
-use Webware\MessageBus\MessageStatus;
-use Webware\MessageBus\Query\QueryResult;
 use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserModalHandler;
-use Webware\UserManager\Query\FetchAssignableRolesQuery;
+use WebwareTest\UserManager\Support\MessageBus\MessageBusDoublesTrait;
 
 #[CoversClass(CreateUserModalHandler::class)]
 #[CoversMethod(CreateUserModalHandler::class, '__construct')]
 #[CoversMethod(CreateUserModalHandler::class, 'handle')]
 final class CreateUserModalHandlerTest extends TestCase
 {
+    use MessageBusDoublesTrait;
+
     #[Test]
     public function rendersAnEmptyRoleListWhenTheActorAttributeIsMissing(): void
     {
-        $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->never())->method('handle');
+        $messageBus = $this->messageBusThatIsNeverUsed();
 
         $template = $this->expectingEmptyRoles();
 
@@ -42,8 +40,7 @@ final class CreateUserModalHandlerTest extends TestCase
     #[Test]
     public function rendersAnEmptyRoleListWhenTheActorHasNoRole(): void
     {
-        $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->never())->method('handle');
+        $messageBus = $this->messageBusThatIsNeverUsed();
 
         $template = $this->expectingEmptyRoles();
 
@@ -60,18 +57,7 @@ final class CreateUserModalHandlerTest extends TestCase
     #[Test]
     public function rendersTheModalWithTheAssignableRoles(): void
     {
-        $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus
-            ->expects($this->once())
-            ->method('handle')
-            ->with($this->callback(
-                static fn(FetchAssignableRolesQuery $query): bool => 'Administrator' === $query->actorRoleId,
-            ))
-            ->willReturn(new QueryResult(
-                new FetchAssignableRolesQuery(actorRoleId: 'Administrator'),
-                MessageStatus::Success,
-                ['Administrator', 'Member'],
-            ));
+        $messageBus = $this->messageBusAnsweringWithRoles('Administrator', ['Administrator', 'Member']);
 
         $template = $this->createMock(TemplateRendererInterface::class);
         $template

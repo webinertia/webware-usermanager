@@ -10,15 +10,17 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Webware\MessageBus\MessageBusInterface;
 use Webware\UserManager\Http\Admin\AssignableRolesProvider;
 use Webware\UserManager\Http\Admin\RequestHandler\Container\CreateUserModalHandlerFactory;
 use Webware\UserManager\Http\Admin\RequestHandler\CreateUserModalHandler;
+use WebwareTest\UserManager\Support\MessageBus\MessageBusDoublesTrait;
 
 #[CoversClass(CreateUserModalHandlerFactory::class)]
 #[CoversMethod(CreateUserModalHandlerFactory::class, '__invoke')]
 final class CreateUserModalHandlerFactoryTest extends TestCase
 {
+    use MessageBusDoublesTrait;
+
     #[Test]
     public function invokeBuildsHandler(): void
     {
@@ -27,10 +29,9 @@ final class CreateUserModalHandlerFactoryTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 [TemplateRendererInterface::class, $this->createStub(TemplateRendererInterface::class)],
-                [MessageBusInterface::class, $this->createStub(MessageBusInterface::class)],
                 [
                     AssignableRolesProvider::class,
-                    new AssignableRolesProvider($this->createStub(MessageBusInterface::class)),
+                    new AssignableRolesProvider($this->messageBusStub()),
                 ],
             ]);
 
