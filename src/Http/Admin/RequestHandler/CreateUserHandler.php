@@ -89,9 +89,9 @@ final class CreateUserHandler implements RequestHandlerInterface
         }
 
         return match (true) {
-            [] !== $state->errors => 422,
+            [] !== $state->errors                   => 422,
             $state->result instanceof CommandResult => 500,
-            default => 200,
+            default                                 => 200,
         };
     }
 }

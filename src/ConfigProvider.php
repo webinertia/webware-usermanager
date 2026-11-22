@@ -114,9 +114,10 @@ final class ConfigProvider
     public function getAuthenticationConfig(): array
     {
         return [
-            'redirect'                                       => '/'
-                . Container\Configuration::getRouteSegment()
-                . '/login',
+            'redirect' =>
+                '/'
+                    . Container\Configuration::getRouteSegment()
+                    . '/login',
             'username'                                       => 'email',
             'password'                                       => 'password',
             Container\Configuration::POST_LOGIN_REDIRECT_KEY => Container\Configuration::POST_LOGIN_REDIRECT_VALUE,
@@ -127,14 +128,15 @@ final class ConfigProvider
     public function getCommandMap(): array
     {
         return [
-            Command\ActivateUserCommand::class                => CommandHandler\ActivateUserHandler::class,
-            Command\CreateUserCommand::class                  => CommandHandler\CreateUserHandler::class,
-            Command\RegenerateVerificationTokenCommand::class => CommandHandler\RegenerateVerificationTokenHandler::class,
-            Command\ResendVerificationEmailCommand::class     => CommandHandler\ResendVerificationEmailHandler::class,
-            Command\SendVerificationEmailCommand::class       => CommandHandler\SendVerificationEmailHandler::class,
-            Command\SetPasswordCommand::class                 => CommandHandler\SetPasswordHandler::class,
-            Command\ToggleUserActiveCommand::class            => CommandHandler\ToggleUserActiveHandler::class,
-            Command\UpdateUserCommand::class                  => CommandHandler\UpdateUserHandler::class,
+            Command\ActivateUserCommand::class            => CommandHandler\ActivateUserHandler::class,
+            Command\CreateUserCommand::class              => CommandHandler\CreateUserHandler::class,
+            Command\RegenerateVerificationTokenCommand::class =>
+                CommandHandler\RegenerateVerificationTokenHandler::class,
+            Command\ResendVerificationEmailCommand::class => CommandHandler\ResendVerificationEmailHandler::class,
+            Command\SendVerificationEmailCommand::class   => CommandHandler\SendVerificationEmailHandler::class,
+            Command\SetPasswordCommand::class             => CommandHandler\SetPasswordHandler::class,
+            Command\ToggleUserActiveCommand::class        => CommandHandler\ToggleUserActiveHandler::class,
+            Command\UpdateUserCommand::class              => CommandHandler\UpdateUserHandler::class,
         ];
     }
 
@@ -163,51 +165,79 @@ final class ConfigProvider
             ],
             'factories'  => [
                 // Registers the user factory under our own interface key.
-                UserInterface::class                                           => Container\UserFactory::class,
-                Http\Admin\RequestHandler\CreateUserHandler::class             => Http\Admin\RequestHandler\Container\CreateUserHandlerFactory::class,
-                Http\Admin\RequestHandler\ToggleUserActiveHandler::class       => Http\Admin\RequestHandler\Container\ToggleUserActiveHandlerFactory::class,
-                Http\Admin\RequestHandler\UpdateUserHandler::class             => Http\Admin\RequestHandler\Container\UpdateUserHandlerFactory::class,
-                Http\Admin\RequestHandler\UpdateUserModalHandler::class        => Http\Admin\RequestHandler\Container\UpdateUserModalHandlerFactory::class,
-                Http\Admin\RequestHandler\CreateUserModalHandler::class        => Http\Admin\RequestHandler\Container\CreateUserModalHandlerFactory::class,
-                Http\Admin\AssignableRolesProvider::class                      => Http\Admin\Container\AssignableRolesProviderFactory::class,
-                CommandHandler\CreateUserHandler::class                        => CommandHandler\Container\CreateUserHandlerFactory::class,
-                CommandHandler\ToggleUserActiveHandler::class                  => CommandHandler\Container\ToggleUserActiveHandlerFactory::class,
-                CommandHandler\UpdateUserHandler::class                        => CommandHandler\Container\UpdateUserHandlerFactory::class,
-                CommandHandler\ActivateUserHandler::class                      => CommandHandler\Container\ActivateUserHandlerFactory::class,
-                CommandHandler\RegenerateVerificationTokenHandler::class       => CommandHandler\Container\RegenerateVerificationTokenHandlerFactory::class,
-                CommandHandler\ResendVerificationEmailHandler::class           => CommandHandler\Container\ResendVerificationEmailHandlerFactory::class,
-                CommandHandler\SendVerificationEmailHandler::class             => CommandHandler\Container\SendVerificationEmailHandlerFactory::class,
-                CommandHandler\SetPasswordHandler::class                       => CommandHandler\Container\SetPasswordHandlerFactory::class,
-                QueryHandler\AuthenticateUserHandler::class                    => QueryHandler\Container\AuthenticateUserHandlerFactory::class,
-                QueryHandler\CheckUserActiveHandler::class                     => QueryHandler\Container\CheckUserActiveHandlerFactory::class,
-                QueryHandler\FetchAssignableRolesHandler::class                => QueryHandler\Container\FetchAssignableRolesHandlerFactory::class,
-                QueryHandler\FetchUserByEmailHandler::class                    => QueryHandler\Container\FetchUserByEmailHandlerFactory::class,
-                QueryHandler\FetchUserByIdHandler::class                       => QueryHandler\Container\FetchUserByIdHandlerFactory::class,
-                QueryHandler\FetchUserByVerificationTokenHandler::class        => QueryHandler\Container\FetchUserByVerificationTokenHandlerFactory::class,
-                QueryHandler\FetchUsersHandler::class                          => QueryHandler\Container\FetchUsersHandlerFactory::class,
-                Http\Middleware\IdentityMiddleware::class                      => Http\Middleware\Container\IdentityMiddlewareFactory::class,
-                Http\Middleware\LoginMiddleware::class                         => Http\Middleware\Container\LoginMiddlewareFactory::class,
-                Http\Middleware\ProcessVerifyEmailMiddleware::class            => Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory::class,
-                Http\Middleware\ProcessSetPasswordMiddleware::class            => Http\Middleware\Container\ProcessSetPasswordMiddlewareFactory::class,
-                Http\Middleware\ProcessResendVerificationMiddleware::class     => Http\Middleware\Container\ProcessResendVerificationMiddlewareFactory::class,
-                Http\Admin\Middleware\ProcessToggleUserActiveMiddleware::class => Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::class,
-                Http\Admin\Middleware\ProcessCreateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessCreateUserMiddlewareFactory::class,
-                Http\Admin\Middleware\ProcessUpdateUserMiddleware::class       => Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory::class,
-                Http\Admin\Middleware\UpdateUserModalMiddleware::class         => Http\Admin\Middleware\Container\UpdateUserModalMiddlewareFactory::class,
-                Http\Middleware\RegistrationMiddleware::class                  => Http\Middleware\Container\RegistrationMiddlewareFactory::class,
-                Http\Middleware\UserListMiddleware::class                      => Http\Middleware\Container\UserListMiddlewareFactory::class,
-                Repository\UserRepository::class                               => Repository\UserRepositoryFactory::class,
-                InitDbCommand::class                                           => InitDbCommandFactory::class,
-                RouteProvider::class                                           => Container\RouteProviderFactory::class,
-                Http\RequestHandler\LoginHandler::class                        => Http\RequestHandler\Container\LoginHandlerFactory::class,
-                Http\RequestHandler\LogoutHandler::class                       => Http\RequestHandler\Container\LogoutHandlerFactory::class,
-                Http\RequestHandler\RegistrationHandler::class                 => Http\RequestHandler\Container\RegistrationHandlerFactory::class,
-                Http\RequestHandler\ResendVerificationHandler::class           => Http\RequestHandler\Container\ResendVerificationHandlerFactory::class,
-                Http\RequestHandler\UserListHandler::class                     => Http\RequestHandler\Container\UserListHandlerFactory::class,
-                Http\RequestHandler\VerifyEmailHandler::class                  => Http\RequestHandler\Container\VerifyEmailHandlerFactory::class,
-                Http\RequestHandler\SetPasswordHandler::class                  => Http\RequestHandler\Container\SetPasswordHandlerFactory::class,
-                Listener\SendVerificationEmailListener::class                  => Listener\Container\SendVerificationEmailListenerFactory::class,
-                RegisterWidgetListener::class                                  => RegisterWidgetListenerFactory::class,
+                UserInterface::class                      => Container\UserFactory::class,
+                Http\Admin\RequestHandler\CreateUserHandler::class =>
+                    Http\Admin\RequestHandler\Container\CreateUserHandlerFactory::class,
+                Http\Admin\RequestHandler\ToggleUserActiveHandler::class =>
+                    Http\Admin\RequestHandler\Container\ToggleUserActiveHandlerFactory::class,
+                Http\Admin\RequestHandler\UpdateUserHandler::class =>
+                    Http\Admin\RequestHandler\Container\UpdateUserHandlerFactory::class,
+                Http\Admin\RequestHandler\UpdateUserModalHandler::class =>
+                    Http\Admin\RequestHandler\Container\UpdateUserModalHandlerFactory::class,
+                Http\Admin\RequestHandler\CreateUserModalHandler::class =>
+                    Http\Admin\RequestHandler\Container\CreateUserModalHandlerFactory::class,
+                Http\Admin\AssignableRolesProvider::class => Http\Admin\Container\AssignableRolesProviderFactory::class,
+                CommandHandler\CreateUserHandler::class   => CommandHandler\Container\CreateUserHandlerFactory::class,
+                CommandHandler\ToggleUserActiveHandler::class =>
+                    CommandHandler\Container\ToggleUserActiveHandlerFactory::class,
+                CommandHandler\UpdateUserHandler::class   => CommandHandler\Container\UpdateUserHandlerFactory::class,
+                CommandHandler\ActivateUserHandler::class => CommandHandler\Container\ActivateUserHandlerFactory::class,
+                CommandHandler\RegenerateVerificationTokenHandler::class =>
+                    CommandHandler\Container\RegenerateVerificationTokenHandlerFactory::class,
+                CommandHandler\ResendVerificationEmailHandler::class =>
+                    CommandHandler\Container\ResendVerificationEmailHandlerFactory::class,
+                CommandHandler\SendVerificationEmailHandler::class =>
+                    CommandHandler\Container\SendVerificationEmailHandlerFactory::class,
+                CommandHandler\SetPasswordHandler::class  => CommandHandler\Container\SetPasswordHandlerFactory::class,
+                QueryHandler\AuthenticateUserHandler::class =>
+                    QueryHandler\Container\AuthenticateUserHandlerFactory::class,
+                QueryHandler\CheckUserActiveHandler::class =>
+                    QueryHandler\Container\CheckUserActiveHandlerFactory::class,
+                QueryHandler\FetchAssignableRolesHandler::class =>
+                    QueryHandler\Container\FetchAssignableRolesHandlerFactory::class,
+                QueryHandler\FetchUserByEmailHandler::class =>
+                    QueryHandler\Container\FetchUserByEmailHandlerFactory::class,
+                QueryHandler\FetchUserByIdHandler::class  => QueryHandler\Container\FetchUserByIdHandlerFactory::class,
+                QueryHandler\FetchUserByVerificationTokenHandler::class =>
+                    QueryHandler\Container\FetchUserByVerificationTokenHandlerFactory::class,
+                QueryHandler\FetchUsersHandler::class     => QueryHandler\Container\FetchUsersHandlerFactory::class,
+                Http\Middleware\IdentityMiddleware::class => Http\Middleware\Container\IdentityMiddlewareFactory::class,
+                Http\Middleware\LoginMiddleware::class    => Http\Middleware\Container\LoginMiddlewareFactory::class,
+                Http\Middleware\ProcessVerifyEmailMiddleware::class =>
+                    Http\Middleware\Container\ProcessVerifyEmailMiddlewareFactory::class,
+                Http\Middleware\ProcessSetPasswordMiddleware::class =>
+                    Http\Middleware\Container\ProcessSetPasswordMiddlewareFactory::class,
+                Http\Middleware\ProcessResendVerificationMiddleware::class =>
+                    Http\Middleware\Container\ProcessResendVerificationMiddlewareFactory::class,
+                Http\Admin\Middleware\ProcessToggleUserActiveMiddleware::class =>
+                    Http\Admin\Middleware\Container\ProcessToggleUserActiveMiddlewareFactory::class,
+                Http\Admin\Middleware\ProcessCreateUserMiddleware::class =>
+                    Http\Admin\Middleware\Container\ProcessCreateUserMiddlewareFactory::class,
+                Http\Admin\Middleware\ProcessUpdateUserMiddleware::class =>
+                    Http\Admin\Middleware\Container\ProcessUpdateUserMiddlewareFactory::class,
+                Http\Admin\Middleware\UpdateUserModalMiddleware::class =>
+                    Http\Admin\Middleware\Container\UpdateUserModalMiddlewareFactory::class,
+                Http\Middleware\RegistrationMiddleware::class =>
+                    Http\Middleware\Container\RegistrationMiddlewareFactory::class,
+                Http\Middleware\UserListMiddleware::class => Http\Middleware\Container\UserListMiddlewareFactory::class,
+                Repository\UserRepository::class          => Repository\UserRepositoryFactory::class,
+                InitDbCommand::class                      => InitDbCommandFactory::class,
+                RouteProvider::class                      => Container\RouteProviderFactory::class,
+                Http\RequestHandler\LoginHandler::class   => Http\RequestHandler\Container\LoginHandlerFactory::class,
+                Http\RequestHandler\LogoutHandler::class  => Http\RequestHandler\Container\LogoutHandlerFactory::class,
+                Http\RequestHandler\RegistrationHandler::class =>
+                    Http\RequestHandler\Container\RegistrationHandlerFactory::class,
+                Http\RequestHandler\ResendVerificationHandler::class =>
+                    Http\RequestHandler\Container\ResendVerificationHandlerFactory::class,
+                Http\RequestHandler\UserListHandler::class =>
+                    Http\RequestHandler\Container\UserListHandlerFactory::class,
+                Http\RequestHandler\VerifyEmailHandler::class =>
+                    Http\RequestHandler\Container\VerifyEmailHandlerFactory::class,
+                Http\RequestHandler\SetPasswordHandler::class =>
+                    Http\RequestHandler\Container\SetPasswordHandlerFactory::class,
+                Listener\SendVerificationEmailListener::class =>
+                    Listener\Container\SendVerificationEmailListenerFactory::class,
+                RegisterWidgetListener::class             => RegisterWidgetListenerFactory::class,
             ],
             'invokables' => [
                 Entity\User::class   => Entity\User::class,

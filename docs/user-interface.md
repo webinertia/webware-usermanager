@@ -172,7 +172,7 @@ Any class used as the concrete implementation must:
 
 ## Checklist
 
-```
+```text
 □ Concrete user class implements Webware\Core\UserInterface
 □ Guests are User instances carrying UserInterface::GUEST_ROLE (no separate GuestUser class)
 □ User::getRoleId() returns roleId as-is (array|string|null); single-role consumers use Webware\Acl\Role\SingleRoleUserProxy

@@ -29,7 +29,7 @@ exactly what a task says, nothing else. Section numbers below refer to that plan
 
 **Report format (and nothing else):**
 
-```
+```text
 Task: <id>
 PR: <url>
 Gates: fmt=<0|1> lint=<0|1> analyze=<0|1> guard=<0|1> test=<0|1> mutation=<0|1>
@@ -161,7 +161,7 @@ Behavior. Input: `string $actorRoleId`. Source: `Webware\Core\AclInterface::getR
 `array<string, string[]>` (role id → direct parent role ids). Output: `new QueryResult(...)` with status
 Success and payload `list<string>`.
 
-```
+```text
 assignable(actor) = ({actor} ∪ ancestors(actor)) \ {Webware\Core\UserInterface::GUEST_ROLE}
 ```
 
