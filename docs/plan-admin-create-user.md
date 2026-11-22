@@ -461,7 +461,7 @@ PHPUnit 13 with `#[CoversClass]` and `#[CoversMethod]` on every test class (`req
 `createStub()` for value doubles and `createMock()` only with `expects()`. Floors: 100% line coverage target,
 95% MSI and covered MSI.
 
-**Unit**
+### Unit
 
 - Mocked identity: tests supply the actor through a **stubbed `Webware\Core\UserInterface` request attribute**; no
   real session is needed (answering your "can we not mock a session?"). Session persistence itself stays
@@ -483,7 +483,7 @@ PHPUnit 13 with `#[CoversClass]` and `#[CoversMethod]` on every test class (`req
 - `ConfigProviderTest`: query map, listener (P0), input filter, validators.
 - `RuleSeedsTest`: updated for `admin.user.create.modal`.
 
-**Integration**
+### Integration
 
 - A middleware-stack test with the real `InputFilterPluginManager` and an in-memory registry: an Administrator
   cannot create a Developer, a Developer can.
