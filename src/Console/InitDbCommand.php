@@ -173,7 +173,7 @@ final class InitDbCommand extends Command
             }
 
             $input->setArgument(
-                name: $name,
+                name : $name,
                 value: $helper->ask($input, $output, $this->questionFor($name)),
             );
         }

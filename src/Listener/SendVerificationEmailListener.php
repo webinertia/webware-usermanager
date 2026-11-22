@@ -38,13 +38,14 @@ final class SendVerificationEmailListener
      */
     public function __invoke(SendVerificationEmailEvent $event): void
     {
-        $command         = $event->getTarget();
-        $token           = $command->verificationToken;
-        $verificationUrl = rtrim(
-            string    : $this->baseUrl,
-            characters: '/',
-        )
-        . ($this->userUrl)($this->routeName($command), ['token' => $token]);
+        $command = $event->getTarget();
+        $token   = $command->verificationToken;
+        $verificationUrl =
+            rtrim(
+                string    : $this->baseUrl,
+                characters: '/',
+            )
+            . ($this->userUrl)($this->routeName($command), ['token' => $token]);
 
         $this->messageBus->handle(new SendVerificationEmailCommand(
             to             : $event->getEmail(),

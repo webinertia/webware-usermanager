@@ -58,7 +58,7 @@ initial import (`a6ff3ef`, 2026-08-24). There is no POST processing at all.
 
 ### 2.3 What creation already looks like (public registration)
 
-```
+```text
 POST /user/register
   DisableBodyMiddleware → RegistrationMiddleware → RegistrationHandler
 ```
@@ -77,7 +77,7 @@ POST /user/register
 
 ### 2.4 The update pipeline (the pattern the admin UI already follows)
 
-```
+```text
 PATCH /admin/user/update/{id}
   BodyParamsMiddleware → ProcessUpdateUserMiddleware → NotificationMiddleware → UpdateUserHandler (Http)
 ```
@@ -200,7 +200,7 @@ except `ResultSet` and `Validator` (a new PhpDb namespace must be added to that 
 
 Two routes, mirroring update (`update.modal` GET and `update` PATCH):
 
-```
+```text
 GET  /admin/user/create/modal  (admin.user.create.modal)   CreateUserModalHandler
 POST /admin/user/create        (admin.user.create)         CsrfMiddleware → ProcessCreateUserMiddleware
                                                            → NotificationMiddleware → CreateUserHandler
@@ -314,7 +314,7 @@ No change to: `Entity\User`, `UserRepository`, `UpdateUserCommand` (the `UserSch
 
 Input: the actor's role id and `AclInterface::getRoles()` (`role → direct parent roles`).
 
-```
+```text
 assignable(actor) = ({actor} ∪ ancestors(actor)) \ {Guest}
 ```
 

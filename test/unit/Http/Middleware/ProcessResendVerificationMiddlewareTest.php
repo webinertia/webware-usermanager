@@ -71,7 +71,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
             );
 
         $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()
                 ->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
@@ -121,7 +121,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
             );
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()
                 ->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
@@ -156,7 +156,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
             ));
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()
                 ->withMethod('POST')
                 ->withParsedBody(['email' => 'jane@example.com']),
@@ -263,7 +263,7 @@ final class ProcessResendVerificationMiddlewareTest extends TestCase
             ));
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()
                 ->withMethod('POST')
                 ->withParsedBody(['email' => 'ghost@example.com']),

@@ -51,7 +51,8 @@ class User implements UserInterface
                 $this->email = null !== $value ? strtolower($value) : null;
             }
         },
-        #[SensitiveParameter] public private(set) ?string $passwordHash = null,
+        #[SensitiveParameter]
+        public private(set) ?string $passwordHash = null,
         public private(set) int|bool|null $active = null {
             get => $this->active ?? false;
             set(int|bool|null $value) {
@@ -77,7 +78,8 @@ class User implements UserInterface
                 }
             }
         },
-        #[SensitiveParameter] public private(set) ?string $verificationToken = null,
+        #[SensitiveParameter]
+        public private(set) ?string $verificationToken = null,
 
         /** @var DateTimeImmutable|array<array-key, mixed>|string|null */
         public private(set) DateTimeImmutable|array|string|null $tokenCreatedAt = null {

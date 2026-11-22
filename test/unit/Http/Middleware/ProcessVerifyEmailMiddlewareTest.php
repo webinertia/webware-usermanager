@@ -66,7 +66,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             ->with('Email verified! You may now sign in.', 1, false);
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()
                 ->withAttribute('token', 'x')
                 ->withAttribute(SystemMessengerInterface::class, $messenger),
@@ -234,7 +234,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             ));
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()->withAttribute('token', $token),
         );
 
@@ -262,7 +262,7 @@ final class ProcessVerifyEmailMiddlewareTest extends TestCase
             ));
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()->withAttribute('token', $token),
         );
 

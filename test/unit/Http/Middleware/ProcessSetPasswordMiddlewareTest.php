@@ -176,7 +176,7 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
         ));
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest()->withAttribute('token', $token),
         );
 
@@ -254,7 +254,7 @@ final class ProcessSetPasswordMiddlewareTest extends TestCase
             ->with('Your password is set. You may now sign in.', 1, false);
 
         $request = $this->process(
-            bus: $bus,
+            bus    : $bus,
             request: new ServerRequest([], [], null, 'POST')
                 ->withAttribute('token', $token)
                 ->withAttribute(SystemMessengerInterface::class, $messenger)
